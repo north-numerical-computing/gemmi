@@ -15,8 +15,6 @@ int main() {
 
     typedef double my_fp_type;
     typedef uint64_t my_int_type;
-    const size_t n_exp_bits = 11;
-    const size_t n_frac_bits = 53;
 
     // Genereate a 5 x 3 matrix.
     for (size_t m = 50; m <= 200; m += 50) {
@@ -24,6 +22,8 @@ int main() {
             for (size_t n = 50; n <= 200; n += 50) {
                 std::vector<my_fp_type> A(m * p);
                 std::vector<my_fp_type> B(p * n);
+
+                std::cout << "m: " << m << ", p: " << p << ", n: " << n << std::endl;
 
                 // Initalize matrix with random values between -10 and 10.
                 std::default_random_engine generator(std::random_device{}());
@@ -36,7 +36,7 @@ int main() {
                         B[i * n + j] = distribution(generator);
                 A[0] = 1;
 
-                auto C = gemmi<int8_t, int32_t, my_fp_type, my_int_type, n_exp_bits, n_frac_bits>(A, B, m, p, n, 15);
+                auto C = gemmi<int8_t, int32_t, my_fp_type, my_int_type>(A, B, m, p, n, 15);
                 auto C_ref = reference_gemm(A, B, m, p, n);
 
                 double relative_error = frobenius_norm<my_fp_type, double>(C - C_ref) / frobenius_norm<my_fp_type, double>(C);
