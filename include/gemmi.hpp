@@ -2,6 +2,8 @@
 #include <cassert>
 #include <vector>
 
+#include <iostream>
+
 template <typename fp_t> size_t numExpBits() {return 0;}
 template <> size_t numExpBits<float>() {return 8;}
 template <> size_t numExpBits<double>() {return 11;}
@@ -16,6 +18,9 @@ enum class normalisationDimension {
     byCols
 };
 
+// TODO: I'm really unhappy with this function taking uing_t as a template
+// parameter, and having to propagate this value all the way from gemmi().
+// This type should be inferred from fp_type.
 template <typename splitint_t, typename fp_type, typename uint_t>
 struct MatrixSplit {
     size_t m;
@@ -105,7 +110,7 @@ struct MatrixSplit {
             // Get binary representation of normalised row/column.
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
                 const size_t index = i * i_stride + j * j_stride;
-                fp_type value = this->matrix[index]; // / powers_vector[i];
+                fp_type value = this->matrix[index];          // powers_vector[i];
                 tmp[j] = std::bit_cast<uint_t>(value);        // To bitstring.
                 sign[j] = std::signbit(value);                // Extract sign.
                 tmp[j] &= (~(uint_t)(0)) >> (n_exp_bits + 1); // Remove exponent.
@@ -187,27 +192,26 @@ std::vector<fp_t> mergeFloatfromInt(const MatrixSplit<splitint_t, fp_t, uint_t> 
 
 /* Compute exact products of slices of A and B. */
 template <typename splitint_t, typename accumulator_t, typename fp_t, typename uint_t>
-void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t, uint_t> &A, const MatrixSplit<splitint_t, fp_t, uint_t> &B, size_t i_block, size_t j_block, const size_t bits_per_slice, std::vector<fp_t> &C) {
-            for (size_t i = 0; i < A.m; i++) {
-                for (size_t j = 0; j < B.n; j++) {
-                    accumulator_t sum = 0;
-                    for (size_t k = 0; k < A.n; k++) {
-                        sum += A.memory[i + k * A.m + i_block * A.m * A.n] *
-                               B.memory[k + j * B.m + j_block * B.m * B.n];
-                    }
-            fp_t scaled_sum = std::ldexp(sum, -(i_block + 1 + j_block + 1) * bits_per_slice);
-                    fp_t scaling_factor = A.powers_vector[i] * B.powers_vector[j];
-                    C[i + j * A.m] += scaled_sum * scaling_factor;
-                }
+void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t, uint_t> &A, 
+                             const MatrixSplit<splitint_t, fp_t, uint_t> &B, std::vector<accumulator_t> &C,
+                             size_t i_block, size_t j_block) {
+    for (size_t i = 0; i < A.m; i++) {
+        for (size_t j = 0; j < B.n; j++) {
+            for (size_t k = 0; k < A.n; k++) {
+                C[i + j * A.m] += A.memory[i + k * A.m + i_block * A.m * A.n] *
+                                  B.memory[k + j * B.m + j_block * B.m * B.n];
             }
+        }
+    }
 }
 
 /* Accumulate products using the technique in:
 
     Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication unit.
-    Int. J. High Performance Comput. App. 2024;38(4):297-313. DOI:10.1177/10943420241239588
+    Int. J. High Performance Comput. App. 2024;38(4):297-313.
+    DOI: 10.1177/10943420241239588
 
-Each integer product is computed and accumulated in floating-point arithmetic.
+Integer products are accumulated in floating-point arithmetic one by one.
 */
 template <typename splitint_t, typename accumulator_t, typename fp_t, typename uint_t>
 std::vector<fp_t> computeProductsWithFloatingPlointAccumulation(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
@@ -218,8 +222,52 @@ std::vector<fp_t> computeProductsWithFloatingPlointAccumulation(const MatrixSpli
 
     for (size_t i_block = 0; i_block < A.num_splits; i_block++) {
         for (size_t j_block = 0; j_block < B.num_splits - i_block; j_block++) {
-            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t, uint_t>(A, B, i_block, j_block, bits_per_slice, C);
+            std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
+            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t, uint_t>(A, B, accumulator, i_block, j_block);
+            for (size_t i = 0; i < A.m; i++) {
+                for (size_t j = 0; j < B.n; j++) {
+                    fp_t scaled_sum = std::ldexp(accumulator[i + j * A.m], -(i_block + 1 + j_block + 1) * bits_per_slice);
+                    fp_t scaling_factor = A.powers_vector[i] * B.powers_vector[j];
+                    C[i + j * A.m] += scaled_sum * scaling_factor;
+                }
+            }
         }
+    }
+
+    return C;
+}
+
+/* Accumulate products using the technique in:
+
+    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
+    scheme on integer matrix multiplication unit. arXiv:2409.13313 [cs.DC]. 2024.
+    DOI: 10.48550/arXiv.2409.13313
+
+Integer products are accumulated in integer arithmetic along the diagonal, and in
+floating-point arithmetic across diagonals.
+*/
+template <typename splitint_t, typename accumulator_t, typename fp_t, typename uint_t>
+std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
+                                  const MatrixSplit<splitint_t, fp_t, uint_t> &B,
+                                  const size_t bits_per_slice) {
+
+    std::vector<fp_t > C (A.m * B.n);
+    for (size_t diagonal = 0; diagonal < A.num_splits + B.num_splits - 2; diagonal++) {
+        size_t Aindex = 0;
+        int Bindex = diagonal;
+        std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
+        while (Aindex < A.num_splits && Bindex >= 0) {
+            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t, uint_t>(A, B, accumulator, Aindex, Bindex);
+            Aindex++;
+            Bindex--;
+        }
+        for (size_t i = 0; i < A.m; i++) {
+                for (size_t j = 0; j < B.n; j++) {
+                    fp_t scaled_sum = std::ldexp(accumulator[i + j * A.m], -(diagonal + 2) * bits_per_slice);
+                    fp_t scaling_factor = A.powers_vector[i] * B.powers_vector[j];
+                    C[i + j * A.m] += scaled_sum * scaling_factor;
+                }
+            }
     }
 
     return C;
@@ -246,7 +294,8 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
     auto splitB = splitFloatToInt<splitint_t, fp_t, uint_t>
         (B, p, n, normalisationDimension::byCols, num_splits, bits_per_slice);
 
-    return computeProductsWithFloatingPlointAccumulation<splitint_t, accumulator_t, fp_t, uint_t>(splitA, splitB, bits_per_slice);
+    // return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t, uint_t>(splitA, splitB, bits_per_slice);
+    return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t, uint_t>(splitA, splitB, bits_per_slice);
 }
 
 template

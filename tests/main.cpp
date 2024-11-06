@@ -36,14 +36,13 @@ int main() {
                         B[i * n + j] = distribution(generator);
                 A[0] = 1;
 
-                auto C = gemmi<int8_t, int32_t, my_fp_type, my_int_type>(A, B, m, p, n, 15);
+                auto C = gemmi<int8_t, int32_t, my_fp_type, my_int_type>(A, B, m, p, n, 10);
                 auto C_ref = reference_gemm(A, B, m, p, n);
 
                 double relative_error = frobenius_norm<my_fp_type, double>(C - C_ref) / frobenius_norm<my_fp_type, double>(C);
 
-                assert(relative_error < 1e-15);
-
                 std::cout << "Relative error: " << relative_error << std::endl;
+                assert(relative_error < 1e-15);
             }
         }
     }
