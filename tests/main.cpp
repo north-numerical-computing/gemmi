@@ -8,13 +8,34 @@
 
 int main() {
 
-/*     typedef float my_fp_type;
-    typedef uint32_t my_int_type;
-    const size_t n_exp_bits = 8;
-    const size_t n_frac_bits = 24; */
+    // typedef float my_fp_type;
+    // typedef uint32_t my_int_type;
 
     typedef double my_fp_type;
     typedef uint64_t my_int_type;
+
+    size_t ms = 2, ns = 2, ps = 2;
+    std::vector<my_fp_type> As(ms * ps);
+    std::vector<my_fp_type> Bs(ps * ns);
+    std::default_random_engine generator(std::random_device{}());
+    std::uniform_real_distribution<double> distribution(-100000.0, 100000.0);
+    for (size_t i = 0; i < ms; i++)
+        for (size_t j = 0; j < ps; j++)
+            As[i * ms + j] = distribution(generator);
+    for (size_t i = 0; i < ps; i++)
+        for (size_t j = 0; j < ns; j++)
+            Bs[i * ns + j] = distribution(generator);
+    As[0] = 1;
+
+    auto Cs = gemmi<int8_t, int32_t, my_fp_type, my_int_type>(As, Bs, ms, ps, ns, 10);
+    auto Cs_ref = reference_gemm(As, Bs, ms, ps, ns);
+
+    double relErr = frobenius_norm<my_fp_type, double>(Cs - Cs_ref) / frobenius_norm<my_fp_type, double>(Cs);
+
+    std::cout << "Relative error: " << relErr << std::endl;
+    assert(relErr < 1e-15);
+
+    return 0;
 
     // Genereate a 5 x 3 matrix.
     for (size_t m = 50; m <= 200; m += 50) {
