@@ -214,7 +214,7 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
  * Integer products are accumulated in floating-point arithmetic one by one.
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t, typename uint_t>
-std::vector<fp_t> computeProductsWithFloatingPlointAccumulation(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
+std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
                                   const MatrixSplit<splitint_t, fp_t, uint_t> &B,
                                   const size_t bitsPerSlice) {
 
