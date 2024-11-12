@@ -158,7 +158,7 @@ MatrixSplit<splitint_t, fp_t, uint_t> splitFloatToInt(const std::vector<fp_t> A,
                                               const size_t bitsPerSlice) {
     auto splits = MatrixSplit<splitint_t, fp_t, uint_t>(m, n, numSplits, dimension, A);
     splits.computeNormalisationVectors();
-    splits.computeSplitsWithRoundToNearest(bitsPerSlice);
+    splits.computeSplitsWithTruncation(bitsPerSlice);
     //splits.computeSplitsWithTruncation(bitsPerSlice);
 
     return splits;
