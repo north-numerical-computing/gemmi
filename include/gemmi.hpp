@@ -109,7 +109,7 @@ struct MatrixSplit {
             // Get binary representation of normalised row/column.
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
                 const size_t index = i * iStride + j * jStride;
-                fp_t value = this->matrix[index];          // powersVector[i];
+                fp_t value = this->matrix[index];             // powersVector[i];
                 tmp[j] = std::bit_cast<uint_t>(value);        // To bitstring.
                 sign[j] = std::signbit(value);                // Extract sign.
                 tmp[j] &= (~(uint_t)(0)) >> (nunExpBits + 1); // Remove exponent.
@@ -261,8 +261,8 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
     // TODO: I should test that this works when A and B have very different numbers of splits
     // (for example, 2 vs 15). Are the high-diagonal products computed? In order to test this,
     // I need to modify gemmi to use different numbers of splits for A and B.
-    size_t numSplits = std::max(A.numSplits, B.numSplits) - 2;
-    for (size_t diagonal = 0; diagonal < numSplits; diagonal++) {
+    size_t numSplits = std::max(A.numSplits, B.numSplits) - 1;
+    for (size_t diagonal = 0; diagonal <= numSplits; diagonal++) {
         size_t Aindex = 0;
         int Bindex = diagonal;
         std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
