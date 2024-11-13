@@ -27,7 +27,7 @@ int main() {
             Bs[i * ns + j] = distribution(generator);
     As[0] = 1;
 
-    auto Cs = gemmi<int8_t, int32_t, my_fp_type, my_int_type>(As, Bs, ms, ps, ns, 10);
+    auto Cs = gemmi<my_fp_type, int8_t, int32_t, my_int_type>(As, Bs, ms, ps, ns, 10);
     auto Cs_ref = reference_gemm(As, Bs, ms, ps, ns);
 
     double relErr = frobenius_norm<my_fp_type, double>(Cs - Cs_ref) / frobenius_norm<my_fp_type, double>(Cs);
@@ -57,7 +57,7 @@ int main() {
                         B[i * n + j] = distribution(generator);
                 A[0] = 1;
 
-                auto C = gemmi<int8_t, int32_t, my_fp_type, my_int_type>(A, B, m, p, n, 10);
+                auto C = gemmi<my_fp_type, int8_t, int32_t, my_int_type>(A, B, m, p, n, 10);
                 auto C_ref = reference_gemm(A, B, m, p, n);
 
                 double relative_error = frobenius_norm<my_fp_type, double>(C - C_ref) / frobenius_norm<my_fp_type, double>(C);
