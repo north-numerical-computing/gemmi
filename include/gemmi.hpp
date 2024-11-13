@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+/* Computations related to floating-point types. */
 template <typename fp_t> size_t numExpBits() {return 0;}
 template <> size_t numExpBits<float>() {return 8;}
 template <> size_t numExpBits<double>() {return 11;}
@@ -12,16 +13,18 @@ template <typename fp_t> size_t numFracBits() {return 0;}
 template <> size_t numFracBits<float>() {return 24;}
 template <> size_t numFracBits<double>() {return 53;}
 
+template <typename T>
+struct get_storage_format;
+template <> struct get_storage_format<float> {using storage_format = uint32_t;};
+template <> struct get_storage_format<double> {using storage_format = uint64_t;};
+
 /* Everything is defined to use column-major. */
 enum class normalisationDimension {
     byRows,
     byCols
 };
 
-// TODO: I'm really unhappy with this function taking uing_t as a template
-// parameter, and having to propagate this value all the way from gemmi().
-// This type should be inferred from fp_t.
-template <typename splitint_t, typename fp_t, typename uint_t>
+template <typename splitint_t, typename fp_t>
 struct MatrixSplit {
     size_t m;
     size_t n;
@@ -32,6 +35,8 @@ struct MatrixSplit {
     std::vector<splitint_t> memory;
     std::vector<fp_t> powersVector;
     std::vector<int> scalingExponents;
+
+    using uint_t = typename get_storage_format<fp_t>::storage_format;
 
     MatrixSplit(const size_t m, const size_t n, const size_t numSplits,
                 const normalisationDimension dimension,
@@ -150,13 +155,13 @@ struct MatrixSplit {
     }
 };
 
-template <typename splitint_t, typename fp_t, typename uint_t>
-MatrixSplit<splitint_t, fp_t, uint_t> splitFloatToInt(const std::vector<fp_t> A,
+template <typename splitint_t, typename fp_t>
+MatrixSplit<splitint_t, fp_t> splitFloatToInt(const std::vector<fp_t> A,
                                               const size_t m, const size_t n,
                                               normalisationDimension dimension,
                                               const size_t numSplits,
                                               const size_t bitsPerSlice) {
-    auto splits = MatrixSplit<splitint_t, fp_t, uint_t>(m, n, numSplits, dimension, A);
+    auto splits = MatrixSplit<splitint_t, fp_t>(m, n, numSplits, dimension, A);
     splits.computeNormalisationVectors();
     splits.computeSplitsWithTruncation(bitsPerSlice);
     //splits.computeSplitsWithTruncation(bitsPerSlice);
@@ -164,19 +169,18 @@ MatrixSplit<splitint_t, fp_t, uint_t> splitFloatToInt(const std::vector<fp_t> A,
     return splits;
 }
 
-template <typename splitint_t, typename accumulator_t,
-          typename fp_t, typename uint_t>
-std::vector<fp_t> mergeFloatfromInt(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
+template <typename splitint_t, typename accumulator_t, typename fp_t>
+std::vector<fp_t> mergeFloatfromInt(const MatrixSplit<splitint_t, fp_t> &A,
                                     const size_t bitsPerSlice) {
     std::vector<fp_t> C (A.m * A.n, 0.0);
 
     for (size_t i = 0; i < A.m; i++) {
-        uint_t tmp = 0;
+        decltype(A.memory[0]) tmp = 0;
         for (size_t j = 0; j < A.n; j++) {
             int8_t shiftValue = numFracBits<fp_t>() - bitsPerSlice;
             for (size_t iBlock = 0; iBlock < A.numSplits; iBlock++) {
-                uint_t slice = A.memory[i + j * A.m + iBlock * A.m * A.n];
-                uint_t new_slice = shiftValue > 0 ?
+                auto slice = A.memory[i + j * A.m + iBlock * A.m * A.n];
+                auto new_slice = shiftValue > 0 ?
                     slice << shiftValue :
                     slice >> -shiftValue;
                 tmp |= new_slice;
@@ -191,9 +195,9 @@ std::vector<fp_t> mergeFloatfromInt(const MatrixSplit<splitint_t, fp_t, uint_t> 
 }
 
 /* Compute exact products of slices of A and B. */
-template <typename splitint_t, typename accumulator_t, typename fp_t, typename uint_t>
-void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t, uint_t> &A, 
-                             const MatrixSplit<splitint_t, fp_t, uint_t> &B, std::vector<accumulator_t> &C,
+template <typename splitint_t, typename accumulator_t, typename fp_t>
+void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A, 
+                             const MatrixSplit<splitint_t, fp_t> &B, std::vector<accumulator_t> &C,
                              size_t iBlock, size_t jBlock) {
     for (size_t i = 0; i < A.m; i++) {
         for (size_t j = 0; j < B.n; j++) {
@@ -213,9 +217,9 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
  *
  * Integer products are accumulated in floating-point arithmetic one by one.
  */
-template <typename splitint_t, typename accumulator_t, typename fp_t, typename uint_t>
-std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
-                                  const MatrixSplit<splitint_t, fp_t, uint_t> &B,
+template <typename splitint_t, typename accumulator_t, typename fp_t>
+std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
+                                  const MatrixSplit<splitint_t, fp_t> &B,
                                   const size_t bitsPerSlice) {
 
     std::vector<fp_t > C (A.m * B.n);
@@ -223,7 +227,7 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
     for (size_t iBlock = 0; iBlock < A.numSplits; iBlock++) {
         for (size_t jBlock = 0; jBlock < B.numSplits - iBlock; jBlock++) {
             std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
-            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t, uint_t>(A, B, accumulator, iBlock, jBlock);
+            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, iBlock, jBlock);
             for (size_t i = 0; i < A.m; i++) {
                 for (size_t j = 0; j < B.n; j++) {
                     fp_t scaledSum = std::ldexp(accumulator[i + j * A.m], -(iBlock + 1 + jBlock + 1) * bitsPerSlice);
@@ -246,9 +250,9 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
  * Integer products are accumulated in integer arithmetic along the diagonal, and
  * in floating-point arithmetic across diagonals.
  */
-template <typename splitint_t, typename accumulator_t, typename fp_t, typename uint_t>
-std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<splitint_t, fp_t, uint_t> &A,
-                                  const MatrixSplit<splitint_t, fp_t, uint_t> &B,
+template <typename splitint_t, typename accumulator_t, typename fp_t>
+std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
+                                  const MatrixSplit<splitint_t, fp_t> &B,
                                   const size_t bitsPerSlice) {
 
     std::vector<fp_t > C (A.m * B.n);
@@ -267,7 +271,7 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
         int Bindex = diagonal;
         std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
         while (Aindex < A.numSplits && Bindex >= 0) {
-            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t, uint_t>(A, B, accumulator, Aindex, Bindex);
+            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, Aindex, Bindex);
             Aindex++;
             Bindex--;
         }
@@ -288,7 +292,7 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
  *   + B is p x n
  *   + C is m x n
  */
-template <typename fp_t, typename splitint_t, typename accumulator_t, typename uint_t>
+template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
                          const size_t m, const size_t p, const size_t n, const size_t numSplits) {
 
@@ -298,19 +302,19 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
     const size_t alpha = std::floor((bitsInAccumulator - log2(n)) / 2);
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
-    auto splitA = splitFloatToInt<splitint_t, fp_t, uint_t>
+    auto splitA = splitFloatToInt<splitint_t, fp_t>
         (A, m, p, normalisationDimension::byRows, numSplits, bitsPerSlice);
 
-    auto splitB = splitFloatToInt<splitint_t, fp_t, uint_t>
+    auto splitB = splitFloatToInt<splitint_t, fp_t>
         (B, p, n, normalisationDimension::byCols, numSplits, bitsPerSlice);
 
-    return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t, uint_t>(splitA, splitB, bitsPerSlice);
-    // return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t, uint_t>(splitA, splitB, bitsPerSlice);
+    return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
+    // return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
 }
 
 template
-std::vector<float> gemmi<float, int8_t, int32_t, uint32_t> (const std::vector<float> &A, const std::vector<float> &B,
+std::vector<float> gemmi<float, int8_t, int32_t> (const std::vector<float> &A, const std::vector<float> &B,
                          const size_t m, const size_t p, const size_t n, const size_t numSplits);
 template
-std::vector<double> gemmi<double, int8_t, int32_t, uint64_t> (const std::vector<double> &A, const std::vector<double> &B,
+std::vector<double> gemmi<double, int8_t, int32_t> (const std::vector<double> &A, const std::vector<double> &B,
                          const size_t m, const size_t p, const size_t n, const size_t numSplits);
