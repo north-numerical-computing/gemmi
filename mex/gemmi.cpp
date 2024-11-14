@@ -9,17 +9,19 @@ public:
         // Validate input.
         validateInput(inputs);
 
-        size_t num_splits = std::move(inputs[2][0]);
+        size_t numSplitsA = std::move(inputs[2][0]);
+        size_t numSplitsB = inputs.size() == 3 ? numSplitsA : std::move(inputs[3][0]);
+
         if (inputs[0].getType() == matlab::data::ArrayType::DOUBLE &&
             inputs[1].getType() == matlab::data::ArrayType::DOUBLE) {
-            matlab::data::TypedArray<double> A_matlab = std::move(inputs[0]);
-            matlab::data::TypedArray<double> B_matlab = std::move(inputs[1]);
-            outputs[0] = std::move(executeOperation(A_matlab, B_matlab, num_splits));
+            matlab::data::TypedArray<double> Amatlab = std::move(inputs[0]);
+            matlab::data::TypedArray<double> Bmatlab = std::move(inputs[1]);
+            outputs[0] = std::move(executeOperation(Amatlab, Bmatlab, numSplitsA, numSplitsB));
         } else if (inputs[0].getType() == matlab::data::ArrayType::SINGLE &&
             inputs[1].getType() == matlab::data::ArrayType::SINGLE) {
-            matlab::data::TypedArray<float> A_matlab = std::move(inputs[0]);
-            matlab::data::TypedArray<float> B_matlab = std::move(inputs[1]);
-            outputs[0] = std::move(executeOperation(A_matlab, B_matlab, num_splits));
+            matlab::data::TypedArray<float> Amatlab = std::move(inputs[0]);
+            matlab::data::TypedArray<float> Bmatlab = std::move(inputs[1]);
+            outputs[0] = std::move(executeOperation(Amatlab, Bmatlab, numSplitsA, numSplitsB));
         } else {
             std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr = getEngine();
             matlab::data::ArrayFactory factory;
@@ -29,29 +31,31 @@ public:
     }
 
 private:
-    matlab::data::TypedArray<double> executeOperation(const matlab::data::TypedArray<double> &A_matlab,
-                          const matlab::data::TypedArray<double> &B_matlab,
-                          const size_t num_splits) {
-        const std::vector<double> A(A_matlab.begin(), A_matlab.end());
-        const std::vector<double> B(B_matlab.begin(), B_matlab.end());
-        auto A_size = A_matlab.getDimensions();
-        auto B_size = B_matlab.getDimensions();
+    matlab::data::TypedArray<double> executeOperation(const matlab::data::TypedArray<double> &Amatlab,
+                          const matlab::data::TypedArray<double> &Bmatlab,
+                          const size_t numSplitsA, const size_t numSplitsB) {
+        const std::vector<double> A(Amatlab.begin(), Amatlab.end());
+        const std::vector<double> B(Bmatlab.begin(), Bmatlab.end());
+        auto A_size = Amatlab.getDimensions();
+        auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<double, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], (size_t)num_splits);
+        auto C = gemmi<double, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], 
+                                                numSplitsA, numSplitsB);
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
     }
 
-    matlab::data::TypedArray<float> executeOperation(const matlab::data::TypedArray<float> &A_matlab,
-                          const matlab::data::TypedArray<float> &B_matlab,
-                          const size_t num_splits) {
-        const std::vector<float> A(A_matlab.begin(), A_matlab.end());
-        const std::vector<float> B(B_matlab.begin(), B_matlab.end());
-        auto A_size = A_matlab.getDimensions();
-        auto B_size = B_matlab.getDimensions();
+    matlab::data::TypedArray<float> executeOperation(const matlab::data::TypedArray<float> &Amatlab,
+                          const matlab::data::TypedArray<float> &Bmatlab,
+                          const size_t numSplitsA, const size_t numSplitsB) {
+        const std::vector<float> A(Amatlab.begin(), Amatlab.end());
+        const std::vector<float> B(Bmatlab.begin(), Bmatlab.end());
+        auto A_size = Amatlab.getDimensions();
+        auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<float, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], (size_t)num_splits);
+        auto C = gemmi<float, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1],
+                                               numSplitsA, numSplitsB);
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
@@ -61,9 +65,23 @@ private:
         std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr = getEngine();
         matlab::data::ArrayFactory factory;
 
-        if (inputs.size() != 3) {
+        size_t numArgs = inputs.size();
+
+        if ( numArgs < 3 || numArgs > 4) {
             matlabPtr->feval(u"error",
-                0, std::vector<matlab::data::Array>({ factory.createScalar("Three inputs expected.") }));
+                0, std::vector<matlab::data::Array>({ factory.createScalar("Three or four inputs expected.") }));
+        }
+
+        if (inputs[2].getNumberOfElements() != 1 || std::round((double)inputs[2][0][0]) != (double)inputs[2][0][0]) {
+            matlabPtr->feval(u"error",
+                0, std::vector<matlab::data::Array>({ factory.createScalar("The third input must be a scalar integer.") }));
+        }
+
+        if (numArgs == 4) {
+            if (inputs[3].getNumberOfElements() != 1 || std::round((double)inputs[3][0][0]) != (double)inputs[3][0][0]) {
+                matlabPtr->feval(u"error",
+                    0, std::vector<matlab::data::Array>({ factory.createScalar("The third input must be a scalar integer.") }));
+            }
         }
 
         auto A_size = inputs[0].getDimensions();
@@ -72,11 +90,6 @@ private:
         if (A_size.size() != 2 || B_size.size() != 2) {
             matlabPtr->feval(u"error",
                 0, std::vector<matlab::data::Array>({ factory.createScalar("The first two inputs must be matrices.") }));
-        }
-
-        if (inputs[2].getNumberOfElements() != 1 || std::round((double)inputs[2][0][0]) != (double)inputs[2][0][0]) {
-            matlabPtr->feval(u"error",
-                0, std::vector<matlab::data::Array>({ factory.createScalar("The third input must be a scalar integer.") }));
         }
 
         if (A_size[1] != B_size[0]) {

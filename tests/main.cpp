@@ -35,28 +35,32 @@ int main() {
     assert(relErr < 1e-15);
 
     // Test different sizes.
-    for (size_t m = 20; m <= 100; m += 20) {
-        for (size_t p = 20; p <= 100; p += 20) {
-            for (size_t n = 20; n <= 100; n += 20) {
-                std::vector<my_fp_type> A(m * p);
-                std::vector<my_fp_type> B(p * n);
+    for (size_t numSplitA : { 1, 2, 10 }) {
+        for (size_t numSplitB : { 1, 2, 10 }) {
+            for (size_t m = 10; m <= 50; m += 10) {
+                for (size_t p = 10; p <= 50; p += 10) {
+                    for (size_t n = 10; n <= 50; n += 10) {
+                        std::vector<my_fp_type> A(m * p);
+                        std::vector<my_fp_type> B(p * n);
 
-                std::cout << "m: " << m << ", p: " << p << ", n: " << n << std::endl;
+                        std::cout << "m: " << m << ", p: " << p << ", n: " << n << std::endl;
 
-                // Initalize matrix with random values between -10 and 10.
-                std::default_random_engine generator(std::random_device{}());
-                std::uniform_real_distribution<double> distribution(-100000.0, 100000.0);
-                for (auto & element : A)
-                    element = distribution(generator);
-                for (auto & element : B)
-                    element = distribution(generator);
-                auto C = gemmi<my_fp_type, int8_t, int32_t>(A, B, m, p, n, 10);
-                auto C_ref = reference_gemm(A, B, m, p, n);
+                        // Initalize matrix with random values.
+                        std::default_random_engine generator(std::random_device{}());
+                        std::uniform_real_distribution<double> distribution(-100000.0, 100000.0);
+                        for (auto & element : A)
+                            element = numSplitA < 10 ? ldexp(1.0, 2 * numSplitA) - 1 : distribution(generator);
+                        for (auto & element : B)
+                            element = numSplitB < 10 ? ldexp(1.0, 2 * numSplitB) - 1 : distribution(generator);
+                        auto C = gemmi<my_fp_type, int8_t, int32_t>(A, B, m, p, n, numSplitA, numSplitB);
+                        auto C_ref = reference_gemm(A, B, m, p, n);
 
-                double relative_error = frobenius_norm<my_fp_type, double>(C - C_ref) / frobenius_norm<my_fp_type, double>(C);
+                        double relative_error = frobenius_norm<my_fp_type, double>(C - C_ref) / frobenius_norm<my_fp_type, double>(C);
 
-                std::cout << "Relative error: " << relative_error << std::endl;
-                assert(relative_error < 1e-15);
+                        std::cout << "Relative error: " << relative_error << std::endl;
+                        assert(relative_error < 1e-15);
+                    }
+                }
             }
         }
     }

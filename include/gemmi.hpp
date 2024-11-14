@@ -196,7 +196,7 @@ std::vector<fp_t> mergeFloatfromInt(const MatrixSplit<splitint_t, fp_t> &A,
 
 /* Compute exact products of slices of A and B. */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
-void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A, 
+void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
                              const MatrixSplit<splitint_t, fp_t> &B, std::vector<accumulator_t> &C,
                              size_t iBlock, size_t jBlock) {
     for (size_t i = 0; i < A.m; i++) {
@@ -262,14 +262,10 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
 
     std::vector<fp_t > C (A.m * B.n);
 
-    // Here I'm ignoring the products below the main anti-diagonal, as done in the original
-    // paper. To compute all products, the following line could be changed to:
-    // size t numSplits = A.numSplits + B.numSplits - 2;
+    // Here, I'm ignoring the products below the main anti-diagonal, as done in the original
+    // paper.
     // NOTE: this is different from previous work, as I allow a different number of splits
     // for A and B.
-    // TODO: I should test that this works when A and B have very different numbers of splits
-    // (for example, 2 vs 15). Are the high-diagonal products computed? In order to test this,
-    // I need to modify gemmi to use different numbers of splits for A and B.
     size_t numDiagonals = std::max(A.numSplits, B.numSplits) - 1;
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
         int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
@@ -299,7 +295,8 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
  */
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
-                         const size_t m, const size_t p, const size_t n, const size_t numSplits) {
+                         const size_t m, const size_t p, const size_t n,
+                         const size_t numSplitsA, const size_t numSplitsB) {
 
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
     const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
@@ -308,18 +305,16 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
     auto splitA = splitFloatToInt<splitint_t, fp_t>
-        (A, m, p, normalisationDimension::byRows, numSplits, bitsPerSlice);
+        (A, m, p, normalisationDimension::byRows, numSplitsA, bitsPerSlice);
 
     auto splitB = splitFloatToInt<splitint_t, fp_t>
-        (B, p, n, normalisationDimension::byCols, numSplits, bitsPerSlice);
+        (B, p, n, normalisationDimension::byCols, numSplitsB, bitsPerSlice);
 
     return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
     // return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
 }
-
-template
-std::vector<float> gemmi<float, int8_t, int32_t> (const std::vector<float> &A, const std::vector<float> &B,
-                         const size_t m, const size_t p, const size_t n, const size_t numSplits);
-template
-std::vector<double> gemmi<double, int8_t, int32_t> (const std::vector<double> &A, const std::vector<double> &B,
-                         const size_t m, const size_t p, const size_t n, const size_t numSplits);
+template <typename fp_t, typename splitint_t, typename accumulator_t>
+std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
+                         const size_t m, const size_t p, const size_t n, const size_t numSplits) {
+    return gemmi <fp_t, splitint_t, accumulator_t> (A, B, m, p, n, numSplits, numSplits);
+}
