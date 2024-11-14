@@ -224,17 +224,22 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
 
     std::vector<fp_t > C (A.m * B.n);
 
-    for (size_t iBlock = 0; iBlock < A.numSplits; iBlock++) {
-        for (size_t jBlock = 0; jBlock < B.numSplits - iBlock; jBlock++) {
+    size_t numDiagonals = std::max(A.numSplits, B.numSplits) - 1;
+    for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
+        int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
+        size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
+        while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
             std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
-            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, iBlock, jBlock);
+            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, Aindex, Bindex);
             for (size_t i = 0; i < A.m; i++) {
                 for (size_t j = 0; j < B.n; j++) {
-                    fp_t scaledSum = std::ldexp(accumulator[i + j * A.m], -(iBlock + 1 + jBlock + 1) * bitsPerSlice);
+                    fp_t scaledSum = std::ldexp(accumulator[i + j * A.m], -(Aindex + 1 + Bindex + 1) * bitsPerSlice);
                     fp_t scalingFactor = A.powersVector[i] * B.powersVector[j];
                     C[i + j * A.m] += scaledSum * scalingFactor;
                 }
             }
+            Aindex--;
+            Bindex++;
         }
     }
 
