@@ -265,15 +265,15 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
     // TODO: I should test that this works when A and B have very different numbers of splits
     // (for example, 2 vs 15). Are the high-diagonal products computed? In order to test this,
     // I need to modify gemmi to use different numbers of splits for A and B.
-    size_t numSplits = std::max(A.numSplits, B.numSplits) - 1;
-    for (size_t diagonal = 0; diagonal <= numSplits; diagonal++) {
-        size_t Aindex = 0;
-        int Bindex = diagonal;
+    size_t numDiagonals = std::max(A.numSplits, B.numSplits) - 1;
+    for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
+        int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
+        size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
         std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
-        while (Aindex < A.numSplits && Bindex >= 0) {
+        while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
             computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, Aindex, Bindex);
-            Aindex++;
-            Bindex--;
+            Aindex--;
+            Bindex++;
         }
         for (size_t i = 0; i < A.m; i++) {
                 for (size_t j = 0; j < B.n; j++) {
