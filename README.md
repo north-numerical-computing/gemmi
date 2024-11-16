@@ -1,5 +1,7 @@
 # Matrix–matrix multiply using integer Ozaki scheme
 
+[![Testing](https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml/badge.svg?branch=main)](https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml)
+
 ## Dependencies
 
 The recommended system to build this project is `CMake`. Compilation of the C++ example requires a g++ compiler that supports the C++20 standard. In order to build the MEX interface, MATLAB should be installed and available on the search path.

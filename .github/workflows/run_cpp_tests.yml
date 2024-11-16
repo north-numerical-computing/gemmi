@@ -1,0 +1,41 @@
+name: C++ tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest , macos-latest]
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        git checkout "v3.4.0"
+        mkdir build && cd build
+        cmake .. -DBUILD_TESTING=Off
+        make -j $(nproc)
+        sudo make install
+
+    - name: Configure
+      run: |
+        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_MEX=False -DBUILD_TESTS=True
+
+    - name: Build
+      run: |
+        cmake --build build
+
+    - name: Run tests
+      run: |
+        cd build/tests
+        ctest -C Release --output-on-failure --verbose
