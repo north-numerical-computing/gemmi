@@ -18,13 +18,14 @@ int main() {
     std::vector<my_fp_type> Bs(ps * ns);
     std::default_random_engine generator(std::random_device{}());
     std::uniform_real_distribution<double> distribution(-100000.0, 100000.0);
-    for (size_t i = 0; i < ms; i++)
-        for (size_t j = 0; j < ps; j++)
-            As[i * ms + j] = distribution(generator);
-    for (size_t i = 0; i < ps; i++)
-        for (size_t j = 0; j < ns; j++)
-            Bs[i * ns + j] = distribution(generator);
-    As[0] = 1;
+    for (auto & element : As)
+        element = distribution(generator);
+    for (auto & element : Bs)
+        element = distribution(generator);
+    As[0] = 1.984375;          // 0x3FFE0000 -> 1.11111 10000 00000 00000 000
+    As[1] = 1.999969482421875; // 0x3FFFFF00 -> 1.11111 11111 11111 00000 000
+    As[2] = 1.99993896484375;  // 0x3FFFFE00 -> 1.11111 11111 11110 00000 000
+    As[3] = 1.9998779296875;   // 0x3FFFCE00 -> 1.11111 11111 11100 00000 000
 
     auto Cs = gemmi<my_fp_type, int8_t, int32_t>(As, Bs, ms, ps, ns, 10);
     auto Cs_ref = reference_gemm(As, Bs, ms, ps, ns);
