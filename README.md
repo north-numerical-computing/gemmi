@@ -4,23 +4,36 @@
 
 ## Dependencies
 
-The recommended system to build this project is `CMake`. Compilation of the C++ example requires a g++ compiler that supports the C++20 standard. In order to build the MEX interface, MATLAB should be installed and available on the search path.
+The recommended system to build this project is `CMake`. Compilation of the C++ tests requires a C++ compiler that supports the C++20 standard. In order to build the MEX interface, MATLAB must be installed and available on the search path.
 
 ## Build
 
-The C++ example program and the MEX interface can be compiled with:
+### Mex interface
+
+The MEX interface can be compiled with:
 ```bash
-mkdir build
-cmake -B build
-cd build && make
+cmake -S. -Bbuild
+cmake --build build
 ```
-If the compilation is successful, these commands will produce the executable `build/example` and the MEX interface `build/gemmi.$(mexext)`, where `$(mexext)` is `mexa64` on Linux, `mexmaci64` or `mexmaca64` on MacOS , and `mexw64` on Windows. The file `build/gemmi.m` contains the documentation for the MATLAB `gemmi` function.
+If the compilation is successful, these commands will produce the the MEX file `build/gemmi.$(mexext)`, where `$(mexext)` is `mexa64` on Linux, `mexmaci64` or `mexmaca64` on MacOS , and `mexw64` on Windows. The file `build/gemmi.m` contains the documentation for the MATLAB `gemmi` function.
+
+Building the interface can be disabled by setting the CMake variable `BUILD_MEX` to false:
+```bash
+cmake -S. -Bbuild -DBUILD_MEX=False
+```
+
+### Catch2 tests
+
+The project comes with a suite of [Catch2](https://github.com/catchorg/Catch2) C++ tests. By default, the tests are disabled, and can be enabled by setting the CMake variable `BUILD_TEST` to true:
+```bash
+cmake -S. -Bbuild -DBUILD_TESTS=True
+```
 
 ## Configuration
 
 Additional options can be passed to `CMake` during the configuration stage. To use a compiler other than the default one, for example, one can use:
 ```bash
-cmake -B build -D CMAKE_CXX_COMPILER=<preferred_compiler>
+cmake -S. -Bbuild -DCMAKE_CXX_COMPILER=<preferred_compiler>
 ```
 Here, `<preferred_compiler>` must be either an executable on the search path or the path to the chosen compiler.
 
