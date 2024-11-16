@@ -20,24 +20,28 @@ template <> struct get_storage_format<double> {using storage_format = uint64_t;}
 
 /* Everything is defined to use column-major. */
 enum class normalisationDimension {
-    byRows,
-    byCols
+    byRows, // Matrix on the left of the prodcut.
+    byCols  // Matrix on the right of the product.
 };
 
-/* Splitting format. */
-enum class splitStrategy{
-    undef,
+enum class splittingStrategy{
     roundToNearest,
     bitMasking
+};
+
+enum class accumulationStrategy{
+    floatingPoint,
+    integer
 };
 
 template <typename splitint_t, typename fp_t>
 struct MatrixSplit {
     size_t m;
     size_t n;
+    splittingStrategy splitType;
     size_t numSplits;
+    size_t bitsPerSlice;
     normalisationDimension dimension;
-    splitStrategy splitType;
 
     std::vector<fp_t> matrix;
     std::vector<splitint_t> memory;
@@ -46,25 +50,23 @@ struct MatrixSplit {
 
     using uint_t = typename get_storage_format<fp_t>::storage_format;
 
-    MatrixSplit(const size_t m, const size_t n, const size_t numSplits,
-                const normalisationDimension dimension,
-                const std::vector<fp_t>& matrix,
-                std::vector<splitint_t>& memory,
-                std::vector<fp_t>& powersVector,
-                std::vector<int>& scalingExponents) :
-                m(m), n(n), numSplits(numSplits), dimension(dimension),
-                splitType(splitStrategy::undef),
-                matrix(matrix), memory(memory),
-                powersVector(powersVector),
-                scalingExponents(scalingExponents) {}
-
-    MatrixSplit(const size_t m, const size_t n, const size_t numSplits,
-                const normalisationDimension dimension, const std::vector<fp_t>& matrix) :
-                m(m), n(n), numSplits(numSplits), dimension(dimension), splitType(splitStrategy::undef),
-                matrix(matrix) {
+    MatrixSplit(const std::vector<fp_t>& matrix, const size_t m, const size_t n,
+                const splittingStrategy splitType, size_t numSplits, size_t bitsPerSlice,
+                const normalisationDimension dimension) :
+                m(m), n(n), splitType(splitType), numSplits(numSplits), bitsPerSlice(bitsPerSlice),
+                dimension(dimension), matrix(matrix) {
                     this->memory.resize(m * n * numSplits);
                     this->powersVector.resize(this->otherDimension());
                     this->scalingExponents.resize(this->otherDimension());
+                    this->computeNormalisationVectors();
+                    switch (splitType) {
+                        case splittingStrategy::roundToNearest:
+                            this->computeSplitsWithRoundToNearest();
+                            break;
+                        case splittingStrategy::bitMasking:
+                            this->computeSplitsWithBitMasking();
+                            break;
+                     }
                 }
 
     // This is the dimension alng which the inner product is computed.
@@ -121,27 +123,27 @@ struct MatrixSplit {
      * Integer products are accumulated in integer arithmetic along the diagonal, and in
      * floating-point arithmetic across diagonals.
      */
-    void computeSplitsWithRoundToNearest(const size_t bitsPerSlice) {
-        this->splitType = splitStrategy::roundToNearest;
+    void computeSplitsWithRoundToNearest() {
+        this->splitType = splittingStrategy::roundToNearest;
         auto iStride = this->iStride();
         auto jStride = this->jStride();
         auto localMatrix = this->matrix;
         for (size_t slice = 0; slice < numSplits; slice++) {
             for (size_t i = 0; i < this->otherDimension(); i++) {
-                fp_t sigma = ldexp(0.75, numFracBits<fp_t>() - bitsPerSlice * slice + 1 - bitsPerSlice) * powersVector[i];
+                fp_t sigma = ldexp(0.75, numFracBits<fp_t>() - this->bitsPerSlice * slice + 1 - this->bitsPerSlice) * powersVector[i];
                 for (size_t j = 0; j < this->innerProductDimension(); j++) {
                     auto value = (localMatrix[i * iStride + j * jStride] + sigma);
                     value -= sigma;
                     localMatrix[i * iStride + j * jStride] -= value;
-                    value = value / powersVector[i] * ldexp(1.0, bitsPerSlice * slice + bitsPerSlice - 1);
+                    value = value / powersVector[i] * ldexp(1.0, this->bitsPerSlice * slice + this->bitsPerSlice - 1);
                     this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = value;
                 }
             }
         }
     }
 
-    void computeSplitsWithBitMasking(const size_t bitsPerSlice) {
-        this->splitType = splitStrategy::bitMasking;
+    void computeSplitsWithBitMasking() {
+        this->splitType = splittingStrategy::bitMasking;
         // Compute splits one row/column at a time.
         auto nunExpBits = numExpBits<fp_t>();
         auto nunFracBits = numFracBits<fp_t>();
@@ -164,16 +166,16 @@ struct MatrixSplit {
             }
 
             // Create bitmask.
-            const uint_t smallBitmask = (1 << bitsPerSlice) - 1;
+            const uint_t smallBitmask = (1 << this->bitsPerSlice) - 1;
             // Perform the split.
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
-                int16_t shiftCounter = nunFracBits - bitsPerSlice;
+                int16_t shiftCounter = nunFracBits - this->bitsPerSlice;
                 int currentExponent;
                 frexp(this->matrix[i * iStride + j * jStride], &currentExponent);
                 int16_t exponentDifference = scalingExponents[i] - currentExponent;
                 for (size_t slice = 0; slice < numSplits; slice++) {
-                    if (exponentDifference > (signed)bitsPerSlice) {
-                        exponentDifference -= bitsPerSlice;
+                    if (exponentDifference > (signed)this->bitsPerSlice) {
+                        exponentDifference -= this->bitsPerSlice;
                     } else {
                         shiftCounter += exponentDifference;
                         exponentDifference = 0;
@@ -186,27 +188,13 @@ struct MatrixSplit {
                             currentSlice << -shiftCounter;
                         splitint_t value = (splitint_t)(current_split) * (sign[j] ? -1 : 1);
                         this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = value;
-                        shiftCounter -= bitsPerSlice;
+                        shiftCounter -= this->bitsPerSlice;
                     }
                 }
             }
         }
     }
 };
-
-template <typename splitint_t, typename fp_t>
-MatrixSplit<splitint_t, fp_t> splitFloatToInt(const std::vector<fp_t> A,
-                                              const size_t m, const size_t n,
-                                              normalisationDimension dimension,
-                                              const size_t numSplits,
-                                              const size_t bitsPerSlice) {
-    auto splits = MatrixSplit<splitint_t, fp_t>(m, n, numSplits, dimension, A);
-    splits.computeNormalisationVectors();
-    splits.computeSplitsWithRoundToNearest(bitsPerSlice);
-    // splits.computeSplitsWithBitMasking(bitsPerSlice);
-
-    return splits;
-}
 
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> mergeIntToFloats(const MatrixSplit<splitint_t, fp_t> &A,
@@ -255,8 +243,8 @@ fp_t computeScalingConstantforUsingSplitStrategy(const MatrixSplit<splitint_t, f
     // When splitting with round-to-nearst, the first slice has bitsPerSlice - 1 bits, and we need 
     // to account for this when scaling the final result.
     fp_t scalingConstant = 1.0;
-    scalingConstant *= A.splitType == splitStrategy::roundToNearest ? 2.0 : 1.0;
-    scalingConstant *= B.splitType == splitStrategy::roundToNearest ? 2.0 : 1.0;
+    scalingConstant *= A.splitType == splittingStrategy::roundToNearest ? 2.0 : 1.0;
+    scalingConstant *= B.splitType == splittingStrategy::roundToNearest ? 2.0 : 1.0;
     return scalingConstant;
 }
 
@@ -351,7 +339,9 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
                          const size_t m, const size_t p, const size_t n,
-                         const size_t numSplitsA, const size_t numSplitsB) {
+                         const size_t numSplitsA, const size_t numSplitsB,
+                         const splittingStrategy splitType = splittingStrategy::roundToNearest,
+                         const accumulationStrategy accType = accumulationStrategy::floatingPoint) {
 
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
     const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
@@ -360,15 +350,16 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
     // TODO: The user should be able to select what splitting strategy to use.
-    auto splitA = splitFloatToInt<splitint_t, fp_t>
-        (A, m, p, normalisationDimension::byRows, numSplitsA, bitsPerSlice);
-
-    auto splitB = splitFloatToInt<splitint_t, fp_t>
-        (B, p, n, normalisationDimension::byCols, numSplitsB, bitsPerSlice);
+    auto splitA = MatrixSplit<splitint_t, fp_t>(A, m, p, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
+    auto splitB = MatrixSplit<splitint_t, fp_t>(B, p, n, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
 
     // TODO: The user should be able to select what accumulation strategy to use.
-    // return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
-    return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
+    switch (accType) {
+        case accumulationStrategy::floatingPoint:
+            return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
+        case accumulationStrategy::integer:
+            return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
+    }
 }
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
