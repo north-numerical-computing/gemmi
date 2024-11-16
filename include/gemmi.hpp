@@ -70,9 +70,6 @@ struct MatrixSplit {
                 }
 
     // This is the dimension alng which the inner product is computed.
-    // This will be the number of columns for the matrix on the left of the
-    // product, which is normalised by rows, and the number of rows for the
-    // matrix on the right, which is normalised by columns.
     size_t innerProductDimension() {
         return (dimension == normalisationDimension::byRows) ? n : m;
     }
@@ -160,7 +157,7 @@ struct MatrixSplit {
                 sign[j] = std::signbit(value);                // Extract sign.
                 tmp[j] &= (~(uint_t)(0)) >> (nunExpBits + 1); // Remove exponent.
                 // Restore implicit bit for normal numbers.
-                // TODO: NaNs and infs are currently not supported..
+                // NOTE: NaNs and infs are currently not supported.
                 if (std::fpclassify(value) == FP_NORMAL)
                     tmp[j] |= ((uint_t)1 << (nunFracBits - 1));
             }
@@ -238,10 +235,10 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
 
 /* Compute scaling constant for using the split strategy. */
 template <typename splitint_t, typename fp_t>
-fp_t computeScalingConstantforUsingSplitStrategy(const MatrixSplit<splitint_t, fp_t> &A,
+fp_t computeScalingConstantforUsingSplittingStrategy(const MatrixSplit<splitint_t, fp_t> &A,
                                                  const MatrixSplit<splitint_t, fp_t> &B) {
-    // When splitting with round-to-nearst, the first slice has bitsPerSlice - 1 bits, and we need 
-    // to account for this when scaling the final result.
+    // When splitting with round-to-nearest, the first slice has bitsPerSlice - 1 bits, 
+    // and we need to account for this when scaling the final result.
     fp_t scalingConstant = 1.0;
     scalingConstant *= A.splitType == splittingStrategy::roundToNearest ? 2.0 : 1.0;
     scalingConstant *= B.splitType == splittingStrategy::roundToNearest ? 2.0 : 1.0;
@@ -263,8 +260,9 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
 
     std::vector<fp_t > C (A.m * B.n);
 
-    auto scalingConstant = computeScalingConstantforUsingSplitStrategy(A, B);
+    auto scalingConstant = computeScalingConstantforUsingSplittingStrategy(A, B);
 
+    // Products below the main anti-diagonal are ignored.
     size_t numDiagonals = std::max(A.numSplits, B.numSplits) - 1;
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
         int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
@@ -303,12 +301,9 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
 
     std::vector<fp_t > C (A.m * B.n);
 
-    auto scalingConstant = computeScalingConstantforUsingSplitStrategy(A, B);
+    auto scalingConstant = computeScalingConstantforUsingSplittingStrategy(A, B);
 
-    // Here, I'm ignoring the products below the main anti-diagonal, as done in the original
-    // paper.
-    // NOTE: this is different from previous work, as I allow a different number of splits
-    // for A and B.
+    // Products below the main anti-diagonal are ignored.
     size_t numDiagonals = std::max(A.numSplits, B.numSplits) - 1;
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
         int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
@@ -349,11 +344,9 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
     const size_t alpha = std::floor((bitsInAccumulator - log2(n)) / 2);
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
-    // TODO: The user should be able to select what splitting strategy to use.
     auto splitA = MatrixSplit<splitint_t, fp_t>(A, m, p, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
     auto splitB = MatrixSplit<splitint_t, fp_t>(B, p, n, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
 
-    // TODO: The user should be able to select what accumulation strategy to use.
     switch (accType) {
         case accumulationStrategy::floatingPoint:
             return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
