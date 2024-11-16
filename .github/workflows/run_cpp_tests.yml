@@ -2,7 +2,9 @@ name: C++ tests
 
 on:
   push:
+    branches: [main, dev]
   pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -17,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Install Catch2
       run: |
         git clone https://github.com/catchorg/Catch2.git
         cd Catch2
@@ -37,5 +39,5 @@ jobs:
 
     - name: Run tests
       run: |
-        cd build/tests
+        cd build
         ctest -C Release --output-on-failure --verbose

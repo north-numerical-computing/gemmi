@@ -19,16 +19,15 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-g -Og -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -Wextra")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-O3 -Wall -Wextra")
 
-if(NOT DEFINED BUILD_MEX)
-    set(BUILD_MEX True)
-endif()
+# Build MEX interface.
+option(BUILD_MEX "Build MEX interface" True)
 if (BUILD_MEX)
     add_subdirectory("mex")
 endif()
 
-if(NOT DEFINED BUILD_TESTS)
-    set(BUILD_TESTS False)
-endif()
+# Build tests.
+option(BUILD_TESTS "Run Catch2 tests" False)
 if (BUILD_TESTS)
+    enable_testing()
     add_subdirectory("tests")
 endif()
