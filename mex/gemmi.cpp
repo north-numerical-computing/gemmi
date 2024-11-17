@@ -19,9 +19,9 @@ public:
         }
 
         // Validate input.
-        validateInput(inputs);
+        validateInput(inputs, outputs);
 
-       size_t numSplitsA = std::move(inputs[2][0]);
+        size_t numSplitsA = std::move(inputs[2][0]);
         size_t numSplitsB = inputs.size() == 3 ? numSplitsA : std::move(inputs[3][0]);
 
         if (inputs[0].getType() == matlab::data::ArrayType::DOUBLE &&
@@ -39,6 +39,14 @@ public:
             matlab::data::ArrayFactory factory;
             matlabPtr->feval(u"error",
                 0, std::vector<matlab::data::Array>({ factory.createScalar("Unsupported combination of data type.") }));
+        }
+
+        if (outputs.size() == 2) {
+            matlab::data::ArrayFactory factory;
+            matlab::data::StructArray S = factory.createStructArray({1, 1}, {"split", "acc"});
+            S[0]["split"] = factory.createCharArray(options->splitType == splittingStrategy::roundToNearest ? "n" : "b");
+            S[0]["acc"] = factory.createCharArray(options->accType == accumulationStrategy::floatingPoint ? "f" : "i");
+            outputs[1] = std::move(S);
         }
     }
 
@@ -73,9 +81,14 @@ private:
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
     }
 
-    void validateInput(matlab::mex::ArgumentList inputs) {
+    void validateInput(matlab::mex::ArgumentList inputs, matlab::mex::ArgumentList outputs) {
         std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr = getEngine();
         matlab::data::ArrayFactory factory;
+
+        if (outputs.size() < 1 || outputs.size() > 2) {
+            matlabPtr->feval(u"error",
+                0, std::vector<matlab::data::Array>({ factory.createScalar("This function requires one or two output arguments.") }));
+        }
 
         size_t numArgs = inputs.size();
 
