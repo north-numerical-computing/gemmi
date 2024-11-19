@@ -11,10 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest , macos-latest]
-    defaults:
-      run:
-        shell: bash -l {0}
+        os: [ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -29,15 +26,45 @@ jobs:
         make -j $(nproc)
         sudo make install
 
-    - name: Configure
+    - name: Install coverage tools
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update
+        sudo apt install lcov
+        sudo apt install pipx
+        pipx install gcovr
+
+    - name: Configure for tests
+      if: runner.os == 'macOS'
       run: |
         cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_MEX=False -DBUILD_TESTS=True
+
+    - name: Configure for coverage
+      if: runner.os == 'Linux'
+      run: |
+        cmake -S. -Bbuild -DBUILD_MEX=False -DCHECK_COVERAGE=True
 
     - name: Build
       run: |
         cmake --build build
 
     - name: Run tests
+      if: runner.os == 'macOS'
+      working-directory: ./build
       run: |
-        cd build
         ctest -C Release --output-on-failure --verbose
+
+    - name: Generate coverage report
+      if: runner.os == 'Linux'
+      working-directory: ./build
+      run: |
+        make coverage
+        gcovr -r .. . --txt-metric branch --cobertura > coverage.xml
+
+    - uses: codecov/codecov-action@v5
+      if: runner.os == 'Linux'
+      with:
+        files: build/coverage.xml
+        verbose: true
+      env:
+           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
