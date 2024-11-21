@@ -16,8 +16,8 @@ endif()
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-g -Og")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Og --coverage")
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-g -Og --coverage")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-O3 -flto")
