@@ -352,8 +352,12 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
             return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
         case accumulationStrategy::integer:
             return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
+        default:
+            std::cerr << "Unknown accumulation strategy requested.";
+            exit(1);
     }
 }
+
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
                          const size_t m, const size_t p, const size_t n, const size_t numSplits) {
