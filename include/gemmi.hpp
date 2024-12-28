@@ -111,7 +111,7 @@ struct MatrixSplit {
     }
 
     /* Split the matrix using round-to-nearest. This is an implementation of
-     * Algorithm 8 in
+     * Algorithm 8 in:
      *
      *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
      *    scheme on integer matrix multiplication unit. arXiv:2409.13313 [cs.DC]. 2024.
@@ -139,6 +139,15 @@ struct MatrixSplit {
         }
     }
 
+    /*  Split the matrix using bit masking, which is equivalent to truncation.
+     * This is an implementation of Algorithm 4 in:
+     *
+     *    Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication
+     *    unit. Int. J. High Performance Comput. App. 2024;38(4):297-313.
+     *    DOI: 10.1177/10943420241239588
+     *
+     * Integer products are accumulated in floating-point arithmetic one by one.
+     */
     void computeSplitsWithBitMasking() {
         this->splitType = splittingStrategy::bitMasking;
         // Compute splits one row/column at a time.
