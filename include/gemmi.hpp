@@ -104,9 +104,7 @@ struct MatrixSplit {
             //         to shift correctly.
             frexp(this->powersVector[i], this->scalingExponents.data() + i);
             const auto largest_log = log2(this->powersVector[i]);
-            auto temp = ceil(largest_log) +
-                        (ceil(largest_log) == floor(largest_log) ? 1 : 0);
-            this->powersVector[i] = std::ldexp(1.0, temp);
+            this->powersVector[i] = std::ldexp(1.0, floor(largest_log) + 1);
         }
     }
 
