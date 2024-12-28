@@ -4,7 +4,7 @@
 %   for the matrices A and B, respectively. The ALGIN parameter
 %   must be a struct, with the following fields currently supported.
 %   'split' - selects the stragegy to be used to split A and B into
-%             slices. Possible values are 'b' for bitmasking and 'n
+%             slices. Possible values are 'b' for bitmasking and 'n'
 %             for round-to-nearest (default). 
 %   'acc'   - selects how the exact integer matrix products are
 %             accumulated. Possible values are 'f' for floating-point
