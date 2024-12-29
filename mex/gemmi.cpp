@@ -162,7 +162,7 @@ private:
                     }
                     const matlab::data::TypedArray<char16_t> data = inStruct[0][field];
                     if (std::string(field) == "split") {
-                        switch (data[0]) {
+                        switch ((char)data[0]) {
                             case 'n':
                                 options->splitType = splittingStrategy::roundToNearest;
                                 break;
@@ -175,7 +175,7 @@ private:
                                 break;
                         }
                     } else if (std::string(field) == "acc") {
-                        switch (data[0]) {
+                        switch ((char)data[0]) {
                             case 'f':
                                 options->accType = accumulationStrategy::floatingPoint;
                                 break;
