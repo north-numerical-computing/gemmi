@@ -24,14 +24,19 @@ enum class normalisationDimension {
     byCols  // Matrix on the right of the product.
 };
 
-enum class splittingStrategy{
+enum class splittingStrategy {
     roundToNearest,
     bitMasking
 };
 
-enum class accumulationStrategy{
+enum class accumulationStrategy {
     floatingPoint,
     integer
+};
+
+enum class multiplicationStrategy {
+    full,
+    reduced
 };
 
 template <typename splitint_t, typename fp_t>
@@ -263,14 +268,13 @@ fp_t computeScalingConstantforUsingSplittingStrategy(const MatrixSplit<splitint_
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
                                   const MatrixSplit<splitint_t, fp_t> &B,
-                                  const size_t bitsPerSlice) {
+                                  const size_t bitsPerSlice,
+                                  const size_t numDiagonals) {
 
     std::vector<fp_t > C (A.m * B.n);
 
     auto scalingConstant = computeScalingConstantforUsingSplittingStrategy(A, B);
 
-    // Products below the main anti-diagonal are ignored.
-    size_t numDiagonals = std::max(A.numSplits, B.numSplits) - 1;
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
         int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
         size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
@@ -304,14 +308,13 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
                                   const MatrixSplit<splitint_t, fp_t> &B,
-                                  const size_t bitsPerSlice) {
+                                  const size_t bitsPerSlice,
+                                  const size_t numDiagonals) {
 
     std::vector<fp_t > C (A.m * B.n);
 
     auto scalingConstant = computeScalingConstantforUsingSplittingStrategy(A, B);
 
-    // Products below the main anti-diagonal are ignored.
-    size_t numDiagonals = std::max(A.numSplits, B.numSplits) - 1;
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
         int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
         size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
@@ -343,6 +346,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
                          const size_t m, const size_t p, const size_t n,
                          const size_t numSplitsA, const size_t numSplitsB,
                          const splittingStrategy splitType = splittingStrategy::roundToNearest,
+                         const multiplicationStrategy multType = multiplicationStrategy::reduced,
                          const accumulationStrategy accType = accumulationStrategy::floatingPoint) {
 
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
@@ -354,11 +358,26 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
     auto splitA = MatrixSplit<splitint_t, fp_t>(A, m, p, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
     auto splitB = MatrixSplit<splitint_t, fp_t>(B, p, n, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
 
+    size_t numDiagonals;
+    switch (multType) {
+        case multiplicationStrategy::reduced:
+            // Products below the main anti-diagonal are ignored.
+            numDiagonals = std::max(splitA.numSplits, splitB.numSplits) - 1;
+            break;
+        case multiplicationStrategy::full:
+            // All products are computed.
+            numDiagonals = splitA.numSplits + splitB.numSplits - 1;
+            break;
+        default:
+            std::cerr << "Unknown multiplication strategy requested.";
+            exit(1);
+    }
+
     switch (accType) {
         case accumulationStrategy::floatingPoint:
-            return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
+            return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice, numDiagonals);
         case accumulationStrategy::integer:
-            return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice);
+            return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice, numDiagonals);
         default:
             std::cerr << "Unknown accumulation strategy requested.";
             exit(1);

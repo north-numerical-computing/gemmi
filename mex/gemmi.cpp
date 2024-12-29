@@ -4,6 +4,7 @@
 
 typedef struct {
     splittingStrategy splitType;
+    multiplicationStrategy multType;
     accumulationStrategy accType;
 } algorithmOptions;
 static std::unique_ptr<algorithmOptions> options = nullptr;
@@ -45,6 +46,7 @@ public:
             matlab::data::ArrayFactory factory;
             matlab::data::StructArray S = factory.createStructArray({1, 1}, {"split", "acc"});
             S[0]["split"] = factory.createCharArray(options->splitType == splittingStrategy::roundToNearest ? "n" : "b");
+            S[0]["mult"] = factory.createCharArray(options->multType == multiplicationStrategy::full ? "f" : "r");
             S[0]["acc"] = factory.createCharArray(options->accType == accumulationStrategy::floatingPoint ? "f" : "i");
             outputs[1] = std::move(S);
         }
@@ -59,8 +61,8 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<double, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1],
-                                                numSplitsA, numSplitsB, options->splitType, options->accType);
+        auto C = gemmi<double, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
+                                                options->splitType, options->multType, options->accType);
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
@@ -74,8 +76,8 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<float, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1],
-                                               numSplitsA, numSplitsB, options->splitType, options->accType);
+        auto C = gemmi<float, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
+                                               options->splitType, options->multType, options->accType);
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
@@ -145,22 +147,22 @@ private:
                     0, std::vector<matlab::data::Array>({ factory.createScalar("The fifth input must be a struct.") }));
             }
             matlab::data::StructArray inStruct(inputs[4]);
-            if (inStruct.getNumberOfFields() > 2) {
+            if (inStruct.getNumberOfFields() > 3) {
                 matlabPtr->feval(u"error",
-                    0, std::vector<matlab::data::Array>({ factory.createScalar("The fifth input must have at most two fields.") }));
+                    0, std::vector<matlab::data::Array>({ factory.createScalar("The fifth input must have at most three fields.") }));
             }
             auto fields = inStruct.getFieldNames();
             std::vector<matlab::data::MATLABFieldIdentifier> fieldNames(fields.begin(), fields.end());
             for (auto field : fieldNames) {
-                if (std::string(field) != "split" && std::string(field) != "acc") {
+                if (std::string(field) != "split" && std::string(field) != "mult" && std::string(field) != "acc") {
                     matlabPtr->feval(u"error",
-                        0, std::vector<matlab::data::Array>({ factory.createScalar("The fifth input's fields can only be named 'split' or 'acc'.") }));
+                        0, std::vector<matlab::data::Array>({ factory.createScalar("The fifth input's fields can only be named 'split', 'mult', or 'acc'.") }));
                 } else {
                     if (inStruct[0][field].getNumberOfElements() != 1 || inStruct[0][field].getType() != matlab::data::ArrayType::CHAR) {
                         matlabPtr->feval(u"error",
-                            0, std::vector<matlab::data::Array>({ factory.createScalar("The field of the struct should be single characters.") }));
+                            0, std::vector<matlab::data::Array>({ factory.createScalar("Each field of the struct should be a single character.") }));
                     }
-                    const matlab::data::TypedArray<char16_t> data = inStruct[0][field];
+                    const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                     if (std::string(field) == "split") {
                         switch ((char)data[0]) {
                             case 'n':
@@ -172,6 +174,19 @@ private:
                             default:
                                 matlabPtr->feval(u"error",
                                     0, std::vector<matlab::data::Array>({ factory.createScalar("Specified 'split' is invalid.") }));
+                                break;
+                        }
+                    } else if (std::string(field) == "mult") {
+                        switch ((char)(data[0])) {
+                            case 'f':
+                                options->multType = multiplicationStrategy::full;
+                                break;
+                            case 'r':
+                                options->multType = multiplicationStrategy::reduced;
+                                break;
+                            default:
+                                matlabPtr->feval(u"error",
+                                    0, std::vector<matlab::data::Array>({ factory.createScalar("Specified 'mult' is invalid.") }));
                                 break;
                         }
                     } else if (std::string(field) == "acc") {
