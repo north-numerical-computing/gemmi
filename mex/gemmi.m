@@ -1,7 +1,7 @@
 %  GEMMI    Compute matrix product using integer Ozaki scheme.
 %   [C, ALGOUT] = GEMMI(A,B,ASPLITS,BSPLITS,ALGIN) computes the matrix
-%   C = A*B using the Ozaki scheme with ASPLITS and BSPLITS slices
-%   for the matrices A and B, respectively.The ALGIN parameter
+%   C = A * B using the Ozaki scheme with ASPLITS and BSPLITS slices
+%   for the matrices A and B, respectively. The ALGIN parameter
 %   must be a struct, with the following fields currently supported.
 %   'split' - selects the stragegy to be used to split A and B into
 %             slices. Possible values are 'b' for bitmasking and 'n'
