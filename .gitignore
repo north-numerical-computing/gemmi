@@ -1,0 +1,11 @@
+# CMake build directories
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+
+# Output binaries and libraries
+*.o
+a.out
+
+# Generated files
+Makefile
