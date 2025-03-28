@@ -1,5 +1,6 @@
 #ifndef UTILITIES_HPP
 #define UTILITIES_HPP
+#include <bitset>
 #include <cmath>
 #include <iostream>
 #include <iomanip>
@@ -37,6 +38,23 @@ void print_matrix(std::vector<T> A, const size_t m, const size_t n,
             std::cout << std::setprecision(15) << A[i + j * m] << " ";
         std::cout << std::endl;
     }
+}
+
+template <typename my_fp_type, typename my_int_type, size_t numTotalBits, size_t numFracBits>
+void printFloatingPointValueAsBinaryString(my_fp_type value) {
+
+    my_int_type intString = std::bit_cast<my_int_type>(value);
+
+    // Extract fields.
+    bool sign = intString >> (numTotalBits - 1);
+    my_int_type exponent = ((intString << 1) >> numFracBits);
+    my_int_type fraction = (intString << (numTotalBits - numFracBits + 1)) >> (numTotalBits - numFracBits + 1);
+
+    // Print results
+    std::cout << std::bitset<1>(sign) << " " << std::bitset<11>(exponent) << " " << std::bitset<52>(fraction) << std::endl;
+
+    // Full binary representation for reference
+    // std::bitset<64>(intString)
 }
 
 template <typename fp_t>
