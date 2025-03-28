@@ -29,7 +29,7 @@ if (BUILD_MEX)
 endif()
 
 # Build tests and check coverage, if required.
-option(CHECK_COVERAGE "Check test coverate" False)
+option(CHECK_COVERAGE "Check test coverage" False)
 option(BUILD_TESTS "Run Catch2 tests" False)
 if (CHECK_COVERAGE)
     set(BUILD_TESTS True)
