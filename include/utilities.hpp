@@ -19,8 +19,10 @@ std::vector<fp_t> convertIntSlicesToFloatMatrix(const MatrixSplit<splitint_t, fp
             }
             size_t scalingIndex = splitA.dimension == normalisationDimension::byRows ? i : j;
             C[i + j * splitA.m] = tmp * splitA.powersVector[scalingIndex];
-            assert(C[i + j * splitA.m] == ldexp(tmp, splitA.scalingExponents[scalingIndex]));
-        }
+            // For roundToNearest, the first slice has bitsPerSlice - 1 bits,
+            if (splitA.splitType == splittingStrategy::roundToNearest)
+                C[i + j * splitA.m] *= 2;
+       }
     }
 
     return C;
