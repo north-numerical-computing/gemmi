@@ -206,31 +206,6 @@ struct MatrixSplit {
     }
 };
 
-template <typename splitint_t, typename accumulator_t, typename fp_t>
-std::vector<fp_t> mergeIntToFloats(const MatrixSplit<splitint_t, fp_t> &A,
-                                    const size_t bitsPerSlice) {
-    std::vector<fp_t> C (A.m * A.n, 0.0);
-
-    for (size_t i = 0; i < A.m; i++) {
-        decltype(A.memory[0]) tmp = 0;
-        for (size_t j = 0; j < A.n; j++) {
-            int8_t shiftValue = computeNumFracBits<fp_t>() - bitsPerSlice;
-            for (size_t iBlock = 0; iBlock < A.numSplits; iBlock++) {
-                auto slice = A.memory[i + j * A.m + iBlock * A.m * A.n];
-                auto new_slice = shiftValue > 0 ?
-                    slice << shiftValue :
-                    slice >> -shiftValue;
-                tmp |= new_slice;
-                shiftValue -= bitsPerSlice;
-            }
-            C[i + j * A.m] = std::ldexp(tmp, -(int)computeNumFracBits<fp_t>()) *
-                             A.powersVector[i];
-        }
-    }
-
-    return C;
-}
-
 /* Compute exact products of slices of A and B. */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,

@@ -5,6 +5,27 @@
 #include <iomanip>
 #include <vector>
 
+template <typename splitint_t, typename fp_t>
+std::vector<fp_t> convertIntSlicesToFloatMatrix(const MatrixSplit<splitint_t, fp_t> &splitA,
+                                    const size_t bitsPerSlice) {
+    std::vector<fp_t> C (splitA.m * splitA.n, 0.0);
+
+    for (size_t i = 0; i < splitA.m; i++) {
+        for (size_t j = 0; j < splitA.n; j++) {
+            fp_t tmp = 0;
+            for (size_t slice = 0; slice < splitA.numSplits; slice++) {
+                fp_t currentSlice = splitA.memory[i + j * splitA.m + slice * splitA.m * splitA.n];
+                tmp += ldexp(currentSlice, -(slice + 1) * bitsPerSlice);
+            }
+            size_t scalingIndex = splitA.dimension == normalisationDimension::byRows ? i : j;
+            C[i + j * splitA.m] = tmp * splitA.powersVector[scalingIndex];
+            assert(C[i + j * splitA.m] == ldexp(tmp, splitA.scalingExponents[scalingIndex]));
+        }
+    }
+
+    return C;
+}
+
 template <typename T>
 void print_matrix(std::vector<T> A, const size_t m, const size_t n,
                   const std::string id_string) {
