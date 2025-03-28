@@ -1,3 +1,5 @@
+#ifndef UTILITIES_HPP
+#define UTILITIES_HPP
 #include <cmath>
 #include <iostream>
 #include <iomanip>
@@ -48,3 +50,5 @@ std::vector<element_type> operator-(const std::vector<element_type> &A,
     }
     return C;
 }
+
+#endif // UTILITIES_HPP
