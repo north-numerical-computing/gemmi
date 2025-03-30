@@ -87,9 +87,9 @@ private:
         std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr = getEngine();
         matlab::data::ArrayFactory factory;
 
-        if (outputs.size() < 1 || outputs.size() > 2) {
+        if (outputs.size() > 2) {
             matlabPtr->feval(u"error",
-                0, std::vector<matlab::data::Array>({ factory.createScalar("This function requires one or two output arguments.") }));
+                0, std::vector<matlab::data::Array>({ factory.createScalar("This function accepts at most two output arguments.") }));
         }
 
         size_t numArgs = inputs.size();
