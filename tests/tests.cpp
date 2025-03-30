@@ -19,10 +19,10 @@ void runTest() {
                 for (size_t numSplitA : { 1, 2, 10 }) {
                     for (size_t numSplitB : { 1, 2, 10 }) {
                         for (size_t m = 10; m <= 50; m += 10) {
-                            for (size_t p = 10; p <= 50; p += 10) {
+                            for (size_t k = 10; k <= 50; k += 10) {
                                 for (size_t n = 10; n <= 50; n += 10) {
-                                    std::vector<fp_t> A(m * p);
-                                    std::vector<fp_t> B(p * n);
+                                    std::vector<fp_t> A(m * k);
+                                    std::vector<fp_t> B(k * n);
 
                                     // Initalize matrix with random values.
                                     std::default_random_engine generator(std::random_device{}());
@@ -32,8 +32,8 @@ void runTest() {
                                     for (auto & element : B)
                                         element = numSplitB < 10 ? ldexp(1.0, 2 * numSplitB) - 1 : distribution(generator);
 
-                                    auto C = gemmi<fp_t, int8_t, int32_t>(A, B, m, p, n, numSplitA, numSplitB, splitType, multiplicationType, accumulationType);
-                                    auto C_ref = reference_gemm(A, B, m, p, n);
+                                    auto C = gemmi<fp_t, int8_t, int32_t>(A, B, m, k, n, numSplitA, numSplitB, splitType, multiplicationType, accumulationType);
+                                    auto C_ref = reference_gemm(A, B, m, k, n);
 
                                     double relative_error = frobenius_norm<fp_t, double>(C - C_ref) / frobenius_norm<fp_t, double>(C);
 

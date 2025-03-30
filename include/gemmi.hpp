@@ -212,9 +212,9 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
                              size_t iBlock, size_t jBlock) {
     for (size_t i = 0; i < A.m; i++) {
         for (size_t j = 0; j < B.n; j++) {
-            for (size_t k = 0; k < A.n; k++) {
-                C[i + j * A.m] += A.memory[i + k * A.m + iBlock * A.m * A.n] *
-                                  B.memory[k + j * B.m + jBlock * B.m * B.n];
+            for (size_t ell = 0; ell < A.n; ell++) {
+                C[i + j * A.m] += A.memory[i + ell * A.m + iBlock * A.m * A.n] *
+                                  B.memory[ell + j * B.m + jBlock * B.m * B.n];
             }
         }
     }
@@ -312,13 +312,13 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
 }
 
 /* Compute matrix vector product C += A * B, where:
- *   + A is m x p
- *   + B is p x n
+ *   + A is m x k
+ *   + B is k x n
  *   + C is m x n
  */
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
-                         const size_t m, const size_t p, const size_t n,
+                         const size_t m, const size_t k, const size_t n,
                          const size_t numSplitsA, const size_t numSplitsB,
                          const splittingStrategy splitType = splittingStrategy::roundToNearest,
                          const multiplicationStrategy multType = multiplicationStrategy::reduced,
@@ -330,8 +330,8 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
     const size_t alpha = std::floor((bitsInAccumulator - log2(n)) / 2);
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
-    auto splitA = MatrixSplit<splitint_t, fp_t>(A, m, p, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
-    auto splitB = MatrixSplit<splitint_t, fp_t>(B, p, n, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
+    auto splitA = MatrixSplit<splitint_t, fp_t>(A, m, k, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
+    auto splitB = MatrixSplit<splitint_t, fp_t>(B, k, n, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
 
     size_t numDiagonals;
     switch (multType) {
@@ -361,6 +361,6 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
 
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
-                         const size_t m, const size_t p, const size_t n, const size_t numSplits) {
-    return gemmi <fp_t, splitint_t, accumulator_t> (A, B, m, p, n, numSplits, numSplits);
+                         const size_t m, const size_t k, const size_t n, const size_t numSplits) {
+    return gemmi <fp_t, splitint_t, accumulator_t> (A, B, m, k, n, numSplits, numSplits);
 }
