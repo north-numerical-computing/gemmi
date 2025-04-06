@@ -1,60 +1,102 @@
 #include <bit>
 #include <cassert>
 #include <vector>
-
 #include <iostream>
 
-/* Computations related to floating-point types. */
+/**
+ * @file gemmi.hpp
+ * @brief Integer matrix multiplication using the Ozaki scheme.
+ */
+
+/**
+ * @brief Number of bits in the exponent field of a floating-point type.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ * @return Number of bits in the exponent field.
+ */
 template <typename fp_t> size_t computeNumExpBits() {return 0;}
 template <> size_t computeNumExpBits<float>() {return 8;}
 template <> size_t computeNumExpBits<double>() {return 11;}
 
+/**
+ * @brief Number of bits in the fraction field of a floating-point type.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ * @return Number of bits in the fraction field.
+ */
 template <typename fp_t> size_t computeNumFracBits() {return 0;}
 template <> size_t computeNumFracBits<float>() {return 24;}
 template <> size_t computeNumFracBits<double>() {return 53;}
 
-template <typename T>
-struct get_storage_format;
+/**
+ * @brief Map floating-point type to its corresponding storage format.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ */
+template <typename fp_t> struct get_storage_format;
 template <> struct get_storage_format<float> {using storage_format = uint32_t;};
 template <> struct get_storage_format<double> {using storage_format = uint64_t;};
 
-/* Everything is defined to use column-major. */
+/**
+ * @brief Enum to specify the dimension used for normalization.
+ */
 enum class normalisationDimension {
-    byRows, // Matrix on the left of the prodcut.
-    byCols  // Matrix on the right of the product.
+    byRows, ///< Normalise by rows (matrix on the left of the product).
+    byCols  ///< Normalise by columns (matrix on the right of the product).
 };
 
+/**
+ * @brief Enum to specify the splitting strategy to use.
+ */
 enum class splittingStrategy {
-    roundToNearest,
-    bitMasking
+    roundToNearest, ///< Split using round-to-nearest.
+    bitMasking      ///< Split using bit masking (truncation).
 };
 
+/**
+ * @brief Enum to specify the accumulation strategy to use.
+ */
 enum class accumulationStrategy {
-    floatingPoint,
-    integer
+    floatingPoint, ///< Accumulate products in floating-point arithmetic.
+    integer        ///< Accumulate products in integer arithmetic.
 };
 
+/**
+ * @brief Enum to specify the multiplication strategy to use.
+ */
 enum class multiplicationStrategy {
-    full,
-    reduced
+    full,       ///< Compute all products.
+    reduced     ///< Only compute products above the main anti-diagonal.
 };
 
+/**
+ * @brief Class to store the matrix slices for the Ozaki scheme.
+ * @tparam splitint_t Type used to store the integer slices.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ */
 template <typename splitint_t, typename fp_t>
 struct MatrixSplit {
-    size_t m;
-    size_t n;
-    splittingStrategy splitType;
-    size_t numSplits;
-    size_t bitsPerSlice;
-    normalisationDimension dimension;
+    size_t m;                         ///< Number of rows in the matrix.
+    size_t n;                         ///< Number of columns in the matrix.
+    splittingStrategy splitType;      ///< Splitting strategy used.
+    size_t numSplits;                 ///< Number of splits to use.
+    size_t bitsPerSlice;              ///< Number of bits per slice.
+    normalisationDimension dimension; ///< Dimension along wich to normalize.
 
-    std::vector<fp_t> matrix;
-    std::vector<splitint_t> memory;
-    std::vector<fp_t> powersVector;
-    std::vector<int> scalingExponents;
+    std::vector<fp_t> matrix;          ///< Original matrix.
+    std::vector<splitint_t> memory;    ///< Memory to store the split slices.
+    std::vector<fp_t> powersVector;    ///< Normalisation vector.
+    std::vector<int> scalingExponents; ///< Scaling exponents.
 
     using uint_t = typename get_storage_format<fp_t>::storage_format;
 
+    /**
+     * @brief Construct a MatrixSplit object and compute the splits.
+     * @param matrix Original matrix.
+     * @param m Number of rows.
+     * @param n Number of columns.
+     * @param splitType Splitting strategy.
+     * @param numSplits Number of splits.
+     * @param bitsPerSlice Number of bits per slice.
+     * @param dimension Normalization dimension.
+     */
     MatrixSplit(const std::vector<fp_t>& matrix, const size_t m, const size_t n,
                 const splittingStrategy splitType, size_t numSplits, size_t bitsPerSlice,
                 const normalisationDimension dimension) :
@@ -74,23 +116,41 @@ struct MatrixSplit {
                      }
                 }
 
-    // This is the dimension alng which the inner product is computed.
+    /**
+     * @brief Return the dimension along which the inner product is calculated.
+     * @return Inner product dimension.
+     */
     size_t innerProductDimension() {
         return (dimension == normalisationDimension::byRows) ? n : m;
     }
 
+    /**
+     * @brief Return the dimension not used in the inner product.
+     * @return Dimension not used in the inner product.
+     */
     size_t otherDimension() {
         return (dimension == normalisationDimension::byRows) ? m : n;
     }
 
+    /**
+     * @brief Compute the stride for the i-dimension.
+     * @return Stride for the i-dimension.
+     */
     size_t iStride() {
         return (dimension == normalisationDimension::byRows) ? 1 : m;
     }
 
+    /**
+     * @brief Compute the stride for the j-dimension.
+     * @return Stride for the j-dimension.
+     */
     size_t jStride() {
         return (dimension == normalisationDimension::byRows) ? m : 1;
     }
 
+    /**
+     * @brief Compute normalization vectors for the matrix.
+     */
     void computeNormalisationVectors() {
         // Compute normalisation vector.
         const size_t iStride = this->iStride();
@@ -112,8 +172,10 @@ struct MatrixSplit {
         }
     }
 
-    /* Split the matrix using round-to-nearest. This is an implementation of
-     * Algorithm 8 in:
+    /**
+     * @brief Split the matrix using round-to-nearest.
+     *
+     * This is an implementation of Algorithm 8 in:
      *
      *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
      *    scheme on integer matrix multiplication unit. arXiv:2409.13313 [cs.DC]. 2024.
@@ -141,7 +203,9 @@ struct MatrixSplit {
         }
     }
 
-    /*  Split the matrix using bit masking, which is equivalent to truncation.
+    /**
+     * @brief Split the matrix using bit masking, which is equivalent to truncation.
+     *
      * This is an implementation of Algorithm 4 in:
      *
      *    Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication
@@ -205,7 +269,17 @@ struct MatrixSplit {
     }
 };
 
-/* Compute exact products of slices of A and B. */
+/**
+ * @brief Compute the exact integer GEMM (General Matrix-Matrix Multiplication).
+ * @tparam splitint_t Integer type used for splits.
+ * @tparam accumulator_t Accumulator type.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ * @param A Slices of matrix A.
+ * @param B Slices of matrix B.
+ * @param C Output matrix to store the result.
+ * @param iBlock Block index for matrix A.
+ * @param jBlock Block index for matrix B.
+ */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
                              const MatrixSplit<splitint_t, fp_t> &B, std::vector<accumulator_t> &C,
@@ -220,7 +294,18 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
     }
 }
 
-/* Compute scaling constant for using the split strategy. */
+/**
+ * @brief Compute the scaling constant for a given splitting strategy.
+ * 
+ * This function computes the scaling constant based on the splitting strategy used
+ * for the matrices A and B. The scaling constant is used to adjust the final result
+ * based on the number of bits used in the split.
+ * @tparam splitint_t Integer type used for splits.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ * @param A Slices of matrix A.
+ * @param B Slices of matrix B.
+ * @return Scaling constant.
+ */
 template <typename splitint_t, typename fp_t>
 fp_t computeScalingConstantForSplittingStrategy(const MatrixSplit<splitint_t, fp_t> &A,
                                                  const MatrixSplit<splitint_t, fp_t> &B) {
@@ -232,13 +317,25 @@ fp_t computeScalingConstantForSplittingStrategy(const MatrixSplit<splitint_t, fp
     return scalingConstant;
 }
 
-/* Accumulate products using the technique in:
+/**
+ * @brief Accumulate products in floating-point arithmetic.
+ * 
+ * This function accumulates the exact products of integer slices in floating-point
+ * arithmetic, using the algorithm described in:
  *
  *    Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication
  *    unit. Int. J. High Performance Comput. App. 2024;38(4):297-313.
  *    DOI: 10.1177/10943420241239588
+ * 
+ * @tparam splitint_t Integer type used for splits.
+ * @tparam accumulator_t Accumulator type.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ * @param A Slices of matrix A.
+ * @param B Slices of matrix B.
+ * @param bitsPerSlice Number of bits per slice.
+ * @param numDiagonals Number of diagonals to compute.
+ * @return Resulting matrix C.
  *
- * Integer products are accumulated in floating-point arithmetic one by one.
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
@@ -271,14 +368,25 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
     return C;
 }
 
-/* Accumulate products using the technique in:
+/**
+ * @brief Accumulate products in integer arithmetic.
+ * 
+ * This function accumulates the exact products of integer slices in integer
+ * arithmetic along each anti-diagonal, and in floating-point arithmetic
+ * across diagonals. It uses the algorithm described in:
  *
  *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
  *    scheme on integer matrix multiplication unit. arXiv:2409.13313 [cs.DC]. 2024.
  *    DOI: 10.48550/arXiv.2409.13313
  *
- * Integer products are accumulated in integer arithmetic along the diagonal, and
- * in floating-point arithmetic across diagonals.
+ * @tparam splitint_t Integer type used for splits.
+ * @tparam accumulator_t Accumulator type.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ * @param A Slices of matrix A.
+ * @param B Slices of matrix B.
+ * @param bitsPerSlice Number of bits per slice.
+ * @param numDiagonals Number of diagonals to compute.
+ * @return Resulting matrix C.
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
@@ -311,10 +419,22 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
     return C;
 }
 
-/* Compute matrix vector product C += A * B, where:
- *   + A is m x k
- *   + B is k x n
- *   + C is m x n
+/**
+ * @brief Compute the matrix product C = C + A * B.
+ * @tparam fp_t Floating-point type of the matrix elements.
+ * @tparam splitint_t Integer type used for splits.
+ * @tparam accumulator_t Accumulator type.
+ * @param A Matrix A.
+ * @param B Matrix B.
+ * @param m Number of rows in A.
+ * @param k Number of columns in A and rows in B.
+ * @param n Number of columns in B.
+ * @param numSplitsA Number of splits for the matrix A.
+ * @param numSplitsB Number of splits for the matrix B.
+ * @param splitType Splitting strategy.
+ * @param multType Multiplication strategy.
+ * @param accType Accumulation strategy.
+ * @return Resulting matrix product.
  */
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
@@ -358,7 +478,6 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
             exit(1);
     }
 }
-
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
                          const size_t m, const size_t k, const size_t n, const size_t numSplits) {
