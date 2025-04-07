@@ -2,6 +2,8 @@
 #include "mexAdapter.hpp"
 #include "../include/gemmi.hpp"
 
+/*
+*/
 typedef struct {
     splittingStrategy splitType;
     multiplicationStrategy multType;
@@ -17,6 +19,7 @@ public:
             options = std::make_unique<algorithmOptions>();
             options->splitType = splittingStrategy::roundToNearest;
             options->accType = accumulationStrategy::integer;
+            options->multType = multiplicationStrategy::reduced;
         }
 
         // Validate input.
@@ -44,10 +47,10 @@ public:
 
         if (outputs.size() == 2) {
             matlab::data::ArrayFactory factory;
-            matlab::data::StructArray S = factory.createStructArray({1, 1}, {"split", "acc"});
+            matlab::data::StructArray S = factory.createStructArray({1, 1}, {"split", "acc", "mult"});
             S[0]["split"] = factory.createCharArray(options->splitType == splittingStrategy::roundToNearest ? "n" : "b");
-            S[0]["mult"] = factory.createCharArray(options->multType == multiplicationStrategy::full ? "f" : "r");
             S[0]["acc"] = factory.createCharArray(options->accType == accumulationStrategy::floatingPoint ? "f" : "i");
+            S[0]["mult"] = factory.createCharArray(options->multType == multiplicationStrategy::full ? "f" : "r");
             outputs[1] = std::move(S);
         }
     }
@@ -62,7 +65,7 @@ private:
         auto B_size = Bmatlab.getDimensions();
 
         auto C = gemmi<double, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
-                                                options->splitType, options->multType, options->accType);
+                                                options->splitType, options->accType, options->multType);
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
@@ -77,7 +80,7 @@ private:
         auto B_size = Bmatlab.getDimensions();
 
         auto C = gemmi<float, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
-                                               options->splitType, options->multType, options->accType);
+                                               options->splitType, options->accType, options->multType);
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
@@ -176,19 +179,6 @@ private:
                                     0, std::vector<matlab::data::Array>({ factory.createScalar("Specified 'split' is invalid.") }));
                                 break;
                         }
-                    } else if (std::string(field) == "mult") {
-                        switch ((char)(data[0])) {
-                            case 'f':
-                                options->multType = multiplicationStrategy::full;
-                                break;
-                            case 'r':
-                                options->multType = multiplicationStrategy::reduced;
-                                break;
-                            default:
-                                matlabPtr->feval(u"error",
-                                    0, std::vector<matlab::data::Array>({ factory.createScalar("Specified 'mult' is invalid.") }));
-                                break;
-                        }
                     } else if (std::string(field) == "acc") {
                         switch ((char)data[0]) {
                             case 'f':
@@ -200,6 +190,19 @@ private:
                             default:
                                 matlabPtr->feval(u"error",
                                     0, std::vector<matlab::data::Array>({ factory.createScalar("Specified 'acc' is invalid.") }));
+                                break;
+                        }
+                    } else if (std::string(field) == "mult") {
+                        switch ((char)(data[0])) {
+                            case 'f':
+                                options->multType = multiplicationStrategy::full;
+                                break;
+                            case 'r':
+                                options->multType = multiplicationStrategy::reduced;
+                                break;
+                            default:
+                                matlabPtr->feval(u"error",
+                                    0, std::vector<matlab::data::Array>({ factory.createScalar("Specified 'mult' is invalid.") }));
                                 break;
                         }
                     }

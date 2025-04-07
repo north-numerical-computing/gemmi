@@ -321,8 +321,8 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
                          const size_t m, const size_t k, const size_t n,
                          const size_t numSplitsA, const size_t numSplitsB,
                          const splittingStrategy splitType = splittingStrategy::roundToNearest,
-                         const multiplicationStrategy multType = multiplicationStrategy::reduced,
-                         const accumulationStrategy accType = accumulationStrategy::floatingPoint) {
+                         const accumulationStrategy accType = accumulationStrategy::floatingPoint,
+                         const multiplicationStrategy multType = multiplicationStrategy::reduced) {
 
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
     const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
