@@ -1,0 +1,489 @@
+\doxysection{include/gemmi.hpp File Reference}
+\hypertarget{gemmi_8hpp}{}\label{gemmi_8hpp}\index{include/gemmi.hpp@{include/gemmi.hpp}}
+
+
+Integer matrix multiplication using the Ozaki scheme.  
+
+
+{\ttfamily \#include $<$bit$>$}\newline
+{\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+Include dependency graph for gemmi.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=324pt]{df/d1c/gemmi_8hpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structget__storage__format_3_01float_01_4}{get\+\_\+storage\+\_\+format$<$ float $>$}}
+\item 
+struct \mbox{\hyperlink{structget__storage__format_3_01double_01_4}{get\+\_\+storage\+\_\+format$<$ double $>$}}
+\item 
+struct \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split$<$ splitint\+\_\+t, fp\+\_\+t $>$}}
+\begin{DoxyCompactList}\small\item\em Class to store the matrix slices for the Ozaki scheme. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1}{normalisation\+Dimension}} \{ \mbox{\hyperlink{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1a81d1d2b50d380d7d68c0ceefd9116b32}{by\+Rows}}
+, \mbox{\hyperlink{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1a52e5f0255c08ca998267e3a466832203}{by\+Cols}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum to specify the dimension used for normalization. \end{DoxyCompactList}\item 
+enum class \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}{splitting\+Strategy}} \{ \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab}{round\+To\+Nearest}}
+, \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9a93dd9736b6843653ebf730c13b8cbd04}{bit\+Masking}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum to specify the splitting strategy to use. \end{DoxyCompactList}\item 
+enum class \mbox{\hyperlink{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257}{accumulation\+Strategy}} \{ \mbox{\hyperlink{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2}{floating\+Point}}
+, \mbox{\hyperlink{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257a157db7df530023575515d366c9b672e8}{integer}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum to specify the accumulation strategy to use. \end{DoxyCompactList}\item 
+enum class \mbox{\hyperlink{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2}{multiplication\+Strategy}} \{ \mbox{\hyperlink{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2ae9dc924f238fa6cc29465942875fe8f0}{full}}
+, \mbox{\hyperlink{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6}{reduced}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum to specify the multiplication strategy to use. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ }\\\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_a573a0a7d443f19d3349d43d87fd590b6}{compute\+Num\+Exp\+Bits}} ()
+\begin{DoxyCompactList}\small\item\em Number of bits in the exponent field of a floating-\/point type. \end{DoxyCompactList}\item 
+template$<$$>$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_ae49af32744bfc214b55a73da1a0b4ddc}{compute\+Num\+Exp\+Bits$<$ float $>$}} ()
+\item 
+template$<$$>$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_a87798f5897ad8e6002afb9f7c96052e0}{compute\+Num\+Exp\+Bits$<$ double $>$}} ()
+\item 
+{\footnotesize template$<$typename fp\+\_\+t $>$ }\\size\+\_\+t \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{compute\+Num\+Frac\+Bits}} ()
+\begin{DoxyCompactList}\small\item\em Number of bits in the fraction field of a floating-\/point type. \end{DoxyCompactList}\item 
+template$<$$>$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_a30f5b536f819efe0f35ceda5a5fb8e4c}{compute\+Num\+Frac\+Bits$<$ float $>$}} ()
+\item 
+template$<$$>$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_ae33421be0afbbc2fb0fbb0e798a19c86}{compute\+Num\+Frac\+Bits$<$ double $>$}} ()
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ }\\\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{void}} \mbox{\hyperlink{gemmi_8hpp_aafc40ecd0919937318af562c48811219}{compute\+Exact\+Integer\+GEMM}} (\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{A}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{B}}, std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{C}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{i\+Block}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{j\+Block}})
+\begin{DoxyCompactList}\small\item\em Compute the exact integer GEMM (General Matrix-\/\+Matrix Multiplication). \end{DoxyCompactList}\item 
+{\footnotesize template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ }\\\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_a2ea79e4607048514ea6a63d533320cf1}{compute\+Scaling\+Constant\+For\+Splitting\+Strategy}} (\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{A}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{B}})
+\begin{DoxyCompactList}\small\item\em Compute the scaling constant for a given splitting strategy. \end{DoxyCompactList}\item 
+{\footnotesize template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ }\\std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \mbox{\hyperlink{gemmi_8hpp_a84fb9322671c21c604818b76bf6ec1c4}{compute\+Products\+With\+Floating\+Point\+Accumulation}} (\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{A}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{B}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} bits\+Per\+Slice, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{num\+Diagonals}})
+\begin{DoxyCompactList}\small\item\em Accumulate products in floating-\/point arithmetic. \end{DoxyCompactList}\item 
+{\footnotesize template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ }\\std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \mbox{\hyperlink{gemmi_8hpp_a4285861db1d71625c6268f0d777bc3f5}{compute\+Products\+With\+Integer\+Accumulation}} (\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{A}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{B}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} bits\+Per\+Slice, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{num\+Diagonals}})
+\begin{DoxyCompactList}\small\item\em Accumulate products in integer arithmetic. \end{DoxyCompactList}\item 
+{\footnotesize template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} $>$ }\\std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \mbox{\hyperlink{gemmi_8hpp_ae2df71715d235298cddb74f6420a83fe}{gemmi}} (\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{A}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{B}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} m, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{k}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} n, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{num\+SplitsA}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{num\+SplitsB}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}{splitting\+Strategy}} split\+Type=\mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab}{splitting\+Strategy\+::round\+To\+Nearest}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257}{accumulation\+Strategy}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{acc\+Type}}=\mbox{\hyperlink{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2}{accumulation\+Strategy\+::floating\+Point}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2}{multiplication\+Strategy}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{mult\+Type}}=\mbox{\hyperlink{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6}{multiplication\+Strategy\+::reduced}})
+\begin{DoxyCompactList}\small\item\em Compute the matrix product C = C + A \texorpdfstring{$\ast$}{*} B. \end{DoxyCompactList}\item 
+{\footnotesize template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} $>$ }\\std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \mbox{\hyperlink{gemmi_8hpp_ab450de6f859d91c68b85d0d90d1bcbfb}{gemmi}} (\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{A}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{B}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} m, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{k}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} n, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} num\+Splits)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Integer matrix multiplication using the Ozaki scheme. 
+
+
+
+Definition in file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257}\label{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257} 
+\index{gemmi.hpp@{gemmi.hpp}!accumulationStrategy@{accumulationStrategy}}
+\index{accumulationStrategy@{accumulationStrategy}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{accumulationStrategy}{accumulationStrategy}}
+{\footnotesize\ttfamily \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{enum}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{class}} \mbox{\hyperlink{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257}{accumulation\+Strategy}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Enum to specify the accumulation strategy to use. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{floatingPoint@{floatingPoint}!gemmi.hpp@{gemmi.hpp}}\index{gemmi.hpp@{gemmi.hpp}!floatingPoint@{floatingPoint}}}\Hypertarget{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2}\label{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2} 
+floating\+Point&Accumulate products in floating-\/point arithmetic. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{integer@{integer}!gemmi.hpp@{gemmi.hpp}}\index{gemmi.hpp@{gemmi.hpp}!integer@{integer}}}\Hypertarget{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257a157db7df530023575515d366c9b672e8}\label{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257a157db7df530023575515d366c9b672e8} 
+integer&Accumulate products in integer arithmetic. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00056}{56}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2}\label{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2} 
+\index{gemmi.hpp@{gemmi.hpp}!multiplicationStrategy@{multiplicationStrategy}}
+\index{multiplicationStrategy@{multiplicationStrategy}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{multiplicationStrategy}{multiplicationStrategy}}
+{\footnotesize\ttfamily \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{enum}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{class}} \mbox{\hyperlink{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2}{multiplication\+Strategy}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Enum to specify the multiplication strategy to use. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{full@{full}!gemmi.hpp@{gemmi.hpp}}\index{gemmi.hpp@{gemmi.hpp}!full@{full}}}\Hypertarget{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2ae9dc924f238fa6cc29465942875fe8f0}\label{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2ae9dc924f238fa6cc29465942875fe8f0} 
+full&Compute all products. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{reduced@{reduced}!gemmi.hpp@{gemmi.hpp}}\index{gemmi.hpp@{gemmi.hpp}!reduced@{reduced}}}\Hypertarget{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6}\label{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6} 
+reduced&Only compute products above the main anti-\/diagonal. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00064}{64}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1}\label{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1} 
+\index{gemmi.hpp@{gemmi.hpp}!normalisationDimension@{normalisationDimension}}
+\index{normalisationDimension@{normalisationDimension}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{normalisationDimension}{normalisationDimension}}
+{\footnotesize\ttfamily \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{enum}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{class}} \mbox{\hyperlink{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1}{normalisation\+Dimension}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Enum to specify the dimension used for normalization. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{byRows@{byRows}!gemmi.hpp@{gemmi.hpp}}\index{gemmi.hpp@{gemmi.hpp}!byRows@{byRows}}}\Hypertarget{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1a81d1d2b50d380d7d68c0ceefd9116b32}\label{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1a81d1d2b50d380d7d68c0ceefd9116b32} 
+by\+Rows&Normalise by rows (matrix on the left of the product). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{byCols@{byCols}!gemmi.hpp@{gemmi.hpp}}\index{gemmi.hpp@{gemmi.hpp}!byCols@{byCols}}}\Hypertarget{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1a52e5f0255c08ca998267e3a466832203}\label{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1a52e5f0255c08ca998267e3a466832203} 
+by\+Cols&Normalise by columns (matrix on the right of the product). \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00040}{40}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}\label{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9} 
+\index{gemmi.hpp@{gemmi.hpp}!splittingStrategy@{splittingStrategy}}
+\index{splittingStrategy@{splittingStrategy}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{splittingStrategy}{splittingStrategy}}
+{\footnotesize\ttfamily \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{enum}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{class}} \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}{splitting\+Strategy}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Enum to specify the splitting strategy to use. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{roundToNearest@{roundToNearest}!gemmi.hpp@{gemmi.hpp}}\index{gemmi.hpp@{gemmi.hpp}!roundToNearest@{roundToNearest}}}\Hypertarget{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab}\label{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab} 
+round\+To\+Nearest&Split using round-\/to-\/nearest. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{bitMasking@{bitMasking}!gemmi.hpp@{gemmi.hpp}}\index{gemmi.hpp@{gemmi.hpp}!bitMasking@{bitMasking}}}\Hypertarget{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9a93dd9736b6843653ebf730c13b8cbd04}\label{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9a93dd9736b6843653ebf730c13b8cbd04} 
+bit\+Masking&Split using bit masking (truncation). \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00048}{48}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{gemmi_8hpp_aafc40ecd0919937318af562c48811219}\label{gemmi_8hpp_aafc40ecd0919937318af562c48811219} 
+\index{gemmi.hpp@{gemmi.hpp}!computeExactIntegerGEMM@{computeExactIntegerGEMM}}
+\index{computeExactIntegerGEMM@{computeExactIntegerGEMM}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeExactIntegerGEMM()}{computeExactIntegerGEMM()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{void}} compute\+Exact\+Integer\+GEMM (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{A,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{B,  }\item[{std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} $>$ \&}]{C,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{i\+Block,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{j\+Block }\end{DoxyParamCaption})}
+
+
+
+Compute the exact integer GEMM (General Matrix-\/\+Matrix Multiplication). 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em splitint\+\_\+t} & Integer type used for splits. \\
+\hline
+{\em accumulator\+\_\+t} & Accumulator type. \\
+\hline
+{\em fp\+\_\+t} & Floating-\/point type (e.\+g., float, double). \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Slices of matrix A. \\
+\hline
+{\em B} & Slices of matrix B. \\
+\hline
+{\em C} & Output matrix to store the result. \\
+\hline
+{\em i\+Block} & Block index for matrix A. \\
+\hline
+{\em j\+Block} & Block index for matrix B. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00284}{284}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_a573a0a7d443f19d3349d43d87fd590b6}\label{gemmi_8hpp_a573a0a7d443f19d3349d43d87fd590b6} 
+\index{gemmi.hpp@{gemmi.hpp}!computeNumExpBits@{computeNumExpBits}}
+\index{computeNumExpBits@{computeNumExpBits}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeNumExpBits()}{computeNumExpBits()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} compute\+Num\+Exp\+Bits (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Number of bits in the exponent field of a floating-\/point type. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em fp\+\_\+t} & Floating-\/point type (e.\+g., float, double). \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+Number of bits in the exponent field. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00016}{16}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_a87798f5897ad8e6002afb9f7c96052e0}\label{gemmi_8hpp_a87798f5897ad8e6002afb9f7c96052e0} 
+\index{gemmi.hpp@{gemmi.hpp}!computeNumExpBits$<$ double $>$@{computeNumExpBits$<$ double $>$}}
+\index{computeNumExpBits$<$ double $>$@{computeNumExpBits$<$ double $>$}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeNumExpBits$<$ double $>$()}{computeNumExpBits< double >()}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_a573a0a7d443f19d3349d43d87fd590b6}{compute\+Num\+Exp\+Bits}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{double}} $>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00018}{18}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_ae49af32744bfc214b55a73da1a0b4ddc}\label{gemmi_8hpp_ae49af32744bfc214b55a73da1a0b4ddc} 
+\index{gemmi.hpp@{gemmi.hpp}!computeNumExpBits$<$ float $>$@{computeNumExpBits$<$ float $>$}}
+\index{computeNumExpBits$<$ float $>$@{computeNumExpBits$<$ float $>$}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeNumExpBits$<$ float $>$()}{computeNumExpBits< float >()}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_a573a0a7d443f19d3349d43d87fd590b6}{compute\+Num\+Exp\+Bits}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{float}} $>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00017}{17}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}\label{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe} 
+\index{gemmi.hpp@{gemmi.hpp}!computeNumFracBits@{computeNumFracBits}}
+\index{computeNumFracBits@{computeNumFracBits}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeNumFracBits()}{computeNumFracBits()}}
+{\footnotesize\ttfamily template$<$typename fp\+\_\+t $>$ \\
+size\+\_\+t compute\+Num\+Frac\+Bits (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Number of bits in the fraction field of a floating-\/point type. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em fp\+\_\+t} & Floating-\/point type (e.\+g., float, double). \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+Number of bits in the fraction field. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00025}{25}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_ae33421be0afbbc2fb0fbb0e798a19c86}\label{gemmi_8hpp_ae33421be0afbbc2fb0fbb0e798a19c86} 
+\index{gemmi.hpp@{gemmi.hpp}!computeNumFracBits$<$ double $>$@{computeNumFracBits$<$ double $>$}}
+\index{computeNumFracBits$<$ double $>$@{computeNumFracBits$<$ double $>$}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeNumFracBits$<$ double $>$()}{computeNumFracBits< double >()}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{compute\+Num\+Frac\+Bits}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{double}} $>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00027}{27}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_a30f5b536f819efe0f35ceda5a5fb8e4c}\label{gemmi_8hpp_a30f5b536f819efe0f35ceda5a5fb8e4c} 
+\index{gemmi.hpp@{gemmi.hpp}!computeNumFracBits$<$ float $>$@{computeNumFracBits$<$ float $>$}}
+\index{computeNumFracBits$<$ float $>$@{computeNumFracBits$<$ float $>$}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeNumFracBits$<$ float $>$()}{computeNumFracBits< float >()}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{compute\+Num\+Frac\+Bits}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{float}} $>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00026}{26}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_a84fb9322671c21c604818b76bf6ec1c4}\label{gemmi_8hpp_a84fb9322671c21c604818b76bf6ec1c4} 
+\index{gemmi.hpp@{gemmi.hpp}!computeProductsWithFloatingPointAccumulation@{computeProductsWithFloatingPointAccumulation}}
+\index{computeProductsWithFloatingPointAccumulation@{computeProductsWithFloatingPointAccumulation}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeProductsWithFloatingPointAccumulation()}{computeProductsWithFloatingPointAccumulation()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ compute\+Products\+With\+Floating\+Point\+Accumulation (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{A,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{B,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{bits\+Per\+Slice,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{num\+Diagonals }\end{DoxyParamCaption})}
+
+
+
+Accumulate products in floating-\/point arithmetic. 
+
+This function accumulates the exact products of integer slices in floating-\/point arithmetic, using the algorithm described in\+:
+
+Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2024;38(4)\+:297-\/313. DOI\+: 10.\+1177/10943420241239588
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em splitint\+\_\+t} & Integer type used for splits. \\
+\hline
+{\em accumulator\+\_\+t} & Accumulator type. \\
+\hline
+{\em fp\+\_\+t} & Floating-\/point type (e.\+g., float, double). \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Slices of matrix A. \\
+\hline
+{\em B} & Slices of matrix B. \\
+\hline
+{\em bits\+Per\+Slice} & Number of bits per slice. \\
+\hline
+{\em num\+Diagonals} & Number of diagonals to compute. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Resulting matrix C. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00341}{341}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_a4285861db1d71625c6268f0d777bc3f5}\label{gemmi_8hpp_a4285861db1d71625c6268f0d777bc3f5} 
+\index{gemmi.hpp@{gemmi.hpp}!computeProductsWithIntegerAccumulation@{computeProductsWithIntegerAccumulation}}
+\index{computeProductsWithIntegerAccumulation@{computeProductsWithIntegerAccumulation}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeProductsWithIntegerAccumulation()}{computeProductsWithIntegerAccumulation()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ compute\+Products\+With\+Integer\+Accumulation (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{A,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{B,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{bits\+Per\+Slice,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{num\+Diagonals }\end{DoxyParamCaption})}
+
+
+
+Accumulate products in integer arithmetic. 
+
+This function accumulates the exact products of integer slices in integer arithmetic along each anti-\/diagonal, and in floating-\/point arithmetic across diagonals. It uses the algorithm described in\+:
+
+Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki scheme on integer matrix multiplication unit. ar\+Xiv\+:2409.\+13313 \mbox{[}cs.\+DC\mbox{]}. 2024. DOI\+: 10.\+48550/ar\+Xiv.2409.\+13313
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em splitint\+\_\+t} & Integer type used for splits. \\
+\hline
+{\em accumulator\+\_\+t} & Accumulator type. \\
+\hline
+{\em fp\+\_\+t} & Floating-\/point type (e.\+g., float, double). \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Slices of matrix A. \\
+\hline
+{\em B} & Slices of matrix B. \\
+\hline
+{\em bits\+Per\+Slice} & Number of bits per slice. \\
+\hline
+{\em num\+Diagonals} & Number of diagonals to compute. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Resulting matrix C. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00392}{392}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_a2ea79e4607048514ea6a63d533320cf1}\label{gemmi_8hpp_a2ea79e4607048514ea6a63d533320cf1} 
+\index{gemmi.hpp@{gemmi.hpp}!computeScalingConstantForSplittingStrategy@{computeScalingConstantForSplittingStrategy}}
+\index{computeScalingConstantForSplittingStrategy@{computeScalingConstantForSplittingStrategy}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{computeScalingConstantForSplittingStrategy()}{computeScalingConstantForSplittingStrategy()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} compute\+Scaling\+Constant\+For\+Splitting\+Strategy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{A,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{B }\end{DoxyParamCaption})}
+
+
+
+Compute the scaling constant for a given splitting strategy. 
+
+This function computes the scaling constant based on the splitting strategy used for the matrices A and B. The scaling constant is used to adjust the final result based on the number of bits used in the split. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em splitint\+\_\+t} & Integer type used for splits. \\
+\hline
+{\em fp\+\_\+t} & Floating-\/point type (e.\+g., float, double). \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Slices of matrix A. \\
+\hline
+{\em B} & Slices of matrix B. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Scaling constant. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00310}{310}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_ab450de6f859d91c68b85d0d90d1bcbfb}\label{gemmi_8hpp_ab450de6f859d91c68b85d0d90d1bcbfb} 
+\index{gemmi.hpp@{gemmi.hpp}!gemmi@{gemmi}}
+\index{gemmi@{gemmi}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{gemmi()}{gemmi()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} $>$ \\
+std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ gemmi (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{A,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{B,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{m,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{k,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{n,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{num\+Splits }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00482}{482}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{gemmi_8hpp_ae2df71715d235298cddb74f6420a83fe}\label{gemmi_8hpp_ae2df71715d235298cddb74f6420a83fe} 
+\index{gemmi.hpp@{gemmi.hpp}!gemmi@{gemmi}}
+\index{gemmi@{gemmi}!gemmi.hpp@{gemmi.hpp}}
+\doxysubsubsection{\texorpdfstring{gemmi()}{gemmi()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{accumulator\+\_\+t}} $>$ \\
+std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ gemmi (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{A,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{B,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{m,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{k,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{n,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{num\+SplitsA,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{num\+SplitsB,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}{splitting\+Strategy}}}]{split\+Type = {\ttfamily \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab}{splitting\+Strategy\+::round\+To\+Nearest}}},  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257}{accumulation\+Strategy}}}]{acc\+Type = {\ttfamily \mbox{\hyperlink{gemmi_8hpp_ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2}{accumulation\+Strategy\+::floating\+Point}}},  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2}{multiplication\+Strategy}}}]{mult\+Type = {\ttfamily \mbox{\hyperlink{gemmi_8hpp_a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6}{multiplication\+Strategy\+::reduced}}} }\end{DoxyParamCaption})}
+
+
+
+Compute the matrix product C = C + A \texorpdfstring{$\ast$}{*} B. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em fp\+\_\+t} & Floating-\/point type of the matrix elements. \\
+\hline
+{\em splitint\+\_\+t} & Integer type used for splits. \\
+\hline
+{\em accumulator\+\_\+t} & Accumulator type. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Matrix A. \\
+\hline
+{\em B} & Matrix B. \\
+\hline
+{\em m} & Number of rows in A. \\
+\hline
+{\em k} & Number of columns in A and rows in B. \\
+\hline
+{\em n} & Number of columns in B. \\
+\hline
+{\em num\+SplitsA} & Number of splits for the matrix A. \\
+\hline
+{\em num\+SplitsB} & Number of splits for the matrix B. \\
+\hline
+{\em split\+Type} & Splitting strategy. \\
+\hline
+{\em mult\+Type} & Multiplication strategy. \\
+\hline
+{\em acc\+Type} & Accumulation strategy. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Resulting matrix product. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00440}{440}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+

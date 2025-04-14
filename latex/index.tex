@@ -1,0 +1,40 @@
+\chapter{Matrix–matrix multiply using integer Ozaki scheme}
+\hypertarget{index}{}\label{index}\index{Matrix–matrix multiply using integer Ozaki scheme@{Matrix–matrix multiply using integer Ozaki scheme}}
+\label{index_md_README}%
+\Hypertarget{index_md_README}%
+ \href{https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml}{\texttt{ }}\hypertarget{index_autotoc_md1}{}\doxysection{\texorpdfstring{Dependencies}{Dependencies}}\label{index_autotoc_md1}
+The recommended system to build this project is {\ttfamily CMake}. Compilation of the C++ tests requires a C++ compiler that supports the C++20 standard. In order to build the MEX interface, MATLAB must be installed and available on the search path.\hypertarget{index_autotoc_md2}{}\doxysection{\texorpdfstring{Build}{Build}}\label{index_autotoc_md2}
+\hypertarget{index_autotoc_md3}{}\doxysubsection{\texorpdfstring{Mex interface}{Mex interface}}\label{index_autotoc_md3}
+The MEX interface can be compiled with\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S.\ -\/Bbuild}
+\DoxyCodeLine{cmake\ -\/-\/build\ build}
+
+\end{DoxyCode}
+ If the compilation is successful, these commands will produce the the MEX file {\ttfamily build/gemmi.\$(mexext)}, where {\ttfamily \$(mexext)} is {\ttfamily mexa64} on Linux, {\ttfamily mexmaci64} or {\ttfamily mexmaca64} on Mac\+OS , and {\ttfamily mexw64} on Windows. The file {\ttfamily build/gemmi.\+m} contains the documentation for the MATLAB {\ttfamily gemmi} function.
+
+Building the interface can be disabled by setting the CMake variable {\ttfamily BUILD\+\_\+\+MEX} to false\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S.\ -\/Bbuild\ -\/DBUILD\_MEX=False}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md4}{}\doxysubsection{\texorpdfstring{Catch2 tests}{Catch2 tests}}\label{index_autotoc_md4}
+The project comes with a suite of \href{https://github.com/catchorg/Catch2}{\texttt{ Catch2}} C++ tests. By default, the tests are disabled, and can be enabled by setting the CMake variable {\ttfamily BUILD\+\_\+\+TEST} to true\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S.\ -\/Bbuild\ -\/DBUILD\_TESTS=True}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md5}{}\doxysection{\texorpdfstring{Configuration}{Configuration}}\label{index_autotoc_md5}
+Additional options can be passed to {\ttfamily CMake} during the configuration stage. To use a compiler other than the default one, for example, one can use\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S.\ -\/Bbuild\ -\/DCMAKE\_CXX\_COMPILER=<preferred\_compiler>}
+
+\end{DoxyCode}
+ Here, {\ttfamily \texorpdfstring{$<$}{<}preferred\+\_\+compiler\texorpdfstring{$>$}{>}} must be either an executable on the search path or the path to the chosen compiler.\hypertarget{index_autotoc_md6}{}\doxysection{\texorpdfstring{Notes on the MEX interface}{Notes on the MEX interface}}\label{index_autotoc_md6}
+Systems without {\ttfamily CMake} can use the function {\ttfamily mex/compile\+\_\+mex.\+m} to compile the MEX interface. In MATLAB, this can be achieved by using the following commands\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ mex}
+\DoxyCodeLine{compile\_mex}
+
+\end{DoxyCode}
+ The MEX interface and the corresponding documentation will be in the local directory ({\ttfamily mex/}). 

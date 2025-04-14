@@ -1,0 +1,9 @@
+<map id="MatrixSplit&lt; splitint_t, fp_t &gt;" name="MatrixSplit&lt; splitint_t, fp_t &gt;">
+<area shape="rect" id="Node000001" title="Class to store the matrix slices for the Ozaki scheme." alt="" coords="189,108,342,148"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,152,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,37,172,82,220,106,218,110,169,86,102,41"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="176,5,355,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="268,45,268,108,263,108,263,45"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="379,5,517,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="418,40,299,110,296,105,415,35"/>
+</map>

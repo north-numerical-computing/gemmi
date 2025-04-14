@@ -1,0 +1,421 @@
+\doxysection{Matrix\+Split\texorpdfstring{$<$}{<} splitint\+\_\+t, fp\+\_\+t \texorpdfstring{$>$}{>} Struct Template Reference}
+\hypertarget{structMatrixSplit}{}\label{structMatrixSplit}\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+
+
+Class to store the matrix slices for the Ozaki scheme.  
+
+
+
+
+{\ttfamily \#include $<$gemmi.\+hpp$>$}
+
+
+
+Collaboration diagram for Matrix\+Split\texorpdfstring{$<$}{<} splitint\+\_\+t, fp\+\_\+t \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3/d74/structMatrixSplit__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{using}} \mbox{\hyperlink{structMatrixSplit_a11adda574f84466f3bbccada9aee82fe}{uint\+\_\+t}} = \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{structget__storage__format}{get\+\_\+storage\+\_\+format}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::storage\+\_\+format
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structMatrixSplit_a3ac68ead8b731b64d49b817cfb234675}{Matrix\+Split}} (\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&\mbox{\hyperlink{structMatrixSplit_a5fcaae2ef394410f8a13bd58e97312b4}{matrix}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a6053c02cd2bf14cc1c129cc11ecc4987}{m}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a28cebbc0f7324f1202396086c4ec7dfe}{n}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}{splitting\+Strategy}} \mbox{\hyperlink{structMatrixSplit_a4a24d6ad9cf3fcd8014f77ee882e6e26}{split\+Type}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_af1741ad9ab0476c436736936f131aafb}{num\+Splits}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a3162a662c7ebf8c2a6216ce3116518c0}{bits\+Per\+Slice}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1}{normalisation\+Dimension}} \mbox{\hyperlink{structMatrixSplit_adcee697acc6d99d405f774834d10fd5b}{dimension}})
+\begin{DoxyCompactList}\small\item\em Construct a \doxylink{structMatrixSplit}{Matrix\+Split} object and compute the splits. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a86032c0d6f665f1df47be61332599db3}{inner\+Product\+Dimension}} ()
+\begin{DoxyCompactList}\small\item\em Return the dimension along which the inner product is calculated. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a328584192e7c3472921fd9db2565c1c7}{other\+Dimension}} ()
+\begin{DoxyCompactList}\small\item\em Return the dimension not used in the inner product. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a40e596fd4f2f50cd24e2b3b86c5fe8ff}{i\+Stride}} ()
+\begin{DoxyCompactList}\small\item\em Compute the stride for the i-\/dimension. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a9278cc633acaa2d414299577f6ea8f7f}{j\+Stride}} ()
+\begin{DoxyCompactList}\small\item\em Compute the stride for the j-\/dimension. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{void}} \mbox{\hyperlink{structMatrixSplit_a2fa0ebfa23c056bb8723012fa22944f1}{compute\+Normalisation\+Vectors}} ()
+\begin{DoxyCompactList}\small\item\em Compute normalization vectors for the matrix. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{void}} \mbox{\hyperlink{structMatrixSplit_ac0206c8b7906f066e397a6ba4494e6ba}{compute\+Splits\+With\+Round\+To\+Nearest}} ()
+\begin{DoxyCompactList}\small\item\em Split the matrix using round-\/to-\/nearest. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{void}} \mbox{\hyperlink{structMatrixSplit_a2d6cccc4dabb6bcf4f6e0df07c830f9d}{compute\+Splits\+With\+Bit\+Masking}} ()
+\begin{DoxyCompactList}\small\item\em Split the matrix using bit masking, which is equivalent to truncation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a6053c02cd2bf14cc1c129cc11ecc4987}{m}}
+\begin{DoxyCompactList}\small\item\em Number of rows in the matrix. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a28cebbc0f7324f1202396086c4ec7dfe}{n}}
+\begin{DoxyCompactList}\small\item\em Number of columns in the matrix. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}{splitting\+Strategy}} \mbox{\hyperlink{structMatrixSplit_a4a24d6ad9cf3fcd8014f77ee882e6e26}{split\+Type}}
+\begin{DoxyCompactList}\small\item\em Splitting strategy used. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_af1741ad9ab0476c436736936f131aafb}{num\+Splits}}
+\begin{DoxyCompactList}\small\item\em Number of splits to use. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit_a3162a662c7ebf8c2a6216ce3116518c0}{bits\+Per\+Slice}}
+\begin{DoxyCompactList}\small\item\em Number of bits per slice. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1}{normalisation\+Dimension}} \mbox{\hyperlink{structMatrixSplit_adcee697acc6d99d405f774834d10fd5b}{dimension}}
+\begin{DoxyCompactList}\small\item\em Dimension along wich to normalize. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \mbox{\hyperlink{structMatrixSplit_a5fcaae2ef394410f8a13bd58e97312b4}{matrix}}
+\begin{DoxyCompactList}\small\item\em Original matrix. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} $>$ \mbox{\hyperlink{structMatrixSplit_a3ffaa1f379b2bae41396f14c3784f0f0}{memory}}
+\begin{DoxyCompactList}\small\item\em Memory to store the split slices. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \mbox{\hyperlink{structMatrixSplit_a1cd728640328c94ccf6bc7cb64249ca1}{powers\+Vector}}
+\begin{DoxyCompactList}\small\item\em Normalisation vector. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{int}} $>$ \mbox{\hyperlink{structMatrixSplit_a0f4cb8d98c86c32ce48ce3dcb3c3125e}{scaling\+Exponents}}
+\begin{DoxyCompactList}\small\item\em Scaling exponents. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}}$>$\newline
+struct Matrix\+Split$<$ splitint\+\_\+t, fp\+\_\+t $>$}
+Class to store the matrix slices for the Ozaki scheme. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em splitint\+\_\+t} & Type used to store the integer slices. \\
+\hline
+{\em fp\+\_\+t} & Floating-\/point type (e.\+g., float, double). \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00075}{75}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{structMatrixSplit_a11adda574f84466f3bbccada9aee82fe}\label{structMatrixSplit_a11adda574f84466f3bbccada9aee82fe} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!uint\_t@{uint\_t}}
+\index{uint\_t@{uint\_t}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{uint\_t}{uint\_t}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{using}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::uint\+\_\+t =  \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{structget__storage__format}{get\+\_\+storage\+\_\+format}}$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}}$>$\+::storage\+\_\+format}
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00088}{88}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structMatrixSplit_a3ac68ead8b731b64d49b817cfb234675}\label{structMatrixSplit_a3ac68ead8b731b64d49b817cfb234675} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!MatrixSplit@{MatrixSplit}}
+\index{MatrixSplit@{MatrixSplit}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{MatrixSplit()}{MatrixSplit()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\mbox{\hyperlink{structMatrixSplit}{\+::\+Matrix\+Split}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} std\+::vector$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \&}]{matrix,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{m,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{n,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}{splitting\+Strategy}}}]{split\+Type,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{num\+Splits,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}}}]{bits\+Per\+Slice,  }\item[{\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{const}} \mbox{\hyperlink{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1}{normalisation\+Dimension}}}]{dimension }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a \doxylink{structMatrixSplit}{Matrix\+Split} object and compute the splits. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em matrix} & Original matrix. \\
+\hline
+{\em m} & Number of rows. \\
+\hline
+{\em n} & Number of columns. \\
+\hline
+{\em split\+Type} & Splitting strategy. \\
+\hline
+{\em num\+Splits} & Number of splits. \\
+\hline
+{\em bits\+Per\+Slice} & Number of bits per slice. \\
+\hline
+{\em dimension} & Normalization dimension. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00100}{100}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structMatrixSplit_a2fa0ebfa23c056bb8723012fa22944f1}\label{structMatrixSplit_a2fa0ebfa23c056bb8723012fa22944f1} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!computeNormalisationVectors@{computeNormalisationVectors}}
+\index{computeNormalisationVectors@{computeNormalisationVectors}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{computeNormalisationVectors()}{computeNormalisationVectors()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{void}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::compute\+Normalisation\+Vectors (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute normalization vectors for the matrix. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00154}{154}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a2d6cccc4dabb6bcf4f6e0df07c830f9d}\label{structMatrixSplit_a2d6cccc4dabb6bcf4f6e0df07c830f9d} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!computeSplitsWithBitMasking@{computeSplitsWithBitMasking}}
+\index{computeSplitsWithBitMasking@{computeSplitsWithBitMasking}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{computeSplitsWithBitMasking()}{computeSplitsWithBitMasking()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{void}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::compute\+Splits\+With\+Bit\+Masking (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Split the matrix using bit masking, which is equivalent to truncation. 
+
+This is an implementation of Algorithm 4 in\+:
+
+Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2024;38(4)\+:297-\/313. DOI\+: 10.\+1177/10943420241239588
+
+Integer products are accumulated in floating-\/point arithmetic one by one. 
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00217}{217}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_ac0206c8b7906f066e397a6ba4494e6ba}\label{structMatrixSplit_ac0206c8b7906f066e397a6ba4494e6ba} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!computeSplitsWithRoundToNearest@{computeSplitsWithRoundToNearest}}
+\index{computeSplitsWithRoundToNearest@{computeSplitsWithRoundToNearest}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{computeSplitsWithRoundToNearest()}{computeSplitsWithRoundToNearest()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{void}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::compute\+Splits\+With\+Round\+To\+Nearest (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Split the matrix using round-\/to-\/nearest. 
+
+This is an implementation of Algorithm 8 in\+:
+
+Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki scheme on integer matrix multiplication unit. ar\+Xiv\+:2409.\+13313 \mbox{[}cs.\+DC\mbox{]}. 2024. DOI\+: 10.\+48550/ar\+Xiv.2409.\+13313
+
+Integer products are accumulated in integer arithmetic along the diagonal, and in floating-\/point arithmetic across diagonals. 
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00187}{187}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a86032c0d6f665f1df47be61332599db3}\label{structMatrixSplit_a86032c0d6f665f1df47be61332599db3} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!innerProductDimension@{innerProductDimension}}
+\index{innerProductDimension@{innerProductDimension}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{innerProductDimension()}{innerProductDimension()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::inner\+Product\+Dimension (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return the dimension along which the inner product is calculated. 
+
+\begin{DoxyReturn}{Returns}
+Inner product dimension. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00123}{123}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a40e596fd4f2f50cd24e2b3b86c5fe8ff}\label{structMatrixSplit_a40e596fd4f2f50cd24e2b3b86c5fe8ff} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!iStride@{iStride}}
+\index{iStride@{iStride}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{iStride()}{iStride()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::i\+Stride (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute the stride for the i-\/dimension. 
+
+\begin{DoxyReturn}{Returns}
+Stride for the i-\/dimension. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00139}{139}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a9278cc633acaa2d414299577f6ea8f7f}\label{structMatrixSplit_a9278cc633acaa2d414299577f6ea8f7f} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!jStride@{jStride}}
+\index{jStride@{jStride}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{jStride()}{jStride()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::j\+Stride (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute the stride for the j-\/dimension. 
+
+\begin{DoxyReturn}{Returns}
+Stride for the j-\/dimension. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00147}{147}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a328584192e7c3472921fd9db2565c1c7}\label{structMatrixSplit_a328584192e7c3472921fd9db2565c1c7} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!otherDimension@{otherDimension}}
+\index{otherDimension@{otherDimension}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{otherDimension()}{otherDimension()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::other\+Dimension (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return the dimension not used in the inner product. 
+
+\begin{DoxyReturn}{Returns}
+Dimension not used in the inner product. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00131}{131}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structMatrixSplit_a3162a662c7ebf8c2a6216ce3116518c0}\label{structMatrixSplit_a3162a662c7ebf8c2a6216ce3116518c0} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!bitsPerSlice@{bitsPerSlice}}
+\index{bitsPerSlice@{bitsPerSlice}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{bitsPerSlice}{bitsPerSlice}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::bits\+Per\+Slice}
+
+
+
+Number of bits per slice. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00080}{80}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_adcee697acc6d99d405f774834d10fd5b}\label{structMatrixSplit_adcee697acc6d99d405f774834d10fd5b} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!dimension@{dimension}}
+\index{dimension@{dimension}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{dimension}{dimension}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_ab3f5bfb1c3081bf0041b4eb3aff4faf1}{normalisation\+Dimension}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::dimension}
+
+
+
+Dimension along wich to normalize. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00081}{81}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a6053c02cd2bf14cc1c129cc11ecc4987}\label{structMatrixSplit_a6053c02cd2bf14cc1c129cc11ecc4987} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!m@{m}}
+\index{m@{m}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{m}{m}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::m}
+
+
+
+Number of rows in the matrix. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00076}{76}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a5fcaae2ef394410f8a13bd58e97312b4}\label{structMatrixSplit_a5fcaae2ef394410f8a13bd58e97312b4} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!matrix@{matrix}}
+\index{matrix@{matrix}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{matrix}{matrix}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+std\+::vector$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}}$>$ \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::matrix}
+
+
+
+Original matrix. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00083}{83}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a3ffaa1f379b2bae41396f14c3784f0f0}\label{structMatrixSplit_a3ffaa1f379b2bae41396f14c3784f0f0} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!memory@{memory}}
+\index{memory@{memory}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{memory}{memory}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+std\+::vector$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}$>$ \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::memory}
+
+
+
+Memory to store the split slices. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00084}{84}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a28cebbc0f7324f1202396086c4ec7dfe}\label{structMatrixSplit_a28cebbc0f7324f1202396086c4ec7dfe} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!n@{n}}
+\index{n@{n}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{n}{n}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::n}
+
+
+
+Number of columns in the matrix. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00077}{77}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_af1741ad9ab0476c436736936f131aafb}\label{structMatrixSplit_af1741ad9ab0476c436736936f131aafb} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!numSplits@{numSplits}}
+\index{numSplits@{numSplits}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{numSplits}{numSplits}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{size\+\_\+t}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::num\+Splits}
+
+
+
+Number of splits to use. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00079}{79}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a1cd728640328c94ccf6bc7cb64249ca1}\label{structMatrixSplit_a1cd728640328c94ccf6bc7cb64249ca1} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!powersVector@{powersVector}}
+\index{powersVector@{powersVector}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{powersVector}{powersVector}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+std\+::vector$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}}$>$ \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::powers\+Vector}
+
+
+
+Normalisation vector. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00085}{85}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a0f4cb8d98c86c32ce48ce3dcb3c3125e}\label{structMatrixSplit_a0f4cb8d98c86c32ce48ce3dcb3c3125e} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!scalingExponents@{scalingExponents}}
+\index{scalingExponents@{scalingExponents}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{scalingExponents}{scalingExponents}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+std\+::vector$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{int}}$>$ \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::scaling\+Exponents}
+
+
+
+Scaling exponents. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00086}{86}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+\Hypertarget{structMatrixSplit_a4a24d6ad9cf3fcd8014f77ee882e6e26}\label{structMatrixSplit_a4a24d6ad9cf3fcd8014f77ee882e6e26} 
+\index{MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}!splitType@{splitType}}
+\index{splitType@{splitType}!MatrixSplit$<$ splitint\_t, fp\_t $>$@{MatrixSplit$<$ splitint\_t, fp\_t $>$}}
+\doxysubsubsection{\texorpdfstring{splitType}{splitType}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}} , \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{typename}} \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$ \\
+\mbox{\hyperlink{gemmi_8hpp_aad8ea3a11b81457b42367460195a49e9}{splitting\+Strategy}} \mbox{\hyperlink{structMatrixSplit}{Matrix\+Split}}$<$ \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{splitint\+\_\+t}}, \mbox{\hyperlink{gemmi_8hpp_aa3896af2c30eccd1d3469f60ac979ffe}{fp\+\_\+t}} $>$\+::split\+Type}
+
+
+
+Splitting strategy used. 
+
+
+
+Definition at line \mbox{\hyperlink{gemmi_8hpp_source_l00078}{78}} of file \mbox{\hyperlink{gemmi_8hpp_source}{gemmi.\+hpp}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{gemmi_8hpp}{gemmi.\+hpp}}\end{DoxyCompactItemize}
