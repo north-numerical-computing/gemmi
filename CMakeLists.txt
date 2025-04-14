@@ -28,6 +28,12 @@ if (BUILD_MEX)
     add_subdirectory("mex")
 endif()
 
+# Build documentation.
+option(BUILD_DOCS "Build documentation" False)
+if (BUILD_DOCS)
+    add_subdirectory("docs")
+endif()
+
 # Build tests and check coverage, if required.
 option(CHECK_COVERAGE "Check test coverage" False)
 option(BUILD_TESTS "Run Catch2 tests" False)

@@ -1,0 +1,21 @@
+name: Documentation
+on:
+  push:
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+      - uses: actions/checkout@master
+
+      - name: Install and Build
+        run: |
+          sudo apt install -y doxygen graphviz python3-sphinx python3-breathe python3-sphinx-rtd-theme python3-breathe python3-exhale python3-myst-parser
+          cmake -S. -Bbuild -DBUILD_DOCS=True -DBUILD_TESTS=False -DBUILD_MEX=False
+          cmake --build build --target docs
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: build/docs/html
