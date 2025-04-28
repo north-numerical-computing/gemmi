@@ -1,5 +1,6 @@
 # Matrix–matrix multiply using integer Ozaki scheme
 
+[![Version](https://img.shields.io/github/v/tag/north-numerical-computing/gemmi?label=version)](https://github.com/north-numerical-computing/gemmi/tags)
 [![Testing](https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml/badge.svg?branch=main)](https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml)
 [![GitHub](https://img.shields.io/github/license/north-numerical-computing/gemmi)](LICENSE.md)
 
