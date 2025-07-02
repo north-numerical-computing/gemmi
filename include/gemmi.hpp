@@ -447,7 +447,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
     const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
     assert(bitsPerInteger <= bitsInAccumulator / 2);
-    const size_t alpha = std::floor((bitsInAccumulator - log2(n)) / 2);
+    const size_t alpha = std::floor((bitsInAccumulator - log2(k)) / 2);
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
     auto splitA = MatrixSplit<splitint_t, fp_t>(A, m, k, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
