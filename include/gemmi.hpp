@@ -180,9 +180,6 @@ struct MatrixSplit {
      *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
      *    scheme on integer matrix multiplication unit. Int. J. High Performance
      *    Comput. App. 2025;39(3):462–476. DOI: 10.1177/10943420241313064
-     *
-     * Integer products are accumulated in integer arithmetic along the diagonal, and in
-     * floating-point arithmetic across diagonals.
      */
     void computeSplitsWithRoundToNearest() {
         this->splitType = splittingStrategy::roundToNearest;
@@ -211,8 +208,6 @@ struct MatrixSplit {
      *    Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication
      *    unit. Int. J. High Performance Comput. App. 2024;38(4):297-313.
      *    DOI: 10.1177/10943420241239588
-     *
-     * Integer products are accumulated in floating-point arithmetic one by one.
      */
     void computeSplitsWithBitMasking() {
         this->splitType = splittingStrategy::bitMasking;
