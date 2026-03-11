@@ -46,8 +46,8 @@ enum class normalisationDimension {
  * @brief Enum to specify the splitting strategy to use.
  */
 enum class splittingStrategy {
-    roundToNearest, ///< Split using round-to-nearest.
-    bitMasking      ///< Split using bit masking (truncation).
+    bitMasking,      ///< Split using bit masking (truncation).
+    roundToNearest   ///< Split using round-to-nearest.
 };
 
 /**
@@ -173,34 +173,6 @@ struct MatrixSplit {
     }
 
     /**
-     * @brief Split the matrix using round-to-nearest.
-     *
-     * This is an implementation of Algorithm 8 in:
-     *
-     *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
-     *    scheme on integer matrix multiplication unit. Int. J. High Performance
-     *    Comput. App. 2025;39(3):462–476. DOI: 10.1177/10943420241313064
-     */
-    void computeSplitsWithRoundToNearest() {
-        this->splitType = splittingStrategy::roundToNearest;
-        auto iStride = this->iStride();
-        auto jStride = this->jStride();
-        auto localMatrix = this->matrix;
-        for (size_t slice = 0; slice < numSplits; slice++) {
-            for (size_t i = 0; i < this->otherDimension(); i++) {
-                fp_t sigma = ldexp(0.75, computeNumFracBits<fp_t>() - this->bitsPerSlice * slice + 1 - this->bitsPerSlice) * powersVector[i];
-                for (size_t j = 0; j < this->innerProductDimension(); j++) {
-                    auto value = (localMatrix[i * iStride + j * jStride] + sigma);
-                    value -= sigma;
-                    localMatrix[i * iStride + j * jStride] -= value;
-                    value = value / powersVector[i] * ldexp(1.0, this->bitsPerSlice * slice + this->bitsPerSlice - 1);
-                    this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = value;
-                }
-            }
-        }
-    }
-
-    /**
      * @brief Split the matrix using bit masking, which is equivalent to truncation.
      *
      * This is an implementation of Algorithm 4 in:
@@ -258,6 +230,34 @@ struct MatrixSplit {
                         this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = value;
                         shiftCounter -= this->bitsPerSlice;
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * @brief Split the matrix using round-to-nearest.
+     *
+     * This is an implementation of Algorithm 8 in:
+     *
+     *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
+     *    scheme on integer matrix multiplication unit. Int. J. High Performance
+     *    Comput. App. 2025;39(3):462–476. DOI: 10.1177/10943420241313064
+     */
+    void computeSplitsWithRoundToNearest() {
+        this->splitType = splittingStrategy::roundToNearest;
+        auto iStride = this->iStride();
+        auto jStride = this->jStride();
+        auto localMatrix = this->matrix;
+        for (size_t slice = 0; slice < numSplits; slice++) {
+            for (size_t i = 0; i < this->otherDimension(); i++) {
+                fp_t sigma = ldexp(0.75, computeNumFracBits<fp_t>() - this->bitsPerSlice * slice + 1 - this->bitsPerSlice) * powersVector[i];
+                for (size_t j = 0; j < this->innerProductDimension(); j++) {
+                    auto value = (localMatrix[i * iStride + j * jStride] + sigma);
+                    value -= sigma;
+                    localMatrix[i * iStride + j * jStride] -= value;
+                    value = value / powersVector[i] * ldexp(1.0, this->bitsPerSlice * slice + this->bitsPerSlice - 1);
+                    this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = value;
                 }
             }
         }
