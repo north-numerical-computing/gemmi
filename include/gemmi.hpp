@@ -178,8 +178,8 @@ struct MatrixSplit {
      * This is an implementation of Algorithm 8 in:
      *
      *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
-     *    scheme on integer matrix multiplication unit. arXiv:2409.13313 [cs.DC]. 2024.
-     *    DOI: 10.48550/arXiv.2409.13313
+     *    scheme on integer matrix multiplication unit. Int. J. High Performance
+     *    Comput. App. 2025;39(3):462–476. DOI: 10.1177/10943420241313064
      *
      * Integer products are accumulated in integer arithmetic along the diagonal, and in
      * floating-point arithmetic across diagonals.
