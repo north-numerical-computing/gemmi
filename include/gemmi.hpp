@@ -172,6 +172,25 @@ struct MatrixSplit {
         }
     }
 
+    void computeFixedPointRepresentationVector(std::vector<uint_t> &tmp, std::vector<bool> &sign, size_t i) {
+        auto numExpBits = computeNumExpBits<fp_t>();
+        auto numFracBits = computeNumFracBits<fp_t>();
+        auto iStride = this->iStride();
+        auto jStride = this->jStride();
+        for (size_t j = 0; j < this->innerProductDimension(); j++) {
+                const size_t index = i * iStride + j * jStride;
+                fp_t value = this->matrix[index];             // powersVector[i];
+                tmp[j] = std::bit_cast<uint_t>(value);        // To bitstring.
+                sign[j] = std::signbit(value);                // Extract sign.
+                uint_t bitmask = (~((uint_t)(0))) >> (numExpBits + 1);
+                tmp[j] = tmp[j] & bitmask; // Remove exponent and sign.
+                // Restore implicit bit for normal numbers.
+                // NOTE: NaNs and infs are currently not supported.
+                if (std::fpclassify(value) == FP_NORMAL)
+                    tmp[j] |= ((uint_t)1 << (numFracBits - 1));
+            }
+    }
+
     /**
      * @brief Split the matrix using bit masking, which is equivalent to truncation.
      *
@@ -184,38 +203,27 @@ struct MatrixSplit {
     void computeSplitsWithBitMasking() {
         this->splitType = splittingStrategy::bitMasking;
         // Compute splits one row/column at a time.
-        auto numExpBits = computeNumExpBits<fp_t>();
         auto numFracBits = computeNumFracBits<fp_t>();
+        auto bitsPerSlice = this->bitsPerSlice;
         auto iStride = this->iStride();
         auto jStride = this->jStride();
         std::vector<uint_t> tmp (this->innerProductDimension());
         std::vector<bool> sign (this->innerProductDimension());
         for (size_t i = 0; i < this->otherDimension(); i++) {
-            // Get binary representation of normalised row/column.
-            for (size_t j = 0; j < this->innerProductDimension(); j++) {
-                const size_t index = i * iStride + j * jStride;
-                fp_t value = this->matrix[index];             // powersVector[i];
-                tmp[j] = std::bit_cast<uint_t>(value);        // To bitstring.
-                sign[j] = std::signbit(value);                // Extract sign.
-                uint_t bitmask = (~((uint_t)(0))) >> (numExpBits + 1);
-                tmp[j] = tmp[j] & bitmask; // Remove exponent and sign.
-                // Restore implicit bit for normal numbers.
-                // NOTE: NaNs and infs are currently not supported.
-                if (std::fpclassify(value) == FP_NORMAL)
-                    tmp[j] |= ((uint_t)1 << (numFracBits - 1));
-            }
+            // Get binary representation of significands of normalised row/column.
+            computeFixedPointRepresentationVector(tmp, sign, i);
 
             // Create bitmask.
-            const uint_t smallBitmask = (1 << this->bitsPerSlice) - 1;
+            const uint_t smallBitmask = (1 << bitsPerSlice) - 1;
             // Perform the split.
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
-                int16_t shiftCounter = numFracBits - this->bitsPerSlice;
+                int16_t shiftCounter = numFracBits - bitsPerSlice;
                 int currentExponent;
                 frexp(this->matrix[i * iStride + j * jStride], &currentExponent);
                 int16_t exponentDifference = scalingExponents[i] - currentExponent;
                 for (size_t slice = 0; slice < numSplits; slice++) {
-                    if (exponentDifference > (signed)this->bitsPerSlice) {
-                        exponentDifference -= this->bitsPerSlice;
+                    if (exponentDifference > (signed)bitsPerSlice) {
+                        exponentDifference -= bitsPerSlice;
                     } else {
                         shiftCounter += exponentDifference;
                         exponentDifference = 0;
@@ -228,13 +236,13 @@ struct MatrixSplit {
                             currentSlice << -shiftCounter;
                         splitint_t value = (splitint_t)(currentSplit) * (sign[j] ? -1 : 1);
                         this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = value;
-                        shiftCounter -= this->bitsPerSlice;
+                        shiftCounter -= bitsPerSlice;
                     }
                 }
             }
         }
     }
-
+    
     /**
      * @brief Split the matrix using round-to-nearest.
      *
@@ -246,17 +254,18 @@ struct MatrixSplit {
      */
     void computeSplitsWithRoundToNearest() {
         this->splitType = splittingStrategy::roundToNearest;
+        auto bitsPerSlice = this->bitsPerSlice;
         auto iStride = this->iStride();
         auto jStride = this->jStride();
         auto localMatrix = this->matrix;
         for (size_t slice = 0; slice < numSplits; slice++) {
             for (size_t i = 0; i < this->otherDimension(); i++) {
-                fp_t sigma = ldexp(0.75, computeNumFracBits<fp_t>() - this->bitsPerSlice * slice + 1 - this->bitsPerSlice) * powersVector[i];
+                fp_t sigma = ldexp(0.75, computeNumFracBits<fp_t>() - bitsPerSlice * slice + 1 - bitsPerSlice) * powersVector[i];
                 for (size_t j = 0; j < this->innerProductDimension(); j++) {
                     auto value = (localMatrix[i * iStride + j * jStride] + sigma);
                     value -= sigma;
                     localMatrix[i * iStride + j * jStride] -= value;
-                    value = value / powersVector[i] * ldexp(1.0, this->bitsPerSlice * slice + this->bitsPerSlice - 1);
+                    value = value / powersVector[i] * ldexp(1.0, bitsPerSlice * slice + bitsPerSlice - 1);
                     this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = value;
                 }
             }
