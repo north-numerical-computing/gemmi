@@ -1,7 +1,9 @@
 var structMatrixSplit =
 [
     [ "MatrixSplit", "d0/d06/structMatrixSplit.html#a3ac68ead8b731b64d49b817cfb234675", null ],
+    [ "computeFixedPointRepresentationVector", "d0/d06/structMatrixSplit.html#a89a9cce819fd5dedbd4b7af2cfc26e38", null ],
     [ "computeNormalisationVectors", "d0/d06/structMatrixSplit.html#a2fa0ebfa23c056bb8723012fa22944f1", null ],
+    [ "computeSliceBitOffset", "d0/d06/structMatrixSplit.html#ac2ec1f8804748b296f43b22a64b3d745", null ],
     [ "computeSplitsWithBitMasking", "d0/d06/structMatrixSplit.html#a2d6cccc4dabb6bcf4f6e0df07c830f9d", null ],
     [ "computeSplitsWithRoundToNearest", "d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba", null ],
     [ "innerProductDimension", "d0/d06/structMatrixSplit.html#a86032c0d6f665f1df47be61332599db3", null ],
