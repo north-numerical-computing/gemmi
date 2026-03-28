@@ -172,7 +172,35 @@ struct MatrixSplit {
         }
     }
 
-    void computeFixedPointRepresentationVector(std::vector<uint_t> &tmp, std::vector<bool> &sign, size_t i) {
+    /** 
+     * @brief Compute the bit offset for a given slice.
+     * @param slice The slice for which to compute the bit offset.
+     * @return The bit offset for the specified slice.
+     */
+    int computeSliceBitOffset(size_t slice) const {
+        switch (splitType) {
+            case splittingStrategy::bitMasking:
+                // Slice k -> k * b
+                return static_cast<int>((slice + 1) * bitsPerSlice);
+
+            case splittingStrategy::roundToNearest:
+                // Slice 0 -> b - 1
+                // Slice k -> k * b - 1
+                return static_cast<int>((slice + 1) * bitsPerSlice - 1);
+        }
+
+        std::cerr << "Unknown splitting strategy requested.";
+        std::exit(1);
+    }
+
+    /** 
+     * @brief Compute the block fixed-point representation of a row/column of the matrix.
+     * This function computes the fixed-point representation of a row/column of the matrix, which is used in the splitting algorithms. It extracts the significand and sign of each element in the row/column, and stores them in the provided vectors.
+     * @param fraction Vector to store the fixed-point representation of the elements.
+     * @param sign Vector to store the signs of the elements.
+     * @param i The index of the row/column for which to compute the fixed-point representation.
+     */
+    void computeFixedPointRepresentationVector(std::vector<uint_t> &fraction, std::vector<bool> &sign, size_t i) {
         auto numExpBits = computeNumExpBits<fp_t>();
         auto numFracBits = computeNumFracBits<fp_t>();
         auto iStride = this->iStride();
@@ -180,14 +208,14 @@ struct MatrixSplit {
         for (size_t j = 0; j < this->innerProductDimension(); j++) {
                 const size_t index = i * iStride + j * jStride;
                 fp_t value = this->matrix[index];             // powersVector[i];
-                tmp[j] = std::bit_cast<uint_t>(value);        // To bitstring.
+                fraction[j] = std::bit_cast<uint_t>(value);        // To bitstring.
                 sign[j] = std::signbit(value);                // Extract sign.
                 uint_t bitmask = (~((uint_t)(0))) >> (numExpBits + 1);
-                tmp[j] = tmp[j] & bitmask; // Remove exponent and sign.
+                fraction[j] = fraction[j] & bitmask; // Remove exponent and sign.
                 // Restore implicit bit for normal numbers.
                 // NOTE: NaNs and infs are currently not supported.
                 if (std::fpclassify(value) == FP_NORMAL)
-                    tmp[j] |= ((uint_t)1 << (numFracBits - 1));
+                    fraction[j] |= ((uint_t)1 << (numFracBits - 1));
             }
     }
 
@@ -207,11 +235,11 @@ struct MatrixSplit {
         auto bitsPerSlice = this->bitsPerSlice;
         auto iStride = this->iStride();
         auto jStride = this->jStride();
-        std::vector<uint_t> tmp (this->innerProductDimension());
+        std::vector<uint_t> fraction (this->innerProductDimension());
         std::vector<bool> sign (this->innerProductDimension());
         for (size_t i = 0; i < this->otherDimension(); i++) {
             // Get binary representation of significands of normalised row/column.
-            computeFixedPointRepresentationVector(tmp, sign, i);
+            computeFixedPointRepresentationVector(fraction, sign, i);
 
             // Create bitmask.
             const uint_t smallBitmask = (1 << bitsPerSlice) - 1;
@@ -230,7 +258,7 @@ struct MatrixSplit {
                         uint_t bitmask = shiftCounter > 0 ?
                             smallBitmask << shiftCounter :
                             smallBitmask >> -shiftCounter;
-                        uint_t currentSlice = tmp[j] & bitmask;
+                        uint_t currentSlice = fraction[j] & bitmask;
                         uint_t currentSplit = shiftCounter > 0 ?
                             currentSlice >> shiftCounter :
                             currentSlice << -shiftCounter;
@@ -299,29 +327,6 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
 }
 
 /**
- * @brief Compute the scaling constant for a given splitting strategy.
- * 
- * This function computes the scaling constant based on the splitting strategy used
- * for the matrices A and B. The scaling constant is used to adjust the final result
- * based on the number of bits used in the split.
- * @tparam splitint_t Integer type used for splits.
- * @tparam fp_t Floating-point type (e.g., float, double).
- * @param A Slices of matrix A.
- * @param B Slices of matrix B.
- * @return Scaling constant.
- */
-template <typename splitint_t, typename fp_t>
-fp_t computeScalingConstantForSplittingStrategy(const MatrixSplit<splitint_t, fp_t> &A,
-                                                 const MatrixSplit<splitint_t, fp_t> &B) {
-    // When splitting with round-to-nearest, the first slice has bitsPerSlice - 1 bits, 
-    // and we need to account for this when scaling the final result.
-    fp_t scalingConstant = 1.0;
-    scalingConstant *= A.splitType == splittingStrategy::roundToNearest ? 2.0 : 1.0;
-    scalingConstant *= B.splitType == splittingStrategy::roundToNearest ? 2.0 : 1.0;
-    return scalingConstant;
-}
-
-/**
  * @brief Accumulate products in floating-point arithmetic.
  * 
  * This function accumulates the exact products of integer slices in floating-point
@@ -344,12 +349,9 @@ fp_t computeScalingConstantForSplittingStrategy(const MatrixSplit<splitint_t, fp
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
                                   const MatrixSplit<splitint_t, fp_t> &B,
-                                  const size_t bitsPerSlice,
                                   const size_t numDiagonals) {
 
     std::vector<fp_t > C (A.m * B.n);
-
-    auto scalingConstant = computeScalingConstantForSplittingStrategy(A, B);
 
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
         int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
@@ -358,9 +360,10 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
             std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
             computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, Aindex, Bindex);
             for (size_t i = 0; i < A.m; i++) {
-                for (size_t j = 0; j < B.n; j++) {
-                    fp_t scaledSum = std::ldexp(accumulator[i + j * A.m], -(Aindex + 1 + Bindex + 1) * bitsPerSlice);
-                    fp_t scalingFactor = A.powersVector[i] * B.powersVector[j] * scalingConstant;
+                for (size_t j = 0; j < B.n; j++) {                    
+                    int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
+                    fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[i + j * A.m]), -totalShift);
+                    fp_t scalingFactor = A.powersVector[i] * B.powersVector[j];
                     C[i + j * A.m] += scaledSum * scalingFactor;
                 }
             }
@@ -394,30 +397,34 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
-                                  const MatrixSplit<splitint_t, fp_t> &B,
-                                  const size_t bitsPerSlice,
-                                  const size_t numDiagonals) {
-
-    std::vector<fp_t > C (A.m * B.n);
-
-    auto scalingConstant = computeScalingConstantForSplittingStrategy(A, B);
+                                                         const MatrixSplit<splitint_t, fp_t> &B,
+                                                         const size_t numDiagonals) {
+    std::vector<fp_t> C(A.m * B.n);
 
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
-        int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
+        int Aindex = diagonal < A.numSplits ? static_cast<int>(diagonal) : static_cast<int>(A.numSplits - 1);
         size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
-        std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
+
+        const int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
+
+        // Compute and accumulate all products along this anti-diagonal in integer arithmetic.
+        std::vector<accumulator_t> accumulator(A.m * B.n, 0);
         while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
+            // assert(A.sliceBitOffset(static_cast<size_t>(Aindex)) + B.sliceBitOffset(Bindex) == totalShift);
+
             computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, Aindex, Bindex);
             Aindex--;
             Bindex++;
         }
+
+        // Scale the accumulated products and accumulate in floating-point arithmetic across diagonals.
         for (size_t i = 0; i < A.m; i++) {
-                for (size_t j = 0; j < B.n; j++) {
-                    fp_t scaledSum = std::ldexp(accumulator[i + j * A.m], -(diagonal + 2) * bitsPerSlice);
-                    fp_t scalingFactor = A.powersVector[i] * B.powersVector[j]  * scalingConstant;
-                    C[i + j * A.m] += scaledSum * scalingFactor;
-                }
+            for (size_t j = 0; j < B.n; j++) {
+                fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[i + j * A.m]), -totalShift);
+                fp_t scalingFactor = A.powersVector[i] * B.powersVector[j];
+                C[i + j * A.m] += scaledSum * scalingFactor;
             }
+        }
     }
 
     return C;
@@ -474,9 +481,9 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
 
     switch (accType) {
         case accumulationStrategy::floatingPoint:
-            return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice, numDiagonals);
+            return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, numDiagonals);
         case accumulationStrategy::integer:
-            return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, bitsPerSlice, numDiagonals);
+            return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, numDiagonals);
         default:
             std::cerr << "Unknown accumulation strategy requested.";
             exit(1);
