@@ -314,44 +314,20 @@ struct MatrixSplit {
             const uint_t smallBitmask = (1 << (bitsPerSlice - 1)) - 1;
             const uint_t largeBitmask = (1 << (bitsPerSlice + 1)) - 1;
 
-            // Perform the split.
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
 
+                int currentExponent;
+                frexp(this->matrix[i * iStride + j * jStride], &currentExponent);
+                int16_t exponentDifference = scalingExponents[i] - currentExponent;
 
-            int currentExponent;
-            frexp(this->matrix[i * iStride + j * jStride], &currentExponent);
-            int16_t exponentDifference = scalingExponents[i] - currentExponent;
+                // Boundary below slice 0, fully aligned to this entry.
+                int16_t firstShift = numFracBits - (bitsPerSlice - 1) + exponentDifference;
 
-            // Boundary below slice 0, fully aligned to this entry.
-            int16_t firstShift = numFracBits - (bitsPerSlice - 1) + exponentDifference;
+                splitint_t value = 0;
+                uint_t remainder = 0;
 
-            splitint_t value = 0;
-            uint_t remainder = 0;
-
-            if (!sign[j]) {
-                // Positive number: leading digit is truncation.
-                uint_t bitmask = (firstShift > 0)
-                    ? (smallBitmask << firstShift)
-                    : (smallBitmask >> -firstShift);
-
-                uint_t currentSlice = fraction[j] & bitmask;
-                uint_t currentSplit = (firstShift > 0)
-                    ? (currentSlice >> firstShift)
-                    : (currentSlice << -firstShift);
-
-                value = static_cast<splitint_t>(currentSplit);
-                remainder = fraction[j] & ((uint_t(1) << firstShift) - 1);
-            } else {
-                // Negative number.
-                if (exponentDifference > (signed)(bitsPerSlice - 1)) {
-                    // Too small to contribute explicit bits to slice 0:
-                    // round toward -infinity gives -1.
-                    value = -1;
-
-                    // IMPORTANT: complement at the FULL aligned boundary.
-                    remainder = (uint_t(1) << firstShift) - fraction[j];
-                } else {
-                    // Normal truncation path for the leading slice.
+                if (!sign[j]) {
+                    // Positive number: leading digit is truncation.
                     uint_t bitmask = (firstShift > 0)
                         ? (smallBitmask << firstShift)
                         : (smallBitmask >> -firstShift);
@@ -361,26 +337,48 @@ struct MatrixSplit {
                         ? (currentSlice >> firstShift)
                         : (currentSlice << -firstShift);
 
-                    value = -static_cast<splitint_t>(currentSplit);
+                    value = static_cast<splitint_t>(currentSplit);
+                    remainder = fraction[j] & ((uint_t(1) << firstShift) - 1);
+                } else {
+                    // Negative number.
+                    if (exponentDifference > (signed)(bitsPerSlice - 1)) {
+                        // Too small to contribute explicit bits to slice 0:
+                        // round toward -infinity gives -1.
+                        value = -1;
 
-                    uint_t lowMask = (uint_t(1) << firstShift) - 1;
-                    uint_t lowBits = fraction[j] & lowMask;
-
-                    if (lowBits != 0) {
-                        value -= 1;  // round toward -infinity
-                        remainder = (uint_t(1) << firstShift) - lowBits;
+                        // IMPORTANT: complement at the FULL aligned boundary.
+                        remainder = (uint_t(1) << firstShift) - fraction[j];
                     } else {
-                        remainder = 0;
+                        // Normal truncation path for the leading slice.
+                        uint_t bitmask = (firstShift > 0)
+                            ? (smallBitmask << firstShift)
+                            : (smallBitmask >> -firstShift);
+
+                        uint_t currentSlice = fraction[j] & bitmask;
+                        uint_t currentSplit = (firstShift > 0)
+                            ? (currentSlice >> firstShift)
+                            : (currentSlice << -firstShift);
+
+                        value = -static_cast<splitint_t>(currentSplit);
+
+                        uint_t lowMask = (uint_t(1) << firstShift) - 1;
+                        uint_t lowBits = fraction[j] & lowMask;
+
+                        if (lowBits != 0) {
+                            value -= 1;  // round toward -infinity
+                            remainder = (uint_t(1) << firstShift) - lowBits;
+                        } else {
+                            remainder = 0;
+                        }
                     }
                 }
-            }
 
-            this->memory[i * iStride + j * jStride] = value;
+                this->memory[i * iStride + j * jStride] = value;
 
-            // From here on, the remainder is already aligned and nonnegative.
-            fraction[j] = remainder;
-            int shiftCounter = firstShift - (bitsPerSlice + 1);
-            exponentDifference = 0;
+                // From here on, the remainder is already aligned and nonnegative.
+                fraction[j] = remainder;
+                int shiftCounter = firstShift - (bitsPerSlice + 1);
+                exponentDifference = 0;
 
                 // Split (nonnegative) remainder with unsigned slice encoding.
                 for (size_t slice = 1; slice < numSplits; slice++) {

@@ -198,7 +198,7 @@ void runSplitRoundTripTests() {
 		requireBitwiseIdenticalVectors(reconstructed, matrix);
 		}
 	}
-	}
+}
 
 /*******************************
  * Tests matrix multiplication *
