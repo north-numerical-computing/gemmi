@@ -46,8 +46,9 @@ enum class normalisationDimension {
  * @brief Enum to specify the splitting strategy to use.
  */
 enum class splittingStrategy {
-    bitMasking,      ///< Split using bit masking (truncation).
-    roundToNearest   ///< Split using round-to-nearest.
+    bitMasking,       ///< Split using bit masking (truncation).
+    unsignedEncoding, ///< Split using unsigned slice encoding.
+    roundToNearest    ///< Split using round-to-nearest.
 };
 
 /**
@@ -86,6 +87,7 @@ struct MatrixSplit {
     std::vector<int> scalingExponents; ///< Scaling exponents.
 
     using uint_t = typename get_storage_format<fp_t>::storage_format;
+    using wideint_t = std::conditional_t<(sizeof(splitint_t) < sizeof(int)), int, std::intmax_t>;
 
     /**
      * @brief Construct a MatrixSplit object and compute the splits.
@@ -107,11 +109,14 @@ struct MatrixSplit {
                     this->scalingExponents.resize(this->otherDimension());
                     this->computeNormalisationVectors();
                     switch (splitType) {
-                        case splittingStrategy::roundToNearest:
-                            this->computeSplitsWithRoundToNearest();
-                            break;
                         case splittingStrategy::bitMasking:
                             this->computeSplitsWithBitMasking();
+                            break;
+                        case splittingStrategy::unsignedEncoding:
+                            this->computeSplitsWithUnsignedEncoding();
+                            break;
+                        case splittingStrategy::roundToNearest:
+                            this->computeSplitsWithRoundToNearest();
                             break;
                      }
                 }
@@ -172,7 +177,7 @@ struct MatrixSplit {
         }
     }
 
-    /** 
+    /**
      * @brief Compute the bit offset for a given slice.
      * @param slice The slice for which to compute the bit offset.
      * @return The bit offset for the specified slice.
@@ -187,13 +192,18 @@ struct MatrixSplit {
                 // Slice 0 -> b - 1
                 // Slice k -> k * b - 1
                 return static_cast<int>((slice + 1) * bitsPerSlice - 1);
+
+            case splittingStrategy::unsignedEncoding:
+                // Slice 0 -> b - 1
+                // Slice k -> (b - 1) + k * (b + 1)
+                return static_cast<int>((bitsPerSlice - 1) + slice * (bitsPerSlice + 1));
         }
 
         std::cerr << "Unknown splitting strategy requested.";
         std::exit(1);
     }
 
-    /** 
+    /**
      * @brief Compute the block fixed-point representation of a row/column of the matrix.
      * This function computes the fixed-point representation of a row/column of the matrix, which is used in the splitting algorithms. It extracts the significand and sign of each element in the row/column, and stores them in the provided vectors.
      * @param fraction Vector to store the fixed-point representation of the elements.
@@ -270,7 +280,171 @@ struct MatrixSplit {
             }
         }
     }
-    
+
+    /**
+     * @brief Split the matrix using unsigned slice encoding.
+     *
+     * This is an implementation of the algorithm in section 3 of:
+     *
+     *    Schwarz A., Anders A., Brower C., Bayraktar H., Gunnels J., Clark K.,
+     *    Xu R. G., Rodriguez S., Cayrols S., Tabaszewski P., Podlozhnyuk V.
+     *    Guaranteed DGEMM accuracy while using reduced precision tensor cores
+     *    throguh extensions of the Ozaki scheme. SCA/HPCAsia 2026.
+     *    DOI: 10.1145/3773656.3773670
+     */
+    void computeSplitsWithUnsignedEncoding() {
+        this->splitType = splittingStrategy::unsignedEncoding;
+        // Compute splits one row/column at a time.
+        auto numFracBits = computeNumFracBits<fp_t>();
+        auto bitsPerSlice = this->bitsPerSlice;
+        auto iStride = this->iStride();
+        auto jStride = this->jStride();
+        std::vector<uint_t> fraction (this->innerProductDimension());
+        std::vector<bool> sign (this->innerProductDimension());
+        for (size_t i = 0; i < this->otherDimension(); i++) {
+            // Get binary representation of significands of normalised row/column.
+            computeFixedPointRepresentationVector(fraction, sign, i);
+
+            // Create bitmasks.
+            // This algorithm uses bitsPerSlice bits for the first slice and bitsPerSlice + 1 bits for subsequent slices.
+            // This choice is to keep the algorithm consistent with the bitmasking approach above.
+            // NOTE: I am using a first slice with bitsPerSlice - 1 bits. This is not mentioned in sabb26, but it seems
+            // necessary to do this, if I want to ensure that the first slice does not overflow if the second slice
+            // is negative in two's complement.
+            const uint_t smallBitmask = (1 << (bitsPerSlice - 1)) - 1;
+            const uint_t largeBitmask = (1 << (bitsPerSlice + 1)) - 1;
+
+            // Perform the split.
+            for (size_t j = 0; j < this->innerProductDimension(); j++) {
+
+
+            int currentExponent;
+            frexp(this->matrix[i * iStride + j * jStride], &currentExponent);
+            int16_t exponentDifference = scalingExponents[i] - currentExponent;
+
+            // Boundary below slice 0, fully aligned to this entry.
+            int16_t firstShift = numFracBits - (bitsPerSlice - 1) + exponentDifference;
+
+            splitint_t value = 0;
+            uint_t remainder = 0;
+
+            if (!sign[j]) {
+                // Positive number: leading digit is truncation.
+                uint_t bitmask = (firstShift > 0)
+                    ? (smallBitmask << firstShift)
+                    : (smallBitmask >> -firstShift);
+
+                uint_t currentSlice = fraction[j] & bitmask;
+                uint_t currentSplit = (firstShift > 0)
+                    ? (currentSlice >> firstShift)
+                    : (currentSlice << -firstShift);
+
+                value = static_cast<splitint_t>(currentSplit);
+                remainder = fraction[j] & ((uint_t(1) << firstShift) - 1);
+            } else {
+                // Negative number.
+                if (exponentDifference > (signed)(bitsPerSlice - 1)) {
+                    // Too small to contribute explicit bits to slice 0:
+                    // round toward -infinity gives -1.
+                    value = -1;
+
+                    // IMPORTANT: complement at the FULL aligned boundary.
+                    remainder = (uint_t(1) << firstShift) - fraction[j];
+                } else {
+                    // Normal truncation path for the leading slice.
+                    uint_t bitmask = (firstShift > 0)
+                        ? (smallBitmask << firstShift)
+                        : (smallBitmask >> -firstShift);
+
+                    uint_t currentSlice = fraction[j] & bitmask;
+                    uint_t currentSplit = (firstShift > 0)
+                        ? (currentSlice >> firstShift)
+                        : (currentSlice << -firstShift);
+
+                    value = -static_cast<splitint_t>(currentSplit);
+
+                    uint_t lowMask = (uint_t(1) << firstShift) - 1;
+                    uint_t lowBits = fraction[j] & lowMask;
+
+                    if (lowBits != 0) {
+                        value -= 1;  // round toward -infinity
+                        remainder = (uint_t(1) << firstShift) - lowBits;
+                    } else {
+                        remainder = 0;
+                    }
+                }
+            }
+
+            this->memory[i * iStride + j * jStride] = value;
+
+            // From here on, the remainder is already aligned and nonnegative.
+            fraction[j] = remainder;
+            int shiftCounter = firstShift - (bitsPerSlice + 1);
+            exponentDifference = 0;
+
+                // Split (nonnegative) remainder with unsigned slice encoding.
+                for (size_t slice = 1; slice < numSplits; slice++) {
+                    if (exponentDifference > (signed)(bitsPerSlice + 1)) {
+                        exponentDifference -= (bitsPerSlice + 1);
+                    } else {
+                        shiftCounter += exponentDifference;
+                        exponentDifference = 0;
+
+                        uint_t bitmask = shiftCounter > 0 ?
+                            largeBitmask << shiftCounter :
+                            largeBitmask >> -shiftCounter;
+
+                        uint_t currentSlice = fraction[j] & bitmask;
+                        uint_t currentSplit = shiftCounter > 0 ?
+                            currentSlice >> shiftCounter :
+                            currentSlice << -shiftCounter;
+
+                        // Width of sub-leading slices is (bitsPerSlice + 1) bits.
+                        const auto width  = bitsPerSlice + 1;
+                        const auto cutoff = static_cast<wideint_t>(uint_t(1) << bitsPerSlice); // 2^b
+                        const auto base   = static_cast<wideint_t>(uint_t(1) << width);        // 2^(b+1)
+                        const auto digitMax = cutoff - 1;   //  2^b - 1
+                        const auto digitMin = -cutoff;      // -2^b
+
+                        // If the unsigned digit is in the upper half, propagate carry upward.
+                        if (currentSplit >= static_cast<uint_t>(cutoff)) {
+                            int nextSlice = static_cast<int>(slice) - 1;
+                            while (true) {
+                                const size_t prevIdx =
+                                    i * iStride + j * jStride + nextSlice * this->matrix.size();
+
+                                auto newValue =
+                                    static_cast<wideint_t>(this->memory[prevIdx]) + 1;
+
+                                if (newValue <= digitMax) {
+                                    this->memory[prevIdx] = static_cast<splitint_t>(newValue);
+                                    break;
+                                } else {
+                                    this->memory[prevIdx] = static_cast<splitint_t>(digitMin);
+                                    nextSlice--;
+                                }
+                            }
+                        }
+
+                        // Store the slice as a signed (b+1)-bit value:
+                        // [0, 2^b-1]      -> unchanged
+                        // [2^b, 2^(b+1)-1] -> subtract 2^(b+1), yielding [-2^b, -1]
+                        wideint_t signedDigit = static_cast<wideint_t>(currentSplit);
+                        if (signedDigit >= cutoff) {
+                            signedDigit -= base;
+                        }
+
+                        this->memory[
+                            i * iStride + j * jStride + slice * this->matrix.size()
+                        ] = static_cast<splitint_t>(signedDigit);
+
+                        shiftCounter -= (bitsPerSlice + 1);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @brief Split the matrix using round-to-nearest.
      *
@@ -328,14 +502,14 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
 
 /**
  * @brief Accumulate products in floating-point arithmetic.
- * 
+ *
  * This function accumulates the exact products of integer slices in floating-point
  * arithmetic, using the algorithm described in:
  *
  *    Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication
  *    unit. Int. J. High Performance Comput. App. 2024;38(4):297-313.
  *    DOI: 10.1177/10943420241239588
- * 
+ *
  * @tparam splitint_t Integer type used for splits.
  * @tparam accumulator_t Accumulator type.
  * @tparam fp_t Floating-point type (e.g., float, double).
@@ -360,7 +534,7 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
             std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
             computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, Aindex, Bindex);
             for (size_t i = 0; i < A.m; i++) {
-                for (size_t j = 0; j < B.n; j++) {                    
+                for (size_t j = 0; j < B.n; j++) {
                     int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
                     fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[i + j * A.m]), -totalShift);
                     fp_t scalingFactor = A.powersVector[i] * B.powersVector[j];
@@ -377,7 +551,7 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
 
 /**
  * @brief Accumulate products in integer arithmetic.
- * 
+ *
  * This function accumulates the exact products of integer slices in integer
  * arithmetic along each anti-diagonal, and in floating-point arithmetic
  * across diagonals. It uses the algorithm described in:
