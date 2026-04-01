@@ -6,6 +6,7 @@ var structMatrixSplit =
     [ "computeSliceBitOffset", "d0/d06/structMatrixSplit.html#ac2ec1f8804748b296f43b22a64b3d745", null ],
     [ "computeSplitsWithBitMasking", "d0/d06/structMatrixSplit.html#a2d6cccc4dabb6bcf4f6e0df07c830f9d", null ],
     [ "computeSplitsWithRoundToNearest", "d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba", null ],
+    [ "computeSplitsWithUnsignedEncoding", "d0/d06/structMatrixSplit.html#afba567e7930b08676fe39bac63f9f465", null ],
     [ "innerProductDimension", "d0/d06/structMatrixSplit.html#a86032c0d6f665f1df47be61332599db3", null ],
     [ "iStride", "d0/d06/structMatrixSplit.html#a40e596fd4f2f50cd24e2b3b86c5fe8ff", null ],
     [ "jStride", "d0/d06/structMatrixSplit.html#a9278cc633acaa2d414299577f6ea8f7f", null ],

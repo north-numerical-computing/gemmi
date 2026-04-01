@@ -9,5 +9,6 @@ var searchData=
   ['computeproductswithintegeraccumulation_6',['computeProductsWithIntegerAccumulation',['../dc/de8/gemmi_8hpp.html#a161da4c01333e3851e12937441b09fd6',1,'gemmi.hpp']]],
   ['computeslicebitoffset_7',['computeSliceBitOffset',['../d0/d06/structMatrixSplit.html#ac2ec1f8804748b296f43b22a64b3d745',1,'MatrixSplit']]],
   ['computesplitswithbitmasking_8',['computeSplitsWithBitMasking',['../d0/d06/structMatrixSplit.html#a2d6cccc4dabb6bcf4f6e0df07c830f9d',1,'MatrixSplit']]],
-  ['computesplitswithroundtonearest_9',['computeSplitsWithRoundToNearest',['../d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba',1,'MatrixSplit']]]
+  ['computesplitswithroundtonearest_9',['computeSplitsWithRoundToNearest',['../d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba',1,'MatrixSplit']]],
+  ['computesplitswithunsignedencoding_10',['computeSplitsWithUnsignedEncoding',['../d0/d06/structMatrixSplit.html#afba567e7930b08676fe39bac63f9f465',1,'MatrixSplit']]]
 ];

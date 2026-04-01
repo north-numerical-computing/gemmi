@@ -140,6 +140,7 @@ Enumerations</h2></td></tr>
 <tr class="memdesc:ab3f5bfb1c3081bf0041b4eb3aff4faf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum to specify the dimension used for normalization.  <a href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">More...</a><br /></td></tr>
 <tr class="separator:ab3f5bfb1c3081bf0041b4eb3aff4faf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad8ea3a11b81457b42367460195a49e9" id="r_aad8ea3a11b81457b42367460195a49e9"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a> { <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a93dd9736b6843653ebf730c13b8cbd04">bitMasking</a>
+, <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9af4ad70253d0174851f373fab0a220066">unsignedEncoding</a>
 , <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab">roundToNearest</a>
  }</td></tr>
 <tr class="memdesc:aad8ea3a11b81457b42367460195a49e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum to specify the splitting strategy to use.  <a href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">More...</a><br /></td></tr>
@@ -230,7 +231,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00056">56</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00057">57</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -262,7 +263,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00064">64</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00065">65</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -321,6 +322,8 @@ Functions</h2></td></tr>
 <p>Enum to specify the splitting strategy to use. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aad8ea3a11b81457b42367460195a49e9a93dd9736b6843653ebf730c13b8cbd04" name="aad8ea3a11b81457b42367460195a49e9a93dd9736b6843653ebf730c13b8cbd04"></a>bitMasking&#160;</td><td class="fielddoc"><p>Split using bit masking (truncation). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aad8ea3a11b81457b42367460195a49e9af4ad70253d0174851f373fab0a220066" name="aad8ea3a11b81457b42367460195a49e9af4ad70253d0174851f373fab0a220066"></a>unsignedEncoding&#160;</td><td class="fielddoc"><p>Split using unsigned slice encoding. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab" name="aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab"></a>roundToNearest&#160;</td><td class="fielddoc"><p>Split using round-to-nearest. </p>
 </td></tr>
@@ -397,7 +400,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00316">316</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00490">490</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -601,7 +604,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00350">350</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00524">524</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -661,7 +664,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00399">399</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00573">573</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -717,7 +720,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00493">493</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00667">667</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -823,7 +826,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00451">451</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00625">625</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

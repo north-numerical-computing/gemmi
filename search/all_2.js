@@ -11,5 +11,6 @@ var searchData=
   ['computeslicebitoffset_8',['computeSliceBitOffset',['../d0/d06/structMatrixSplit.html#ac2ec1f8804748b296f43b22a64b3d745',1,'MatrixSplit']]],
   ['computesplitswithbitmasking_9',['computeSplitsWithBitMasking',['../d0/d06/structMatrixSplit.html#a2d6cccc4dabb6bcf4f6e0df07c830f9d',1,'MatrixSplit']]],
   ['computesplitswithroundtonearest_10',['computeSplitsWithRoundToNearest',['../d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba',1,'MatrixSplit']]],
-  ['configuration_11',['Configuration',['../index.html#autotoc_md5',1,'']]]
+  ['computesplitswithunsignedencoding_11',['computeSplitsWithUnsignedEncoding',['../d0/d06/structMatrixSplit.html#afba567e7930b08676fe39bac63f9f465',1,'MatrixSplit']]],
+  ['configuration_12',['Configuration',['../index.html#autotoc_md5',1,'']]]
 ];
