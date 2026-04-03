@@ -151,7 +151,7 @@ std::vector<fp_t> reconstructFromSplit(const MatrixSplit<splitint_t, fp_t> &spli
 	for (size_t i = 0; i < otherDim; ++i) {
 		for (size_t j = 0; j < innerDim; ++j) {
 		const size_t index = i * iStride + j * jStride;
-		fp_t value = fp_t{0};
+		fp_t value = 0.0;
 		for (size_t slice = 0; slice < split.numSplits; ++slice) {
 			const auto digit =
 				static_cast<fp_t>(split.memory[index + slice * matrixSize]);
@@ -207,7 +207,7 @@ template <typename fp_t>
 std::vector<fp_t> makeRandomMatrix(size_t rows, size_t cols,
                                    std::uint64_t seed) {
     std::mt19937_64 gen(seed);
-    std::uniform_real_distribution<fp_t> dist(fp_t(-100000.0), fp_t(100000.0));
+    std::uniform_real_distribution<fp_t> dist(fp_t(-100000000.0), fp_t(100000000.0));
 
     std::vector<fp_t> matrix(rows * cols);
     for (auto &x : matrix) {
@@ -238,8 +238,8 @@ void runGemmiAccuracyTests() {
 										<< ", multiplication=" << toString(multiplicationType)
 										<< ", numSplitA=" << numSplitA
 										<< ", numSplitB=" << numSplitB) {
-										const auto A = makeRandomMatrix<fp_t>(m, k, 42);
-										const auto B = makeRandomMatrix<fp_t>(k, n, 42);
+										const auto A = makeRandomMatrix<fp_t>(m, k, 127);
+										const auto B = makeRandomMatrix<fp_t>(k, n, 255);
 
 										const auto C = gemmi<fp_t, int8_t, int32_t>(
 											A, B, m, k, n, numSplitA, numSplitB, splitType,
