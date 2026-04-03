@@ -3,6 +3,22 @@
 #include <vector>
 #include <iostream>
 
+// Own definition of std::unreachable, to support older versions of C++.
+// Only used for coverage and debugging purposes.
+[[noreturn]] inline void unreachable() {
+#ifdef NDEBUG
+    #if defined(__GNUC__) || defined(__clang__)
+        __builtin_unreachable();
+    #elif defined(_MSC_VER)
+        __assume(false);
+    #else
+        std::abort();
+    #endif
+#else
+    std::abort();
+#endif
+}
+
 /**
  * @file gemmi.hpp
  * @brief Integer matrix multiplication using the Ozaki scheme.
@@ -197,10 +213,9 @@ struct MatrixSplit {
                 // Slice 0 -> b - 1
                 // Slice k -> (b - 1) + k * (b + 1)
                 return static_cast<int>((bitsPerSlice - 1) + slice * (bitsPerSlice + 1));
+            default:
+                unreachable();
         }
-
-        std::cerr << "Unknown splitting strategy requested.";
-        std::exit(1);
     }
 
     /**
@@ -660,8 +675,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
             numDiagonals = splitA.numSplits + splitB.numSplits - 1;
             break;
         default:
-            std::cerr << "Unknown multiplication strategy requested.";
-            exit(1);
+            unreachable();
     }
 
     switch (accType) {
@@ -670,8 +684,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
         case accumulationStrategy::integer:
             return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, numDiagonals);
         default:
-            std::cerr << "Unknown accumulation strategy requested.";
-            exit(1);
+            unreachable();
     }
 }
 template <typename fp_t, typename splitint_t, typename accumulator_t>
