@@ -168,11 +168,14 @@ private:
                     const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                     if (std::string(field) == "split") {
                         switch ((char)data[0]) {
-                            case 'n':
-                                options->splitType = splittingStrategy::roundToNearest;
-                                break;
                             case 'b':
                                 options->splitType = splittingStrategy::bitMasking;
+                                break;
+                            case 'u':
+                                options->splitType = splittingStrategy::unsignedEncoding;
+                                break;
+                            case 'n':
+                                options->splitType = splittingStrategy::roundToNearest;
                                 break;
                             default:
                                 matlabPtr->feval(u"error",
