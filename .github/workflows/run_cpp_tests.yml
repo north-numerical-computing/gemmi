@@ -16,15 +16,30 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
-    - name: Install Catch2
+    - name: Cache Catch2 build
+      id: catch2-cache
+      uses: actions/cache@v5
+      with:
+          path: |
+            ~/.local/catch2
+          key: ${{ runner.os }}-catch2
+
+    - name: Build Catch2
+      if: steps.catch2-cache.outputs.cache-hit != 'true'
       run: |
         git clone https://github.com/catchorg/Catch2.git
         cd Catch2
-        git checkout "v3.4.0"
+        git checkout "v3.13.0"
         mkdir build && cd build
-        cmake .. -DBUILD_TESTING=Off
-        make -j $(nproc)
-        sudo make install
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX=$HOME/.local/catch2 \
+          -DBUILD_TESTING=Off
+        cmake --build . \
+          --config Release --
+        cmake --install .
+
+    - name: Configure CMake Prefix
+      run: echo "$HOME/.local/catch2/lib/cmake/Catch2" >> $GITHUB_PATH
 
     - name: Configure for tests
       if: runner.os == 'macOS'
