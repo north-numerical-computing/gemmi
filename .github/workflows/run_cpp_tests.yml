@@ -46,7 +46,7 @@ jobs:
         ctest --output-on-failure --verbose
 
     - name: Upload coverage report to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       if: runner.os == 'Linux'
       with:
         verbose: true
