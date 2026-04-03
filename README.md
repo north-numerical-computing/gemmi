@@ -2,6 +2,7 @@
 
 [![Version](https://img.shields.io/github/v/tag/north-numerical-computing/gemmi?label=version)](https://github.com/north-numerical-computing/gemmi/tags)
 [![Testing](https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml/badge.svg?branch=main)](https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml)
+[![codecov](https://codecov.io/github/north-numerical-computing/gemmi/graph/badge.svg?token=fhhn9BtZgL)](https://codecov.io/github/north-numerical-computing/gemmi)
 [![GitHub](https://img.shields.io/github/license/north-numerical-computing/gemmi)](https://github.com/north-numerical-computing/gemmi/blob/main/LICENSE.md)
 
 ## Dependencies

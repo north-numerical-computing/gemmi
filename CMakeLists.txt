@@ -14,7 +14,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
+add_compile_options(-Wall -Wextra -Wpedantic)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Og --coverage")
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-g -Og --coverage")
