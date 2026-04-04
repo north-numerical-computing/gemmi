@@ -1,11 +1,13 @@
 <map id="include/gemmi.hpp" name="include/gemmi.hpp">
-<area shape="rect" id="Node000001" title="Integer matrix multiplication using the Ozaki scheme." alt="" coords="75,5,222,31"/>
+<area shape="rect" id="Node000001" title="Integer matrix multiplication using the Ozaki scheme." alt="" coords="122,5,269,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,44,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,33,57,74,55,70,127,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,33,58,79,56,74,167,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="69,79,138,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,32,120,69,116,66,139,30"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="163,79,225,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="158,30,182,66,177,69,154,32"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="250,79,330,104"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="173,28,256,70,254,75,170,33"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,33,131,72,127,68,179,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="163,79,228,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="198,31,198,65,193,65,193,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="252,79,315,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="211,29,260,68,257,72,208,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="339,79,419,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="226,28,337,71,335,76,224,33"/>
 </map>
