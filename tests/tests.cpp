@@ -57,7 +57,7 @@ std::string toString(multiplicationStrategy strategy) {
 }
 
 template <typename fp_t>
-using storage_t = typename getStorage_format<fp_t>::storage_format;
+using storage_t = typename getStorageFormat<fp_t>::storage_format;
 
 template <typename fp_t>
 std::string hexBits(fp_t value) {
@@ -89,19 +89,49 @@ void requireBitwiseIdenticalVectors(const std::vector<fp_t> &actual,
  ***********************/
 
 template <typename fp_t>
+inline void pushWithBothSigns(std::vector<fp_t>& out,
+                              typename getStorageFormat<fp_t>::storage_format bits) {
+    using uint_t = typename getStorageFormat<fp_t>::storage_format;
+    const size_t totalBits = sizeof(uint_t) * 8;
+    const uint_t signMask  = uint_t(1) << (totalBits - 1);
+    out.push_back(std::bit_cast<fp_t>(bits));
+    out.push_back(std::bit_cast<fp_t>(bits | signMask));
+}
+
+template <typename fp_t>
+std::vector<fp_t> generateValuesWithSignificand(typename getStorageFormat<fp_t>::storage_format pattern,
+        									    int expMin, int expMax) {
+    using uint_t = typename getStorageFormat<fp_t>::storage_format;
+
+    const size_t fracBits = computeNumFracBits<fp_t>();
+    const size_t expBits  = computeNumExpBits<fp_t>();
+
+    const uint_t fracMask = (uint_t(1) << fracBits) - 1;
+    const uint_t expMask  = (uint_t(1) << expBits) - 1;
+
+    const uint_t fracPart = pattern & fracMask;
+    const int bias = (1 << (expBits - 1)) - 1;
+
+    std::vector<fp_t> result;
+    result.reserve((expMax - expMin + 1) * 2);
+
+    for (int e = expMin; e <= expMax; e++) {
+        int stored = e + bias;
+        if (stored <= 0 || stored >= int(expMask))
+			continue; // Skip subnormals, infs, and NaNs.
+
+        uint_t bits = (uint_t(stored) << (fracBits - 1)) | fracPart;
+        pushWithBothSigns<fp_t>(result, bits);
+    }
+
+    return result;
+}
+
+template <typename fp_t>
 std::vector<fp_t> generateTestValues(int targetExponent) {
     using uint_t = typename getStorageFormat<fp_t>::storage_format;
     const size_t fracBits = computeNumFracBits<fp_t>();
 	const size_t expBits = computeNumExpBits<fp_t>();
-    
-	auto pushPositiveAndNegative = [](std::vector<fp_t> &vec, 
-									  uint_t exponent,
-									  uint_t frac) {
-		const size_t totalBits = sizeof(uint_t) * 8;
-		const uint_t signBitmask = uint_t(1) << (totalBits - 1);
-		vec.push_back(std::bit_cast<fp_t>(exponent | frac));
-		vec.push_back(std::bit_cast<fp_t>(signBitmask | exponent | frac));
-	};
 
 	const int bias = (1 << (expBits - 1)) - 1;
     const uint_t expField = uint_t(targetExponent + bias) << (fracBits - 1);
@@ -112,13 +142,13 @@ std::vector<fp_t> generateTestValues(int targetExponent) {
 	// Add powers of 2 and preceding values.
     for (size_t i = 1; i < fracBits; ++i) {
         uint_t frac = uint_t(1) << i;
-        pushPositiveAndNegative(result, expField, frac - 1);
-		pushPositiveAndNegative(result, expField, frac);
+        pushWithBothSigns(result, expField | (frac - 1));
+        pushWithBothSigns(result, expField | frac);
     }
 
 	// Add largest subnormal values in magnitude.
-	uint_t largestSubnormal = (uint_t(1) << fracBits) - 1;
-	pushPositiveAndNegative(result, expField, largestSubnormal);
+	uint_t largestPositiveSubnormal = expField | ((uint_t(1) << fracBits) - 1);
+	pushWithBothSigns(result, largestPositiveSubnormal);
 
     return result;
 }
@@ -287,10 +317,22 @@ TEST_CASE("Split round-trip binary64 – subnormals", "[split][subnormals][doubl
 
 TEST_CASE("Split round-trip binary32 – normals in [1, 2)", "[split][roundtrip][float]") {
   runSplitRoundTripTests<float>(6, generateTestValues<float>(0));
+  runSplitRoundTripTests<float>(7, generateTestValues<float>(0));
 }
 
 TEST_CASE("Split round-trip binary64 – normals in [1, 2)", "[split][roundtrip][double]") {
   runSplitRoundTripTests<double>(6, generateTestValues<double>(0));
+  runSplitRoundTripTests<double>(7, generateTestValues<double>(0));
+}
+
+TEST_CASE("Split round-trip binary32 – wide range", "[split][roundtrip][float]") {
+  runSplitRoundTripTests<float>(6, generateValuesWithSignificand<float>(0xFFFFFF, -10, 1));
+  runSplitRoundTripTests<float>(7, generateValuesWithSignificand<float>(0xFFFFFF, -10, 1));
+}
+
+TEST_CASE("Split round-trip binary64 – wide range", "[split][roundtrip][double]") {
+  runSplitRoundTripTests<double>(6, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 1));
+  runSplitRoundTripTests<double>(7, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 1));
 }
 
 TEST_CASE("GEMMI accuracy binary32", "[gemmi][float]") {
