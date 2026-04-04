@@ -1,23 +1,26 @@
 #include <bit>
 #include <cassert>
+#include <cstdlib>
 #include <vector>
 #include <iostream>
 
 // Own definition of std::unreachable, to support older versions of C++.
 // Only used for coverage and debugging purposes.
-[[noreturn]] inline void unreachable() {
 #ifdef NDEBUG
     #if defined(__GNUC__) || defined(__clang__)
-        __builtin_unreachable();
+        #define UNREACHABLE() do { __builtin_unreachable(); } while (false)
     #elif defined(_MSC_VER)
-        __assume(false);
+        #define UNREACHABLE() do { __assume(false); } while (false)
     #else
-        std::abort();
+        #define UNREACHABLE() do { std::abort(); } while (false)
     #endif
 #else
-    std::abort();
+    #define UNREACHABLE() do { \
+            /* LCOV_EXCL_START */ \
+            std::abort(); \
+            /* LCOV_EXCL_STOP */ \
+    } while (false)
 #endif
-}
 
 /**
  * @file gemmi.hpp
@@ -214,7 +217,7 @@ struct MatrixSplit {
                 // Slice k -> (b - 1) + k * (b + 1)
                 return static_cast<int>((bitsPerSlice - 1) + slice * (bitsPerSlice + 1));
             default:
-                unreachable();
+                UNREACHABLE();
         }
     }
 
@@ -675,7 +678,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
             numDiagonals = splitA.numSplits + splitB.numSplits - 1;
             break;
         default:
-            unreachable();
+            UNREACHABLE();
     }
 
     switch (accType) {
@@ -684,7 +687,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
         case accumulationStrategy::integer:
             return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, numDiagonals);
         default:
-            unreachable();
+            UNREACHABLE();
     }
 }
 template <typename fp_t, typename splitint_t, typename accumulator_t>
