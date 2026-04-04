@@ -1,7 +1,7 @@
 var gemmi_8hpp =
 [
-    [ "get_storage_format< float >", "d3/d9c/structget__storage__format_3_01float_01_4.html", null ],
-    [ "get_storage_format< double >", "d4/da8/structget__storage__format_3_01double_01_4.html", null ],
+    [ "getStorageFormat< float >", "de/d55/structgetStorageFormat_3_01float_01_4.html", null ],
+    [ "getStorageFormat< double >", "dc/de9/structgetStorageFormat_3_01double_01_4.html", null ],
     [ "MatrixSplit< splitint_t, fp_t >", "d0/d06/structMatrixSplit.html", "d0/d06/structMatrixSplit" ],
     [ "accumulationStrategy", "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257", [
       [ "floatingPoint", "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2", null ],
