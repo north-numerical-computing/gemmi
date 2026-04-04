@@ -32,8 +32,11 @@ std::string toString(splittingStrategy strategy) {
 		return "unsignedEncoding";
 	case splittingStrategy::roundToNearest:
 		return "roundToNearest";
+	// LCOV_EXCL_START
+	default:
+		return "unknown";
+	// LCOV_EXCL_STOP
 	}
-	return "unknown";
 }
 
 std::string toString(accumulationStrategy strategy) {
@@ -42,8 +45,11 @@ std::string toString(accumulationStrategy strategy) {
 		return "floatingPoint";
 	case accumulationStrategy::integer:
 		return "integer";
+	// LCOV_EXCL_START
+	default:
+		return "unknown";
+	// LCOV_EXCL_STOP
 	}
-	return "unknown";
 }
 
 std::string toString(multiplicationStrategy strategy) {
@@ -52,8 +58,11 @@ std::string toString(multiplicationStrategy strategy) {
 		return "reduced";
 	case multiplicationStrategy::full:
 		return "full";
+	// LCOV_EXCL_START
+	default:
+		return "unknown";
+	// LCOV_EXCL_STOP	
 	}
-	return "unknown";
 }
 
 template <typename fp_t>
