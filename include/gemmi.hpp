@@ -54,6 +54,22 @@ template <> struct get_storage_format<float> {using storage_format = uint32_t;};
 template <> struct get_storage_format<double> {using storage_format = uint64_t;};
 
 /**
+ * @brief Get the exponent of a floating-point value.
+ * @tparam fp_t Floating-point type (e.g., float, double).
+ * @param value The floating-point value.
+ * @return The value stored in the exponent field of the value, as an integer.
+ */
+template <typename fp_t>
+int getFloatingPointExponent(fp_t value) {
+    if (value == 0.0) {
+        return 0; // Exponent for zero is typically represented as all zeros.
+    } else {
+        return std::max(std::numeric_limits<fp_t>::min_exponent,
+                        std::ilogb(std::abs(value)) + 1);
+    }
+}
+
+/**
  * @brief Enum to specify the dimension used for normalization.
  */
 enum class normalisationDimension {
@@ -191,7 +207,7 @@ struct MatrixSplit {
             // NOTE 1: This is not the technique used in uoi24.
             // NOTE 2: I use exponents instead of powers of 2, as I need the former
             //         to shift correctly.
-            frexp(this->powersVector[i], this->scalingExponents.data() + i);
+            this->scalingExponents[i] = getFloatingPointExponent(this->powersVector[i]);
             this->powersVector[i] = std::ldexp(1.0, this->scalingExponents[i]);
         }
     }
@@ -229,17 +245,16 @@ struct MatrixSplit {
      * @param i The index of the row/column for which to compute the fixed-point representation.
      */
     void computeFixedPointRepresentationVector(std::vector<uint_t> &fraction, std::vector<bool> &sign, size_t i) {
-        auto numExpBits = computeNumExpBits<fp_t>();
         auto numFracBits = computeNumFracBits<fp_t>();
         auto iStride = this->iStride();
         auto jStride = this->jStride();
         for (size_t j = 0; j < this->innerProductDimension(); j++) {
                 const size_t index = i * iStride + j * jStride;
                 fp_t value = this->matrix[index];             // powersVector[i];
-                fraction[j] = std::bit_cast<uint_t>(value);        // To bitstring.
-                sign[j] = std::signbit(value);                // Extract sign.
-                uint_t bitmask = (~((uint_t)(0))) >> (numExpBits + 1);
-                fraction[j] = fraction[j] & bitmask; // Remove exponent and sign.
+                fraction[j] = std::bit_cast<uint_t>(value);
+                sign[j] = std::signbit(value);
+                uint_t bitmask = (1ull << (numFracBits - 1)) - 1;
+                fraction[j] = fraction[j] & bitmask;
                 // Restore implicit bit for normal numbers.
                 // NOTE: NaNs and infs are currently not supported.
                 if (std::fpclassify(value) == FP_NORMAL)
@@ -273,9 +288,10 @@ struct MatrixSplit {
             const uint_t smallBitmask = (1 << bitsPerSlice) - 1;
             // Perform the split.
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
+
+                // NOTE: I could have a special path for 0.
                 int16_t shiftCounter = numFracBits - bitsPerSlice;
-                int currentExponent;
-                frexp(this->matrix[i * iStride + j * jStride], &currentExponent);
+                int currentExponent = getFloatingPointExponent(this->matrix[i * iStride + j * jStride]);
                 int16_t exponentDifference = scalingExponents[i] - currentExponent;
                 for (size_t slice = 0; slice < numSplits; slice++) {
                     if (exponentDifference > (signed)bitsPerSlice) {
@@ -334,8 +350,8 @@ struct MatrixSplit {
 
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
 
-                int currentExponent;
-                frexp(this->matrix[i * iStride + j * jStride], &currentExponent);
+                // NOTE: I could have a special path for 0.
+                int currentExponent = getFloatingPointExponent(this->matrix[i * iStride + j * jStride]);
                 int16_t exponentDifference = scalingExponents[i] - currentExponent;
 
                 // Boundary below slice 0, fully aligned to this entry.
