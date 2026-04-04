@@ -31,9 +31,9 @@ template <> size_t computeNumFracBits<double>() {return 53;}
  * @brief Map floating-point type to its corresponding storage format.
  * @tparam fp_t Floating-point type (e.g., float, double).
  */
-template <typename fp_t> struct get_storage_format;
-template <> struct get_storage_format<float> {using storage_format = uint32_t;};
-template <> struct get_storage_format<double> {using storage_format = uint64_t;};
+template <typename fp_t> struct getStorageFormat;
+template <> struct getStorageFormat<float> {using storage_format = uint32_t;};
+template <> struct getStorageFormat<double> {using storage_format = uint64_t;};
 
 /**
  * @brief Get the exponent of a floating-point value.
@@ -103,7 +103,7 @@ struct MatrixSplit {
     std::vector<fp_t> powersVector;    ///< Normalisation vector.
     std::vector<int> scalingExponents; ///< Scaling exponents.
 
-    using uint_t = typename get_storage_format<fp_t>::storage_format;
+    using uint_t = typename getStorageFormat<fp_t>::storage_format;
     using wideint_t = std::conditional_t<(sizeof(splitint_t) < sizeof(int)), int, std::intmax_t>;
 
     /**

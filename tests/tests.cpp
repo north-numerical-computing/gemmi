@@ -57,7 +57,7 @@ std::string toString(multiplicationStrategy strategy) {
 }
 
 template <typename fp_t>
-using storage_t = typename get_storage_format<fp_t>::storage_format;
+using storage_t = typename getStorage_format<fp_t>::storage_format;
 
 template <typename fp_t>
 std::string hexBits(fp_t value) {
@@ -90,7 +90,7 @@ void requireBitwiseIdenticalVectors(const std::vector<fp_t> &actual,
 
 template <typename fp_t>
 std::vector<fp_t> generateTestValues(int targetExponent) {
-    using uint_t = typename get_storage_format<fp_t>::storage_format;
+    using uint_t = typename getStorageFormat<fp_t>::storage_format;
     const size_t fracBits = computeNumFracBits<fp_t>();
 	const size_t expBits = computeNumExpBits<fp_t>();
     
