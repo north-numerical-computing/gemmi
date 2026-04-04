@@ -89,42 +89,43 @@ void requireBitwiseIdenticalVectors(const std::vector<fp_t> &actual,
  ***********************/
 
 template <typename fp_t>
-std::vector<fp_t> makeRoundTripValues();
+std::vector<fp_t> generateTestValues(int targetExponent) {
+    using uint_t = typename get_storage_format<fp_t>::storage_format;
+    const size_t fracBits = computeNumFracBits<fp_t>();
+	const size_t expBits = computeNumExpBits<fp_t>();
+    
+	auto pushPositiveAndNegative = [](std::vector<fp_t> &vec, 
+									  uint_t exponent,
+									  uint_t frac) {
+		const size_t totalBits = sizeof(uint_t) * 8;
+		const uint_t signBitmask = uint_t(1) << (totalBits - 1);
+		vec.push_back(std::bit_cast<fp_t>(exponent | frac));
+		vec.push_back(std::bit_cast<fp_t>(signBitmask | exponent | frac));
+	};
 
-template <>
-std::vector<float> makeRoundTripValues<float>() {
-    return {
-		std::bit_cast<float>(0x00000000u), //    0.0
-		std::bit_cast<float>(0x41000000u), //    8.0
-		std::bit_cast<float>(0x41000001u), //    8.00000095367431640625
-		std::bit_cast<float>(0x41234567u), //   10.20444393157958984375
-		std::bit_cast<float>(0x417FFFFFu), //   15.99999904632568359375
-		std::bit_cast<float>(0x42000000u), //   16.0
-		std::bit_cast<float>(0xC1000000u), //  - 8.0
-		std::bit_cast<float>(0xC1000001u), //  - 8.00000095367431640625
-		std::bit_cast<float>(0xC1234567u), //  -10.20444393157958984375
-		std::bit_cast<float>(0xC17FFFFFu), //  -15.99999904632568359375
-		std::bit_cast<float>(0xC2000000u), //  -16.0
-		std::bit_cast<float>(0x4149F2CAu)  //   12.6217746734619140625
-    };
+	const int bias = (1 << (expBits - 1)) - 1;
+    const uint_t expField = uint_t(targetExponent + bias) << (fracBits - 1);
+
+    std::vector<fp_t> result;
+    result.reserve(4 * (fracBits - 1) + 2);
+
+	// Add powers of 2 and preceding values.
+    for (size_t i = 1; i < fracBits; ++i) {
+        uint_t frac = uint_t(1) << i;
+        pushPositiveAndNegative(result, expField, frac - 1);
+		pushPositiveAndNegative(result, expField, frac);
+    }
+
+	// Add largest subnormal values in magnitude.
+	uint_t largestSubnormal = (uint_t(1) << fracBits) - 1;
+	pushPositiveAndNegative(result, expField, largestSubnormal);
+
+    return result;
 }
 
-template <>
-std::vector<double> makeRoundTripValues<double>() {
-	return {
-		std::bit_cast<double>(0x0000000000000000ull), //   0.0
-		std::bit_cast<double>(0x4040000000000000ull), //  32.0
-		std::bit_cast<double>(0x4040000000000001ull), //  32.00000000000001
-		std::bit_cast<double>(0x404123456789ABCDull), //  34.27555555555555
-		std::bit_cast<double>(0x404FFFFFFFFFFFFFull), //  63.99999999999999
-		std::bit_cast<double>(0x4050000000000000ull), //  64.0
-		std::bit_cast<double>(0xC040000000000000ull), // -32.0
-		std::bit_cast<double>(0xC040000000000001ull), // -32.00000000000001
-		std::bit_cast<double>(0xC04123456789ABCDull), // -34.27555555555555
-		std::bit_cast<double>(0xC04FFFFFFFFFFFFFull), // -63.99999999999999
-		std::bit_cast<double>(0xC050000000000000ull), // -64.0
-		std::bit_cast<double>(0x404921FB54442D18ull)  //  50.26548245743669
-	};
+template<typename fp_t>
+std::vector<fp_t> generateTestSubnormals() {
+	return generateTestValues<fp_t>(std::numeric_limits<fp_t>::min_exponent - 2);
 }
 
 template <typename fp_t>
@@ -171,39 +172,48 @@ template <>
 constexpr size_t numSlicesForExactRoundTrip<double>() { return 32; }
 
 template <typename fp_t>
-void runSplitRoundTripTests() {
-	constexpr size_t bitsPerSlice = 6;
-	constexpr size_t m = 3;
-	constexpr size_t n = 4;
+void runSplitRoundTripTests(const size_t bitsPerSlice, std::vector<fp_t> testValues) {
+    const size_t numSplits = numSlicesForExactRoundTrip<fp_t>();
 
-	const auto matrix = makeRoundTripValues<fp_t>();
-	const size_t numSplits = numSlicesForExactRoundTrip<fp_t>();
+    // Generate an even number of subnormals.
+    const size_t subnormalCount = testValues.size();
 
-	for (auto strategy :
-		{splittingStrategy::bitMasking, splittingStrategy::unsignedEncoding,
-			splittingStrategy::roundToNearest}) {
-		DYNAMIC_SECTION("type="
-						<< (std::is_same_v<fp_t, float> ? "float" : "double")
-						<< ", strategy=" << toString(strategy)
-						<< ", dimension=byRows") {
-		MatrixSplit<int8_t, fp_t> split(matrix, m, n, strategy, numSplits,
-										bitsPerSlice,
-										normalisationDimension::byRows);
-		const auto reconstructed = reconstructFromSplit(split);
-		requireBitwiseIdenticalVectors(reconstructed, matrix);
-		}
+    struct Shape { size_t m, n; };
+    std::vector<Shape> shapes = {
+        {1, subnormalCount},
+        {2, subnormalCount / 2},
+        {subnormalCount / 2, 2},
+    };
 
-		DYNAMIC_SECTION("type="
-						<< (std::is_same_v<fp_t, float> ? "float" : "double")
-						<< ", strategy=" << toString(strategy)
-						<< ", dimension=byCols") {
-		MatrixSplit<int8_t, fp_t> split(matrix, m, n, strategy, numSplits,
-										bitsPerSlice,
-										normalisationDimension::byCols);
-		const auto reconstructed = reconstructFromSplit(split);
-		requireBitwiseIdenticalVectors(reconstructed, matrix);
-		}
-	}
+    for (auto [m, n] : shapes) {
+        std::vector<fp_t> mat(m * n);
+        for (size_t i = 0; i < m * n; ++i)
+            mat[i] = testValues[i % subnormalCount];
+
+        for (auto strategy : {splittingStrategy::bitMasking,
+              				  splittingStrategy::unsignedEncoding,
+              				  splittingStrategy::roundToNearest}) {
+            for (auto dim : {normalisationDimension::byRows,
+                             normalisationDimension::byCols}) {
+                DYNAMIC_SECTION(
+                    "type=" << (std::is_same_v<fp_t,float> ? "float" : "double")
+                    << ", strategy=" << toString(strategy)
+                    << ", dim=" << (dim == normalisationDimension::byRows ? "rows" : "cols")
+                    << ", shape=" << m << "x" << n)
+                {
+                    MatrixSplit<int8_t, fp_t> split(
+                        mat, m, n,
+                        strategy,
+                        numSplits,
+                        bitsPerSlice,
+                        dim);
+
+                    const auto recon = reconstructFromSplit(split);
+                    requireBitwiseIdenticalVectors(recon, mat);
+                }
+            }
+        }
+    }
 }
 
 /*******************************
@@ -262,12 +272,25 @@ void runGemmiAccuracyTests() {
 /**************
  * Test cases *
  **************/
-TEST_CASE("Split round-trip binary32", "[split][roundtrip][float]") {
-  runSplitRoundTripTests<float>();
+
+
+TEST_CASE("Split round-trip binary32 – subnormals", "[split][subnormals][float]") {
+    runSplitRoundTripTests<float>(6, generateTestSubnormals<float>());
+    runSplitRoundTripTests<float>(7, generateTestSubnormals<float>());
+	auto res = generateTestValues<float>(0);
 }
 
-TEST_CASE("Split round-trip binary64", "[split][roundtrip][double]") {
-  runSplitRoundTripTests<double>();
+TEST_CASE("Split round-trip binary64 – subnormals", "[split][subnormals][double]") {
+    runSplitRoundTripTests<double>(6, generateTestSubnormals<double>());
+	runSplitRoundTripTests<double>(7, generateTestSubnormals<double>());
+}
+
+TEST_CASE("Split round-trip binary32 – normals in [1, 2)", "[split][roundtrip][float]") {
+  runSplitRoundTripTests<float>(6, generateTestValues<float>(0));
+}
+
+TEST_CASE("Split round-trip binary64 – normals in [1, 2)", "[split][roundtrip][double]") {
+  runSplitRoundTripTests<double>(6, generateTestValues<double>(0));
 }
 
 TEST_CASE("GEMMI accuracy binary32", "[gemmi][float]") {
