@@ -180,9 +180,9 @@ struct MatrixSplit {
         for (size_t i = 0; i < this->otherDimension(); i++) {
             this->powersVector[i] = 0.0;
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
-                const size_t index = i * iStride + j * jStride;
+                const size_t matrixIndex = i * iStride + j * jStride;
                 this->powersVector[i] = std::max(this->powersVector[i],
-                                                  std::abs(this->matrix[index]));
+                                                  std::abs(this->matrix[matrixIndex]));
             }
             // Compute the smallest power of 2 that is strictly greater than the
             // maximum value in the row/column.
@@ -214,9 +214,9 @@ struct MatrixSplit {
                 // Slice 0 -> b - 1
                 // Slice k -> (b - 1) + k * (b + 1)
                 return static_cast<int>((bitsPerSlice - 1) + slice * (bitsPerSlice + 1));
+
             // LCOV_EXCL_START
             default:
-
                 std::abort();
             // LCOV_EXCL_STOP
         }
@@ -234,8 +234,8 @@ struct MatrixSplit {
         auto iStride = this->iStride();
         auto jStride = this->jStride();
         for (size_t j = 0; j < this->innerProductDimension(); j++) {
-                const size_t index = i * iStride + j * jStride;
-                fp_t value = this->matrix[index];             // powersVector[i];
+                const size_t matrixIndex = i * iStride + j * jStride;
+                fp_t value = this->matrix[matrixIndex];
                 fraction[j] = std::bit_cast<uint_t>(value);
                 sign[j] = std::signbit(value);
                 uint_t bitmask = (1ull << (numFracBits - 1)) - 1;
@@ -271,9 +271,9 @@ struct MatrixSplit {
 
             // Create bitmask.
             const uint_t smallBitmask = (1 << bitsPerSlice) - 1;
+
             // Perform the split.
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
-
                 // NOTE: I could have a special path for 0.
                 int16_t shiftCounter = numFracBits - bitsPerSlice;
                 int currentExponent = getFloatingPointExponent(this->matrix[i * iStride + j * jStride]);
@@ -494,11 +494,12 @@ struct MatrixSplit {
             for (size_t i = 0; i < this->otherDimension(); i++) {
                 fp_t sigma = ldexp(0.75, computeNumFracBits<fp_t>() - bitsPerSlice * slice + 1 - bitsPerSlice) * powersVector[i];
                 for (size_t j = 0; j < this->innerProductDimension(); j++) {
-                    auto value = (localMatrix[i * iStride + j * jStride] + sigma);
+                    auto matrixIndex = i * iStride + j * jStride;
+                    auto value = (localMatrix[matrixIndex] + sigma);
                     value -= sigma;
-                    localMatrix[i * iStride + j * jStride] -= value;
+                    localMatrix[matrixIndex] -= value;
                     value = value / powersVector[i] * ldexp(1.0, bitsPerSlice * slice + bitsPerSlice - 1);
-                    this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = value;
+                    this->memory[matrixIndex + slice * this->matrix.size()] = value;
                 }
             }
         }
