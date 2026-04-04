@@ -144,7 +144,7 @@ struct MatrixSplit {
      * @brief Return the dimension along which the inner product is calculated.
      * @return Inner product dimension.
      */
-    size_t innerProductDimension() {
+    size_t innerProductDimension() const {
         return (dimension == normalisationDimension::byRows) ? n : m;
     }
 
@@ -152,7 +152,7 @@ struct MatrixSplit {
      * @brief Return the dimension not used in the inner product.
      * @return Dimension not used in the inner product.
      */
-    size_t otherDimension() {
+    size_t otherDimension() const {
         return (dimension == normalisationDimension::byRows) ? m : n;
     }
 
@@ -160,7 +160,7 @@ struct MatrixSplit {
      * @brief Compute the stride for the i-dimension.
      * @return Stride for the i-dimension.
      */
-    size_t iStride() {
+    size_t iStride() const {
         return (dimension == normalisationDimension::byRows) ? 1 : m;
     }
 
@@ -168,7 +168,7 @@ struct MatrixSplit {
      * @brief Compute the stride for the j-dimension.
      * @return Stride for the j-dimension.
      */
-    size_t jStride() {
+    size_t jStride() const {
         return (dimension == normalisationDimension::byRows) ? m : 1;
     }
 

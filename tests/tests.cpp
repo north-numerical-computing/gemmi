@@ -84,9 +84,9 @@ void requireBitwiseIdenticalVectors(const std::vector<fp_t> &actual,
 	}
 }
 
-/************************
- * Tests matrix slicing *
- ************************/
+/***********************
+ * Testcase generators *
+ ***********************/
 
 template <typename fp_t>
 std::vector<fp_t> makeRoundTripValues();
@@ -128,33 +128,32 @@ std::vector<double> makeRoundTripValues<double>() {
 }
 
 template <typename fp_t>
-constexpr size_t numSlicesForExactRoundTrip() = delete;
-template <>
-constexpr size_t numSlicesForExactRoundTrip<float>() { return 16; }
-template <>
-constexpr size_t numSlicesForExactRoundTrip<double>() { return 32; }
+std::vector<fp_t> makeRandomMatrix(size_t rows, size_t cols,
+                                   std::uint64_t seed) {
+    std::mt19937_64 gen(seed);
+    std::uniform_real_distribution<fp_t> dist(fp_t(-100000000.0), fp_t(100000000.0));
+
+    std::vector<fp_t> matrix(rows * cols);
+    for (auto &x : matrix) {
+        x = dist(gen);
+  	}
+  	return matrix;
+}
+
+/************************
+ * Tests matrix slicing *
+ ************************/
 
 template <typename splitint_t, typename fp_t>
 std::vector<fp_t> reconstructFromSplit(const MatrixSplit<splitint_t, fp_t> &split) {
 	std::vector<fp_t> reconstructed(split.matrix.size(), fp_t{0});
-
-	const size_t matrixSize = split.matrix.size();
-	const size_t otherDim =
-		(split.dimension == normalisationDimension::byRows) ? split.m : split.n;
-	const size_t innerDim =
-		(split.dimension == normalisationDimension::byRows) ? split.n : split.m;
-	const size_t iStride =
-		(split.dimension == normalisationDimension::byRows) ? 1 : split.m;
-	const size_t jStride =
-		(split.dimension == normalisationDimension::byRows) ? split.m : 1;
-
-	for (size_t i = 0; i < otherDim; ++i) {
-		for (size_t j = 0; j < innerDim; ++j) {
-		const size_t index = i * iStride + j * jStride;
+	for (size_t i = 0; i < split.otherDimension(); ++i) {
+		for (size_t j = 0; j < split.innerProductDimension(); ++j) {
+		const size_t index = i * split.iStride() + j * split.jStride();
 		fp_t value = 0.0;
 		for (size_t slice = 0; slice < split.numSplits; ++slice) {
 			const auto digit =
-				static_cast<fp_t>(split.memory[index + slice * matrixSize]);
+				static_cast<fp_t>(split.memory[index + slice * split.matrix.size()]);
 			value += std::ldexp(digit, -split.computeSliceBitOffset(slice));
 		}
 		reconstructed[index] = value * split.powersVector[i];
@@ -163,6 +162,13 @@ std::vector<fp_t> reconstructFromSplit(const MatrixSplit<splitint_t, fp_t> &spli
 
 	return reconstructed;
 }
+
+template <typename fp_t>
+constexpr size_t numSlicesForExactRoundTrip() = delete;
+template <>
+constexpr size_t numSlicesForExactRoundTrip<float>() { return 16; }
+template <>
+constexpr size_t numSlicesForExactRoundTrip<double>() { return 32; }
 
 template <typename fp_t>
 void runSplitRoundTripTests() {
@@ -203,18 +209,6 @@ void runSplitRoundTripTests() {
 /*******************************
  * Tests matrix multiplication *
  *******************************/
-template <typename fp_t>
-std::vector<fp_t> makeRandomMatrix(size_t rows, size_t cols,
-                                   std::uint64_t seed) {
-    std::mt19937_64 gen(seed);
-    std::uniform_real_distribution<fp_t> dist(fp_t(-100000000.0), fp_t(100000000.0));
-
-    std::vector<fp_t> matrix(rows * cols);
-    for (auto &x : matrix) {
-        x = dist(gen);
-  	}
-  	return matrix;
-}
 
 template <typename fp_t>
 void runGemmiAccuracyTests() {
