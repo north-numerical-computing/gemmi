@@ -4,24 +4,6 @@
 #include <vector>
 #include <iostream>
 
-// Own definition of std::unreachable, to support older versions of C++.
-// Only used for coverage and debugging purposes.
-#ifdef NDEBUG
-    #if defined(__GNUC__) || defined(__clang__)
-        #define UNREACHABLE() do { __builtin_unreachable(); } while (false)
-    #elif defined(_MSC_VER)
-        #define UNREACHABLE() do { __assume(false); } while (false)
-    #else
-        #define UNREACHABLE() do { std::abort(); } while (false)
-    #endif
-#else
-    #define UNREACHABLE() do { \
-            /* LCOV_EXCL_START */ \
-            std::abort(); \
-            /* LCOV_EXCL_STOP */ \
-    } while (false)
-#endif
-
 /**
  * @file gemmi.hpp
  * @brief Integer matrix multiplication using the Ozaki scheme.
@@ -232,8 +214,11 @@ struct MatrixSplit {
                 // Slice 0 -> b - 1
                 // Slice k -> (b - 1) + k * (b + 1)
                 return static_cast<int>((bitsPerSlice - 1) + slice * (bitsPerSlice + 1));
+            // LCOV_EXCL_START
             default:
-                UNREACHABLE();
+
+                std::abort();
+            // LCOV_EXCL_STOP
         }
     }
 
@@ -693,8 +678,11 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
             // All products are computed.
             numDiagonals = splitA.numSplits + splitB.numSplits - 1;
             break;
+        // LCOV_EXCL_START
         default:
-            UNREACHABLE();
+            
+            std::abort();
+        // LCOV_EXCL_STOP
     }
 
     switch (accType) {
@@ -702,8 +690,10 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
             return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, numDiagonals);
         case accumulationStrategy::integer:
             return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, numDiagonals);
+        // LCOV_EXCL_START
         default:
-            UNREACHABLE();
+            std::abort();
+        // LCOV_EXCL_STOP   
     }
 }
 template <typename fp_t, typename splitint_t, typename accumulator_t>
