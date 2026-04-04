@@ -335,79 +335,57 @@ struct MatrixSplit {
 
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
 
-                // NOTE: I could have a special path for 0.
-                int currentExponent = getFloatingPointExponent(this->matrix[i * iStride + j * jStride]);
-                int16_t exponentDifference = scalingExponents[i] - currentExponent;
+                auto matrixIndex = i * iStride + j * jStride;
 
-                // Boundary below slice 0, fully aligned to this entry.
-                int16_t firstShift = numFracBits - (bitsPerSlice - 1) + exponentDifference;
+                // NOTE: I could have a special path for 0.
+                int16_t shiftCounter;
+                int currentExponent = getFloatingPointExponent(this->matrix[matrixIndex]);
+                int16_t exponentDifference = scalingExponents[i] - currentExponent;
 
                 splitint_t value = 0;
                 uint_t remainder = 0;
 
-                if (!sign[j]) {
-                    if (exponentDifference > (signed)(bitsPerSlice - 1)) {
-                        // Too small to contribute explicit bits to slice 0.
-                        value = 0;
-                        remainder = fraction[j];
-                    } else {
-                        // Positive number: leading digit is truncation.
-                        uint_t bitmask = (firstShift > 0)
-                            ? (smallBitmask << firstShift)
-                            : (smallBitmask >> -firstShift);
-
-                        uint_t currentSlice = fraction[j] & bitmask;
-                        uint_t currentSplit = (firstShift > 0)
-                            ? (currentSlice >> firstShift)
-                            : (currentSlice << -firstShift);
-
-                        value = static_cast<splitint_t>(currentSplit);
-                        remainder = fraction[j] & ((uint_t(1) << firstShift) - 1);
-                    }
+                // Slice 0.
+                if (exponentDifference > (signed)(bitsPerSlice - 1)) {
+                    // Value is too small to contribute explicit bits to slice 0.
+                    value = sign[j] ? -1 : 0;
+                    remainder = sign[j] ?
+                        ((1ull << (sizeof(uint_t) * 8 - 1)) - fraction[j]) | (uint_t(1) << (sizeof(uint_t) * 8 - 1)) :
+                        fraction[j];
+                    exponentDifference -= (bitsPerSlice - 1);
+                    shiftCounter = numFracBits - (bitsPerSlice + 1);
                 } else {
-                    // Negative number.
-                    if (exponentDifference > (signed)(bitsPerSlice - 1)) {
-                        // Too small to contribute explicit bits to slice 0:
-                        // round toward -infinity gives -1.
-                        value = -1;
-                        remainder = ((1ull << (sizeof(uint_t) * 8 - 1)) - fraction[j]) | (uint_t(1) << (sizeof(uint_t) * 8 - 1));
-                    } else {
-                        // Normal truncation path for the leading slice.
-                        uint_t bitmask = (firstShift > 0)
-                            ? (smallBitmask << firstShift)
-                            : (smallBitmask >> -firstShift);
+                    // Truncation.
+                    shiftCounter = numFracBits - (bitsPerSlice - 1) + exponentDifference;
+                    exponentDifference = 0;
+                    uint_t bitmask = (shiftCounter > 0)
+                        ? (smallBitmask << shiftCounter)
+                        : (smallBitmask >> -shiftCounter);
+                    uint_t currentSlice = fraction[j] & bitmask;
+                    uint_t currentSplit = (shiftCounter > 0)
+                        ? (currentSlice >> shiftCounter)
+                        : (currentSlice << -shiftCounter);
 
-                        uint_t currentSlice = fraction[j] & bitmask;
-                        uint_t currentSplit = (firstShift > 0)
-                            ? (currentSlice >> firstShift)
-                            : (currentSlice << -firstShift);
+                    value = (sign[j] ? -1 : 1) * static_cast<splitint_t>(currentSplit);
 
-                        value = -static_cast<splitint_t>(currentSplit);
+                    // Rounding.
+                    uint_t lowMask = (uint_t(1) << shiftCounter) - 1;
+                    uint_t lowBits = fraction[j] & lowMask;
 
-                        uint_t lowMask = (uint_t(1) << firstShift) - 1;
-                        uint_t lowBits = fraction[j] & lowMask;
-
-                        if (lowBits != 0) {
-                            value -= 1;  // round toward -infinity
-                            remainder = (1ull << firstShift) - lowBits;
-                        } else {
-                            remainder = 0;
-                        }
+                    if (lowBits != 0) {
+                        value += (sign[j] ? -1 : 0);
                     }
+                    remainder = sign[j] ? (1ull << shiftCounter) - lowBits : lowBits;
+                    shiftCounter -= (bitsPerSlice + 1);
                 }
+                this->memory[matrixIndex] = value;
 
-                this->memory[i * iStride + j * jStride] = value;
-
-                // From here on, the remainder is already aligned and nonnegative.
-                int shiftCounter = firstShift - (bitsPerSlice + 1);
-                exponentDifference = 0;
-
-                // Split (nonnegative) remainder with unsigned slice encoding.
+                // Remaining slices.
                 for (size_t slice = 1; slice < numSplits; slice++) {
                     if (exponentDifference > (signed)(bitsPerSlice + 1)) {
                         exponentDifference -= (bitsPerSlice + 1);
                         if (sign[j]) {
-                            this->memory[i * iStride + j * jStride + slice * this->matrix.size()] = static_cast<splitint_t>(largeBitmask);
+                            this->memory[matrixIndex + slice * this->matrix.size()] = static_cast<splitint_t>(largeBitmask);
                         }
                     } else {
                         shiftCounter += exponentDifference;
@@ -440,11 +418,8 @@ struct MatrixSplit {
                         if (currentSplit >= static_cast<uint_t>(cutoff)) {
                             int nextSlice = static_cast<int>(slice) - 1;
                             while (true) {
-                                const size_t prevIdx =
-                                    i * iStride + j * jStride + nextSlice * this->matrix.size();
-
-                                auto newValue =
-                                    static_cast<wideint_t>(this->memory[prevIdx]) + 1;
+                                const size_t prevIdx = matrixIndex + nextSlice * this->matrix.size();
+                                auto newValue = static_cast<wideint_t>(this->memory[prevIdx]) + 1;
 
                                 if (newValue <= digitMax) {
                                     this->memory[prevIdx] = static_cast<splitint_t>(newValue);
@@ -464,10 +439,7 @@ struct MatrixSplit {
                             signedDigit -= base;
                         }
 
-                        this->memory[
-                            i * iStride + j * jStride + slice * this->matrix.size()
-                        ] = static_cast<splitint_t>(signedDigit);
-
+                        this->memory[matrixIndex + slice * this->matrix.size()] = static_cast<splitint_t>(signedDigit);
                         shiftCounter -= (bitsPerSlice + 1);
                     }
                 }
