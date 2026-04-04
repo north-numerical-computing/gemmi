@@ -46,6 +46,7 @@ var NAVTREEINDEX0 =
 "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257":[2,0,0,0,3],
 "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257a157db7df530023575515d366c9b672e8":[2,0,0,0,3,1],
 "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2":[2,0,0,0,3,0],
+"dc/de8/gemmi_8hpp.html#adb1d0263552eafdec96a166772d5ee8e":[2,0,0,0,13],
 "dc/de8/gemmi_8hpp.html#ae2df71715d235298cddb74f6420a83fe":[2,0,0,0,12],
 "dc/de8/gemmi_8hpp_source.html":[2,0,0,0],
 "dir_d44c64559bbebec7f509842c48db8b23.html":[2,0,0],
