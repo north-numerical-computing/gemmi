@@ -220,7 +220,7 @@ struct MatrixSplit {
 
             // LCOV_EXCL_START
             default:
-                std::abort();
+                throw std::logic_error("Unhandled splittingStrategy");
             // LCOV_EXCL_STOP
         }
     }
@@ -662,8 +662,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
             break;
         // LCOV_EXCL_START
         default:
-            
-            std::abort();
+            throw std::logic_error("Unhandled multiplicationStrategy");
         // LCOV_EXCL_STOP
     }
 
@@ -674,7 +673,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
             return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, numDiagonals);
         // LCOV_EXCL_START
         default:
-            std::abort();
+            throw std::logic_error("Unhandled accumulationStrategy");
         // LCOV_EXCL_STOP   
     }
 }
