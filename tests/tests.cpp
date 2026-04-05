@@ -26,8 +26,8 @@ constexpr double tolerance<double>() { return 1e-15; }
 
 std::string toString(splittingStrategy strategy) {
 	switch (strategy) {
-	case splittingStrategy::bitMasking:
-		return "bitMasking";
+	case splittingStrategy::truncation:
+		return "truncation";
 	case splittingStrategy::unsignedEncoding:
 		return "unsignedEncoding";
 	case splittingStrategy::roundToNearest:
@@ -229,7 +229,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, std::vector<fp_t> testVal
         for (size_t i = 0; i < m * n; ++i)
             mat[i] = testValues[i % subnormalCount];
 
-        for (auto strategy : {splittingStrategy::bitMasking,
+        for (auto strategy : {splittingStrategy::truncation,
               				  splittingStrategy::unsignedEncoding,
               				  splittingStrategy::roundToNearest}) {
             for (auto dim : {normalisationDimension::byRows,
@@ -264,7 +264,7 @@ void runGemmiAccuracyTests() {
 	for (size_t m : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
 		for (size_t k : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
 			for (size_t n : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
-				for (auto splitType : {splittingStrategy::bitMasking,
+				for (auto splitType : {splittingStrategy::truncation,
 									   splittingStrategy::unsignedEncoding,
 									   splittingStrategy::roundToNearest}) {
 					for (auto accumulationType : {accumulationStrategy::floatingPoint,

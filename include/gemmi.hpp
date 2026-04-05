@@ -63,7 +63,7 @@ enum class normalisationDimension {
  * @brief Enum to specify the splitting strategy to use.
  */
 enum class splittingStrategy {
-    bitMasking,       ///< Split using bit masking (truncation).
+    truncation,       ///< Split using truncation.
     unsignedEncoding, ///< Split using unsigned slice encoding.
     roundToNearest    ///< Split using round-to-nearest.
 };
@@ -126,8 +126,8 @@ struct MatrixSplit {
                     this->scalingExponents.resize(this->otherDimension());
                     this->computeNormalisationVectors();
                     switch (splitType) {
-                        case splittingStrategy::bitMasking:
-                            this->computeSplitsWithBitMasking();
+                        case splittingStrategy::truncation:
+                            this->computeSplitsWithTruncation();
                             break;
                         case splittingStrategy::unsignedEncoding:
                             this->computeSplitsWithUnsignedEncoding();
@@ -201,7 +201,7 @@ struct MatrixSplit {
      */
     int computeSliceBitOffset(size_t slice) const {
         switch (splitType) {
-            case splittingStrategy::bitMasking:
+            case splittingStrategy::truncation:
                 // Slice k -> k * b
                 return static_cast<int>((slice + 1) * bitsPerSlice);
 
@@ -248,7 +248,7 @@ struct MatrixSplit {
     }
 
     /**
-     * @brief Split the matrix using bit masking, which is equivalent to truncation.
+     * @brief Split the matrix using truncation.
      *
      * This is an implementation of Algorithm 4 in:
      *
@@ -256,8 +256,8 @@ struct MatrixSplit {
      *    unit. Int. J. High Performance Comput. App. 2024;38(4):297-313.
      *    DOI: 10.1177/10943420241239588
      */
-    void computeSplitsWithBitMasking() {
-        this->splitType = splittingStrategy::bitMasking;
+    void computeSplitsWithTruncation() {
+        this->splitType = splittingStrategy::truncation;
         // Compute splits one row/column at a time.
         auto numFracBits = computeNumFracBits<fp_t>();
         auto bitsPerSlice = this->bitsPerSlice;
@@ -270,7 +270,7 @@ struct MatrixSplit {
             computeFixedPointRepresentationVector(fraction, sign, i);
 
             // Create bitmask.
-            const uint_t smallBitmask = (1 << bitsPerSlice) - 1;
+            const uint_t smallBitmask = (static_cast<uint_t>(1) << bitsPerSlice) - 1;
 
             // Perform the split.
             for (size_t j = 0; j < this->innerProductDimension(); j++) {

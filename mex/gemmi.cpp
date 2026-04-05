@@ -168,8 +168,8 @@ private:
                     const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                     if (std::string(field) == "split") {
                         switch ((char)data[0]) {
-                            case 'b':
-                                options->splitType = splittingStrategy::bitMasking;
+                            case 't':
+                                options->splitType = splittingStrategy::truncation;
                                 break;
                             case 'u':
                                 options->splitType = splittingStrategy::unsignedEncoding;
