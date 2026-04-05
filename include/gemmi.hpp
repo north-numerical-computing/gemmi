@@ -381,11 +381,17 @@ struct MatrixSplit {
                 this->memory[matrixIndex] = value;
 
                 // Remaining slices.
+                const auto width  = bitsPerSlice + 1;
+                const auto cutoff = static_cast<wideint_t>(uint_t(1) << bitsPerSlice); // 2^b
+                const auto base   = static_cast<wideint_t>(uint_t(1) << width);        // 2^(b+1)
+                const auto digitMax = cutoff - 1;   //  2^b - 1
+                const auto digitMin = -cutoff;      // -2^b
                 for (size_t slice = 1; slice < numSplits; slice++) {
                     if (exponentDifference > (signed)(bitsPerSlice + 1)) {
                         exponentDifference -= (bitsPerSlice + 1);
                         if (sign[j]) {
-                            this->memory[matrixIndex + slice * this->matrix.size()] = static_cast<splitint_t>(largeBitmask);
+                            this->memory[matrixIndex + (slice - 1) * this->matrix.size()] = static_cast<splitint_t>(0);
+                            this->memory[matrixIndex + slice * this->matrix.size()] = static_cast<splitint_t>(-1);
                         }
                     } else {
                         shiftCounter += exponentDifference;
@@ -407,15 +413,9 @@ struct MatrixSplit {
                             currentSplit |= maskToAdd;
                         }
 
-                        // Width of sub-leading slices is (bitsPerSlice + 1) bits.
-                        const auto width  = bitsPerSlice + 1;
-                        const auto cutoff = static_cast<wideint_t>(uint_t(1) << bitsPerSlice); // 2^b
-                        const auto base   = static_cast<wideint_t>(uint_t(1) << width);        // 2^(b+1)
-                        const auto digitMax = cutoff - 1;   //  2^b - 1
-                        const auto digitMin = -cutoff;      // -2^b
-
-                        // If the unsigned digit is in the upper half, propagate carry upward.
-                        if (currentSplit >= static_cast<uint_t>(cutoff)) {
+                        // Update previous slices if currentSplit is negative in splitint_t.
+                        // Carry must propoagate upward until slice 0 if necessary.
+                        if (currentSplit > static_cast<uint_t>(digitMax)) {
                             int nextSlice = static_cast<int>(slice) - 1;
                             while (true) {
                                 const size_t prevIdx = matrixIndex + nextSlice * this->matrix.size();
