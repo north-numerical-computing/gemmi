@@ -1,11 +1,17 @@
 <map id="include/gemmi.hpp" name="include/gemmi.hpp">
-<area shape="rect" id="Node000001" title="Integer matrix multiplication using the Ozaki scheme." alt="" coords="71,5,218,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,44,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,33,58,74,55,69,124,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="68,79,133,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,32,117,68,113,66,135,30"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="157,79,220,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="154,30,177,66,172,68,150,32"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="245,79,325,104"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="168,28,251,70,249,75,166,33"/>
+<area shape="rect" id="Node000001" title="Integer matrix multiplication using the Ozaki scheme." alt="" coords="225,5,372,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,91,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,33,103,77,101,72,258,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="115,79,154,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="273,33,168,79,166,74,271,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="178,79,241,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="286,33,236,72,233,68,283,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="265,79,332,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="301,31,301,65,296,65,296,31"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="356,79,415,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="314,29,362,68,359,72,311,33"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="439,79,531,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="330,28,443,71,441,76,328,33"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="555,79,618,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="348,28,543,76,541,81,347,33"/>
 </map>
