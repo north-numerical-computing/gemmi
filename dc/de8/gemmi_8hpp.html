@@ -196,18 +196,18 @@ Functions</h2></td></tr>
 <tr class="memitem:adb1d0263552eafdec96a166772d5ee8e"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#adb1d0263552eafdec96a166772d5ee8e">getFloatingPointExponent</a> (fp_t value)</td></tr>
 <tr class="memdesc:adb1d0263552eafdec96a166772d5ee8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the exponent of a floating-point value.  <br /></td></tr>
 <tr class="separator:adb1d0263552eafdec96a166772d5ee8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafc40ecd0919937318af562c48811219" id="r_aafc40ecd0919937318af562c48811219"><td class="memTemplParams" colspan="2">template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </td></tr>
-<tr class="memitem:aafc40ecd0919937318af562c48811219"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aafc40ecd0919937318af562c48811219">computeExactIntegerGEMM</a> (const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;A, const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;B, std::vector&lt; accumulator_t &gt; &amp;C, size_t iBlock, size_t jBlock)</td></tr>
-<tr class="memdesc:aafc40ecd0919937318af562c48811219"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the exact integer GEMM (General Matrix-Matrix Multiplication).  <br /></td></tr>
-<tr class="separator:aafc40ecd0919937318af562c48811219"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a728c9242ff189075059ce45b0e2e0c93" id="r_a728c9242ff189075059ce45b0e2e0c93"><td class="memTemplParams" colspan="2">template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </td></tr>
-<tr class="memitem:a728c9242ff189075059ce45b0e2e0c93"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a728c9242ff189075059ce45b0e2e0c93">computeProductsWithFloatingPointAccumulation</a> (const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;A, const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;B, const size_t numDiagonals)</td></tr>
-<tr class="memdesc:a728c9242ff189075059ce45b0e2e0c93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in floating-point arithmetic.  <br /></td></tr>
-<tr class="separator:a728c9242ff189075059ce45b0e2e0c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a161da4c01333e3851e12937441b09fd6" id="r_a161da4c01333e3851e12937441b09fd6"><td class="memTemplParams" colspan="2">template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </td></tr>
-<tr class="memitem:a161da4c01333e3851e12937441b09fd6"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a161da4c01333e3851e12937441b09fd6">computeProductsWithIntegerAccumulation</a> (const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;A, const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;B, const size_t numDiagonals)</td></tr>
-<tr class="memdesc:a161da4c01333e3851e12937441b09fd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in integer arithmetic.  <br /></td></tr>
-<tr class="separator:a161da4c01333e3851e12937441b09fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab41115c653500ecf5b58ebbd0bc9750" id="r_aab41115c653500ecf5b58ebbd0bc9750"><td class="memTemplParams" colspan="2">template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </td></tr>
+<tr class="memitem:aab41115c653500ecf5b58ebbd0bc9750"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aab41115c653500ecf5b58ebbd0bc9750">computeExactIntegerGEMM</a> (const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;A, const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;B, std::vector&lt; accumulator_t &gt; &amp;C, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutC, size_t iBlock, size_t jBlock)</td></tr>
+<tr class="memdesc:aab41115c653500ecf5b58ebbd0bc9750"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the exact integer GEMM (General Matrix-Matrix Multiplication).  <br /></td></tr>
+<tr class="separator:aab41115c653500ecf5b58ebbd0bc9750"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d4de741ea49c745c16f283968bab441" id="r_a8d4de741ea49c745c16f283968bab441"><td class="memTemplParams" colspan="2">template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </td></tr>
+<tr class="memitem:a8d4de741ea49c745c16f283968bab441"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a8d4de741ea49c745c16f283968bab441">computeProductsWithFloatingPointAccumulation</a> (const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;A, const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;B, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutC, const size_t numDiagonals)</td></tr>
+<tr class="memdesc:a8d4de741ea49c745c16f283968bab441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in floating-point arithmetic.  <br /></td></tr>
+<tr class="separator:a8d4de741ea49c745c16f283968bab441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f26a6763cc201d8098ee242fc7f1157" id="r_a5f26a6763cc201d8098ee242fc7f1157"><td class="memTemplParams" colspan="2">template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </td></tr>
+<tr class="memitem:a5f26a6763cc201d8098ee242fc7f1157"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a5f26a6763cc201d8098ee242fc7f1157">computeProductsWithIntegerAccumulation</a> (const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;A, const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;B, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutC, const size_t numDiagonals)</td></tr>
+<tr class="memdesc:a5f26a6763cc201d8098ee242fc7f1157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in integer arithmetic.  <br /></td></tr>
+<tr class="separator:a5f26a6763cc201d8098ee242fc7f1157"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e13b812f5e4f3aa910c101ef58d48b0" id="r_a6e13b812f5e4f3aa910c101ef58d48b0"><td class="memTemplParams" colspan="2">template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </td></tr>
 <tr class="memitem:a6e13b812f5e4f3aa910c101ef58d48b0"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a6e13b812f5e4f3aa910c101ef58d48b0">gemmi</a> (const std::vector&lt; fp_t &gt; &amp;A, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutA, const std::vector&lt; fp_t &gt; &amp;B, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutB, const size_t m, const size_t k, const size_t n, const size_t numSplitsA, const size_t numSplitsB, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a> splitType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab">splittingStrategy::roundToNearest</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257">accumulationStrategy</a> accType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2">accumulationStrategy::floatingPoint</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a5904f8240cc14f85c5db0198e28df1b2">multiplicationStrategy</a> multType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6">multiplicationStrategy::reduced</a>)</td></tr>
 <tr class="memdesc:a6e13b812f5e4f3aa910c101ef58d48b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix product C = C + A * B.  <br /></td></tr>
@@ -384,8 +384,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="aafc40ecd0919937318af562c48811219" name="aafc40ecd0919937318af562c48811219"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aafc40ecd0919937318af562c48811219">&#9670;&#160;</a></span>computeExactIntegerGEMM()</h2>
+<a id="aab41115c653500ecf5b58ebbd0bc9750" name="aab41115c653500ecf5b58ebbd0bc9750"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab41115c653500ecf5b58ebbd0bc9750">&#9670;&#160;</a></span>computeExactIntegerGEMM()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -409,6 +409,12 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
           <td></td>
           <td class="paramtype">std::vector&lt; accumulator_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>C</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td>
+          <td class="paramname"><em>layoutC</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -598,8 +604,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a728c9242ff189075059ce45b0e2e0c93" name="a728c9242ff189075059ce45b0e2e0c93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a728c9242ff189075059ce45b0e2e0c93">&#9670;&#160;</a></span>computeProductsWithFloatingPointAccumulation()</h2>
+<a id="a8d4de741ea49c745c16f283968bab441" name="a8d4de741ea49c745c16f283968bab441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d4de741ea49c745c16f283968bab441">&#9670;&#160;</a></span>computeProductsWithFloatingPointAccumulation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -617,6 +623,12 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
           <td></td>
           <td class="paramtype">const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td>
+          <td class="paramname"><em>layoutC</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -654,12 +666,12 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00566">566</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00560">560</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a161da4c01333e3851e12937441b09fd6" name="a161da4c01333e3851e12937441b09fd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a161da4c01333e3851e12937441b09fd6">&#9670;&#160;</a></span>computeProductsWithIntegerAccumulation()</h2>
+<a id="a5f26a6763cc201d8098ee242fc7f1157" name="a5f26a6763cc201d8098ee242fc7f1157"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f26a6763cc201d8098ee242fc7f1157">&#9670;&#160;</a></span>computeProductsWithIntegerAccumulation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -677,6 +689,12 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
           <td></td>
           <td class="paramtype">const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td>
+          <td class="paramname"><em>layoutC</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -714,7 +732,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00622">622</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00609">609</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -782,7 +800,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00726">726</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00710">710</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -900,7 +918,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00679">679</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00661">661</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

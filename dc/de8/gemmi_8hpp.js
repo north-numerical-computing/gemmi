@@ -24,11 +24,11 @@ var gemmi_8hpp =
       [ "unsignedEncoding", "dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9af4ad70253d0174851f373fab0a220066", null ],
       [ "roundToNearest", "dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab", null ]
     ] ],
-    [ "computeExactIntegerGEMM", "dc/de8/gemmi_8hpp.html#aafc40ecd0919937318af562c48811219", null ],
+    [ "computeExactIntegerGEMM", "dc/de8/gemmi_8hpp.html#aab41115c653500ecf5b58ebbd0bc9750", null ],
     [ "computeNumExpBits", "dc/de8/gemmi_8hpp.html#a573a0a7d443f19d3349d43d87fd590b6", null ],
     [ "computeNumFracBits", "dc/de8/gemmi_8hpp.html#aa3896af2c30eccd1d3469f60ac979ffe", null ],
-    [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#a728c9242ff189075059ce45b0e2e0c93", null ],
-    [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#a161da4c01333e3851e12937441b09fd6", null ],
+    [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#a8d4de741ea49c745c16f283968bab441", null ],
+    [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#a5f26a6763cc201d8098ee242fc7f1157", null ],
     [ "gemmi", "dc/de8/gemmi_8hpp.html#a6e13b812f5e4f3aa910c101ef58d48b0", null ],
     [ "getFloatingPointExponent", "dc/de8/gemmi_8hpp.html#adb1d0263552eafdec96a166772d5ee8e", null ]
 ];
