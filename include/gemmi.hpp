@@ -2,7 +2,6 @@
 #define GEMMI_HPP
 
 #include <bit>
-#include <cassert>
 #include <cstdlib>
 #include <vector>
 #include <iostream>
@@ -596,8 +595,6 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
         // Compute and accumulate all products along this anti-diagonal in integer arithmetic.
         std::vector<accumulator_t> accumulator(A.m * B.n, 0);
         while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
-            // assert(A.sliceBitOffset(static_cast<size_t>(Aindex)) + B.sliceBitOffset(Bindex) == totalShift);
-
             computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, Aindex, Bindex);
             Aindex--;
             Bindex++;
@@ -643,7 +640,9 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
 
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
     const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
-    assert(bitsPerInteger <= bitsInAccumulator / 2);
+    if (bitsPerInteger > bitsInAccumulator / 2) {
+        throw std::invalid_argument("Split integer type is too wide for the chosen accumulator type");
+    }
     const size_t alpha = std::floor((bitsInAccumulator - log2(k)) / 2);
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
