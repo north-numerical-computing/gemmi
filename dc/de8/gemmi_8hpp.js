@@ -29,6 +29,6 @@ var gemmi_8hpp =
     [ "computeNumFracBits", "dc/de8/gemmi_8hpp.html#aa3896af2c30eccd1d3469f60ac979ffe", null ],
     [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#a8d4de741ea49c745c16f283968bab441", null ],
     [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#a5f26a6763cc201d8098ee242fc7f1157", null ],
-    [ "gemmi", "dc/de8/gemmi_8hpp.html#a6e13b812f5e4f3aa910c101ef58d48b0", null ],
+    [ "gemmi", "dc/de8/gemmi_8hpp.html#a4d39a1642692f0a90c1fb48efa4ca650", null ],
     [ "getFloatingPointExponent", "dc/de8/gemmi_8hpp.html#adb1d0263552eafdec96a166772d5ee8e", null ]
 ];
