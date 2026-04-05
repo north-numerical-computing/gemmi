@@ -238,12 +238,12 @@ struct MatrixSplit {
                 fp_t value = this->matrix[matrixIndex];
                 fraction[j] = std::bit_cast<uint_t>(value);
                 sign[j] = std::signbit(value);
-                uint_t bitmask = (1ull << (numFracBits - 1)) - 1;
+                uint_t bitmask = (static_cast<uint_t>(1) << (numFracBits - 1)) - 1;
                 fraction[j] = fraction[j] & bitmask;
                 // Restore implicit bit for normal numbers.
                 // NOTE: NaNs and infs are currently not supported.
                 if (std::fpclassify(value) == FP_NORMAL)
-                    fraction[j] |= ((uint_t)1 << (numFracBits - 1));
+                    fraction[j] |= (static_cast<uint_t>(1) << (numFracBits - 1));
             }
     }
 
@@ -325,13 +325,17 @@ struct MatrixSplit {
             computeFixedPointRepresentationVector(fraction, sign, i);
 
             // Create bitmasks.
-            // This algorithm uses bitsPerSlice bits for the first slice and bitsPerSlice + 1 bits for subsequent slices.
-            // This choice is to keep the algorithm consistent with the bitmasking approach above.
-            // NOTE: I am using a first slice with bitsPerSlice - 1 bits. This is not mentioned in sabb26, but it seems
-            // necessary to do this, if I want to ensure that the first slice does not overflow if the second slice
-            // is negative in two's complement.
-            const uint_t smallBitmask = (1 << (bitsPerSlice - 1)) - 1;
-            const uint_t largeBitmask = (1 << (bitsPerSlice + 1)) - 1;
+            // This algorithm uses (bitsPerSlice - 1) bits for the first slice
+            // and (bitsPerSlice + 1) bits for subsequent slices. This choice 
+            // is to keep the algorithm consistent with the bitmasking approach
+            // above.
+            // NOTE: I am using a first slice with (bitsPerSlice - 1) bits. This
+            // is not mentioned in sabb26, but it seems necessary to do this to
+            // ensure that the first (signed) slice does not overflow if the full
+            // bitwidth of splitint_t is used and the second slice is negative in
+            // two's complement.
+            const uint_t smallBitmask = (static_cast<uint_t>(1) << (bitsPerSlice - 1)) - 1;
+            const uint_t largeBitmask = (static_cast<uint_t>(1) << (bitsPerSlice + 1)) - 1;
 
             for (size_t j = 0; j < this->innerProductDimension(); j++) {
 
@@ -350,7 +354,8 @@ struct MatrixSplit {
                     // Value is too small to contribute explicit bits to slice 0.
                     value = sign[j] ? -1 : 0;
                     remainder = sign[j] ?
-                        ((1ull << (sizeof(uint_t) * 8 - 1)) - fraction[j]) | (uint_t(1) << (sizeof(uint_t) * 8 - 1)) :
+                        ((static_cast<uint_t>(1) << (sizeof(uint_t) * 8 - 1)) - fraction[j]) |
+                            (static_cast<uint_t>(1) << (sizeof(uint_t) * 8 - 1)) :
                         fraction[j];
                     exponentDifference -= (bitsPerSlice - 1);
                     shiftCounter = numFracBits - (bitsPerSlice + 1);
@@ -369,21 +374,21 @@ struct MatrixSplit {
                     value = (sign[j] ? -1 : 1) * static_cast<splitint_t>(currentSplit);
 
                     // Rounding.
-                    uint_t lowMask = (uint_t(1) << shiftCounter) - 1;
+                    uint_t lowMask = (static_cast<uint_t>(1) << shiftCounter) - 1;
                     uint_t lowBits = fraction[j] & lowMask;
 
                     if (lowBits != 0) {
                         value += (sign[j] ? -1 : 0);
                     }
-                    remainder = sign[j] ? (1ull << shiftCounter) - lowBits : lowBits;
+                    remainder = sign[j] ? (static_cast<uint_t>(1) << shiftCounter) - lowBits : lowBits;
                     shiftCounter -= (bitsPerSlice + 1);
                 }
                 this->memory[matrixIndex] = value;
 
                 // Remaining slices.
                 const auto width  = bitsPerSlice + 1;
-                const auto cutoff = static_cast<wideint_t>(uint_t(1) << bitsPerSlice); // 2^b
-                const auto base   = static_cast<wideint_t>(uint_t(1) << width);        // 2^(b+1)
+                const auto cutoff = static_cast<wideint_t>(static_cast<uint_t>(1) << bitsPerSlice); // 2^b
+                const auto base   = static_cast<wideint_t>(static_cast<uint_t>(1) << width);        // 2^(b+1)
                 const auto digitMax = cutoff - 1;   //  2^b - 1
                 const auto digitMin = -cutoff;      // -2^b
                 for (size_t slice = 1; slice < numSplits; slice++) {
@@ -409,7 +414,7 @@ struct MatrixSplit {
                         if (sign[j] && (shiftCounter + static_cast<int>(bitsPerSlice) + 1) > static_cast<int>(sizeof(uint_t)) * 8) {
                             int bitsUsed = sizeof(uint_t) * 8 - shiftCounter;
                             int bitsLost = (bitsPerSlice + 1) - bitsUsed;
-                            uint_t maskToAdd = ((1ull << bitsLost) - 1) << bitsUsed;
+                            uint_t maskToAdd = ((static_cast<uint_t>(1) << bitsLost) - 1) << bitsUsed;
                             currentSplit |= maskToAdd;
                         }
 
@@ -491,7 +496,8 @@ struct MatrixSplit {
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
-                             const MatrixSplit<splitint_t, fp_t> &B, std::vector<accumulator_t> &C,
+                             const MatrixSplit<splitint_t, fp_t> &B,
+                             std::vector<accumulator_t> &C,
                              size_t iBlock, size_t jBlock) {
     for (size_t i = 0; i < A.m; i++) {
         for (size_t j = 0; j < B.n; j++) {
@@ -525,8 +531,8 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
-                                  const MatrixSplit<splitint_t, fp_t> &B,
-                                  const size_t numDiagonals) {
+                                                               const MatrixSplit<splitint_t, fp_t> &B,
+                                                               const size_t numDiagonals) {
 
     std::vector<fp_t > C (A.m * B.n);
 
