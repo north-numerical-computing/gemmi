@@ -335,13 +335,13 @@ TEST_CASE("Split round-trip binary64 – normals in [1, 2)", "[split][roundtrip]
 }
 
 TEST_CASE("Split round-trip binary32 – wide range", "[split][roundtrip][float]") {
-  runSplitRoundTripTests<float>(6, generateValuesWithSignificand<float>(0xFFFFFF, -10, 1));
-  runSplitRoundTripTests<float>(7, generateValuesWithSignificand<float>(0xFFFFFF, -10, 1));
+  runSplitRoundTripTests<float>(6, generateValuesWithSignificand<float>(0xFFFFFF, -10, 10));
+  runSplitRoundTripTests<float>(7, generateValuesWithSignificand<float>(0xFFFFFF, -10, 10));
 }
 
 TEST_CASE("Split round-trip binary64 – wide range", "[split][roundtrip][double]") {
-  runSplitRoundTripTests<double>(6, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 1));
-  runSplitRoundTripTests<double>(7, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 1));
+  runSplitRoundTripTests<double>(6, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 10));
+  runSplitRoundTripTests<double>(7, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 10));
 }
 
 TEST_CASE("GEMMI accuracy binary32", "[gemmi][float]") {
