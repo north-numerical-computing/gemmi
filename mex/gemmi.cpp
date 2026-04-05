@@ -64,7 +64,9 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<double, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
+        auto C = gemmi<double, int8_t, int32_t>(A, matrixLayout::columnMajor, B, matrixLayout::columnMajor,
+                                                A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
+                                                matrixLayout::columnMajor,
                                                 options->splitType, options->accType, options->multType);
 
         matlab::data::ArrayFactory factory;
@@ -79,7 +81,9 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<float, int8_t, int32_t>(A, B, A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
+        auto C = gemmi<float, int8_t, int32_t>(A, matrixLayout::columnMajor, B, matrixLayout::columnMajor,
+                                               A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
+                                               matrixLayout::columnMajor,
                                                options->splitType, options->accType, options->multType);
 
         matlab::data::ArrayFactory factory;

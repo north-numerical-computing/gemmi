@@ -178,9 +178,9 @@ std::vector<fp_t> makeRandomMatrix(size_t rows, size_t cols,
 template <typename splitint_t, typename fp_t>
 std::vector<fp_t> reconstructFromSplit(const MatrixSplit<splitint_t, fp_t> &split) {
 	std::vector<fp_t> reconstructed(split.matrix.size(), fp_t{0});
-	for (size_t i = 0; i < split.otherDimension(); ++i) {
-		for (size_t j = 0; j < split.innerProductDimension(); ++j) {
-		const size_t index = i * split.iStride() + j * split.jStride();
+	for (size_t i = 0; i < split.outerDimension(); ++i) {
+		for (size_t j = 0; j < split.innerDimension(); ++j) {
+		const size_t index = split.operandIndex(i, j);
 		fp_t value = 0.0;
 		for (size_t slice = 0; slice < split.numSplits; ++slice) {
 			const auto digit =
@@ -219,30 +219,33 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, std::vector<fp_t> testVal
         std::vector<fp_t> mat(m * n);
         for (size_t i = 0; i < m * n; ++i)
             mat[i] = testValues[i % subnormalCount];
+		for (auto layout : {matrixLayout::rowMajor,
+			                matrixLayout::columnMajor}) {
+			for (auto strategy : {splittingStrategy::truncation,
+								splittingStrategy::unsignedEncoding,
+								splittingStrategy::roundToNearest}) {
+				for (auto dim : {normalisationDimension::byRows,
+								normalisationDimension::byCols}) {
+					DYNAMIC_SECTION(
+						"type=" << (std::is_same_v<fp_t,float> ? "float" : "double")
+						<< ", strategy=" << toString(strategy)
+						<< ", dim=" << (dim == normalisationDimension::byRows ? "rows" : "cols")
+						<< ", shape=" << m << "x" << n)
+					{
+						MatrixSplit<int8_t, fp_t> split(
+							mat, m, n,
+							layout,
+							strategy,
+							numSplits,
+							bitsPerSlice,
+							dim);
 
-        for (auto strategy : {splittingStrategy::truncation,
-              				  splittingStrategy::unsignedEncoding,
-              				  splittingStrategy::roundToNearest}) {
-            for (auto dim : {normalisationDimension::byRows,
-                             normalisationDimension::byCols}) {
-                DYNAMIC_SECTION(
-                    "type=" << (std::is_same_v<fp_t,float> ? "float" : "double")
-                    << ", strategy=" << toString(strategy)
-                    << ", dim=" << (dim == normalisationDimension::byRows ? "rows" : "cols")
-                    << ", shape=" << m << "x" << n)
-                {
-                    MatrixSplit<int8_t, fp_t> split(
-                        mat, m, n,
-                        strategy,
-                        numSplits,
-                        bitsPerSlice,
-                        dim);
-
-                    const auto recon = reconstructFromSplit(split);
-                    requireBitwiseIdenticalVectors(recon, mat);
-                }
-            }
-        }
+						const auto recon = reconstructFromSplit(split);
+						requireBitwiseIdenticalVectors(recon, mat);
+					}
+				}
+			}
+		}
     }
 }
 
@@ -252,42 +255,49 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, std::vector<fp_t> testVal
 
 template <typename fp_t>
 void runGemmiAccuracyTests() {
-	for (size_t m : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
-		for (size_t k : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
-			for (size_t n : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
-				for (auto splitType : {splittingStrategy::truncation,
-									   splittingStrategy::unsignedEncoding,
-									   splittingStrategy::roundToNearest}) {
-					for (auto accumulationType : {accumulationStrategy::floatingPoint,
-												  accumulationStrategy::integer}) {
-						for (auto multiplicationType : {multiplicationStrategy::reduced,
-														multiplicationStrategy::full}) {
-							for (size_t numSplitA : {10u, 15u}) {
-								for (size_t numSplitB : {10u, 15u}) {
-									DYNAMIC_SECTION(
-										"type="
-										<< (std::is_same_v<fp_t, float> ? "float" : "double")
-										<< ", split=" << toString(splitType)
-										<< ", accumulation=" << toString(accumulationType)
-										<< ", multiplication=" << toString(multiplicationType)
-										<< ", numSplitA=" << numSplitA
-										<< ", numSplitB=" << numSplitB) {
-										const auto A = makeRandomMatrix<fp_t>(m, k, 127);
-										const auto B = makeRandomMatrix<fp_t>(k, n, 255);
+	for (auto layoutA : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
+		for (auto layoutB : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
+			for (auto layoutC : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
+				for (size_t m : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
+					for (size_t k : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
+						for (size_t n : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
+							for (auto splitType : {splittingStrategy::truncation,
+												splittingStrategy::unsignedEncoding,
+												splittingStrategy::roundToNearest}) {
+								for (auto accumulationType : {accumulationStrategy::floatingPoint,
+															accumulationStrategy::integer}) {
+									for (auto multiplicationType : {multiplicationStrategy::reduced,
+																	multiplicationStrategy::full}) {
+										for (size_t numSplitA : {10u, 15u}) {
+											for (size_t numSplitB : {10u, 15u}) {
+												DYNAMIC_SECTION(
+													"type="
+													<< (std::is_same_v<fp_t, float> ? "float" : "double")
+													<< ", split=" << toString(splitType)
+													<< ", accumulation=" << toString(accumulationType)
+													<< ", multiplication=" << toString(multiplicationType)
+													<< ", numSplitA=" << numSplitA
+													<< ", numSplitB=" << numSplitB) {
+													const auto A = makeRandomMatrix<fp_t>(m, k, 127);
+													const auto B = makeRandomMatrix<fp_t>(k, n, 255);
 
-										const auto C = gemmi<fp_t, int8_t, int32_t>(
-											A, B, m, k, n, numSplitA, numSplitB, splitType,
-											accumulationType, multiplicationType);
+													const auto C = gemmi<fp_t, int8_t, int32_t>(
+														A, layoutA, B, layoutB, m, k, n, numSplitA, numSplitB, 
+														layoutC,
+														splitType, accumulationType, multiplicationType);
 
-										const auto C_ref = reference_gemm(A, B, m, k, n);
+													const auto C_ref = reference_gemm(A, B, m, k, n);
 
-										const double relative_error =
-											frobenius_norm<fp_t, double>(C - C_ref) /
-											frobenius_norm<fp_t, double>(C);
+													const double relative_error =
+														frobenius_norm<fp_t, double>(C - C_ref) /
+														frobenius_norm<fp_t, double>(C);
 
-										INFO("relative_error = " << relative_error);
-										INFO("tolerance = " << tolerance<fp_t>());
-										REQUIRE(relative_error < tolerance<fp_t>());
+													INFO("relative_error = " << relative_error);
+													INFO("tolerance = " << tolerance<fp_t>());
+													REQUIRE(relative_error < tolerance<fp_t>());
+												}
+											}
+										}
 									}
 								}
 							}
