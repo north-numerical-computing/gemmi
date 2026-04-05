@@ -143,6 +143,11 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:a379369b22762eb56c12d193437a41a68" id="r_a379369b22762eb56c12d193437a41a68"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> { <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a0edcf02e1f8904ff1fc5e0fb89d16232">rowMajor</a>
+, <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a5bccb53123b3512007f3f32b68077d7c">columnMajor</a>
+ }</td></tr>
+<tr class="memdesc:a379369b22762eb56c12d193437a41a68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum to specify the layout of the matrix in memory.  <a href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">More...</a><br /></td></tr>
+<tr class="separator:a379369b22762eb56c12d193437a41a68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3f5bfb1c3081bf0041b4eb3aff4faf1" id="r_ab3f5bfb1c3081bf0041b4eb3aff4faf1"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">normalisationDimension</a> { <a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1a81d1d2b50d380d7d68c0ceefd9116b32">byRows</a>
 , <a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1a52e5f0255c08ca998267e3a466832203">byCols</a>
  }</td></tr>
@@ -203,13 +208,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a161da4c01333e3851e12937441b09fd6"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a161da4c01333e3851e12937441b09fd6">computeProductsWithIntegerAccumulation</a> (const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;A, const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;B, const size_t numDiagonals)</td></tr>
 <tr class="memdesc:a161da4c01333e3851e12937441b09fd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in integer arithmetic.  <br /></td></tr>
 <tr class="separator:a161da4c01333e3851e12937441b09fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2df71715d235298cddb74f6420a83fe" id="r_ae2df71715d235298cddb74f6420a83fe"><td class="memTemplParams" colspan="2">template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </td></tr>
-<tr class="memitem:ae2df71715d235298cddb74f6420a83fe"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ae2df71715d235298cddb74f6420a83fe">gemmi</a> (const std::vector&lt; fp_t &gt; &amp;A, const std::vector&lt; fp_t &gt; &amp;B, const size_t m, const size_t k, const size_t n, const size_t numSplitsA, const size_t numSplitsB, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a> splitType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab">splittingStrategy::roundToNearest</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257">accumulationStrategy</a> accType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2">accumulationStrategy::floatingPoint</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a5904f8240cc14f85c5db0198e28df1b2">multiplicationStrategy</a> multType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6">multiplicationStrategy::reduced</a>)</td></tr>
-<tr class="memdesc:ae2df71715d235298cddb74f6420a83fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix product C = C + A * B.  <br /></td></tr>
-<tr class="separator:ae2df71715d235298cddb74f6420a83fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab450de6f859d91c68b85d0d90d1bcbfb" id="r_ab450de6f859d91c68b85d0d90d1bcbfb"><td class="memTemplParams" colspan="2">template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </td></tr>
-<tr class="memitem:ab450de6f859d91c68b85d0d90d1bcbfb"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ab450de6f859d91c68b85d0d90d1bcbfb">gemmi</a> (const std::vector&lt; fp_t &gt; &amp;A, const std::vector&lt; fp_t &gt; &amp;B, const size_t m, const size_t k, const size_t n, const size_t numSplits)</td></tr>
-<tr class="separator:ab450de6f859d91c68b85d0d90d1bcbfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e13b812f5e4f3aa910c101ef58d48b0" id="r_a6e13b812f5e4f3aa910c101ef58d48b0"><td class="memTemplParams" colspan="2">template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </td></tr>
+<tr class="memitem:a6e13b812f5e4f3aa910c101ef58d48b0"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a6e13b812f5e4f3aa910c101ef58d48b0">gemmi</a> (const std::vector&lt; fp_t &gt; &amp;A, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutA, const std::vector&lt; fp_t &gt; &amp;B, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutB, const size_t m, const size_t k, const size_t n, const size_t numSplitsA, const size_t numSplitsB, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a> splitType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab">splittingStrategy::roundToNearest</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257">accumulationStrategy</a> accType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2">accumulationStrategy::floatingPoint</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a5904f8240cc14f85c5db0198e28df1b2">multiplicationStrategy</a> multType=<a class="el" href="../../dc/de8/gemmi_8hpp.html#a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6">multiplicationStrategy::reduced</a>)</td></tr>
+<tr class="memdesc:a6e13b812f5e4f3aa910c101ef58d48b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix product C = C + A * B.  <br /></td></tr>
+<tr class="separator:a6e13b812f5e4f3aa910c101ef58d48b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a446b148a63b3d3dc49017c03cb2db0ec" id="r_a446b148a63b3d3dc49017c03cb2db0ec"><td class="memTemplParams" colspan="2">template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </td></tr>
+<tr class="memitem:a446b148a63b3d3dc49017c03cb2db0ec"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a446b148a63b3d3dc49017c03cb2db0ec">gemmi</a> (const std::vector&lt; fp_t &gt; &amp;A, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutA, const std::vector&lt; fp_t &gt; &amp;B, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutB, const size_t m, const size_t k, const size_t n, const size_t numSplits)</td></tr>
+<tr class="separator:a446b148a63b3d3dc49017c03cb2db0ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Integer matrix multiplication using the Ozaki scheme. </p>
@@ -244,7 +249,39 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00079">79</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00087">87</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a379369b22762eb56c12d193437a41a68" name="a379369b22762eb56c12d193437a41a68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a379369b22762eb56c12d193437a41a68">&#9670;&#160;</a></span>matrixLayout</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enum to specify the layout of the matrix in memory. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a379369b22762eb56c12d193437a41a68a0edcf02e1f8904ff1fc5e0fb89d16232" name="a379369b22762eb56c12d193437a41a68a0edcf02e1f8904ff1fc5e0fb89d16232"></a>rowMajor&#160;</td><td class="fielddoc"><p>Matrix stored in row-major order. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a379369b22762eb56c12d193437a41a68a5bccb53123b3512007f3f32b68077d7c" name="a379369b22762eb56c12d193437a41a68a5bccb53123b3512007f3f32b68077d7c"></a>columnMajor&#160;</td><td class="fielddoc"><p>Matrix stored in column-major order. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00062">62</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -276,7 +313,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00087">87</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00095">95</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -308,7 +345,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00062">62</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00070">70</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -342,7 +379,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00070">70</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00078">78</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -413,7 +450,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00503">503</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00522">522</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -617,7 +654,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00538">538</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00566">566</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -677,12 +714,12 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00587">587</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00622">622</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ab450de6f859d91c68b85d0d90d1bcbfb" name="ab450de6f859d91c68b85d0d90d1bcbfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab450de6f859d91c68b85d0d90d1bcbfb">&#9670;&#160;</a></span>gemmi() <span class="overload">[1/2]</span></h2>
+<a id="a446b148a63b3d3dc49017c03cb2db0ec" name="a446b148a63b3d3dc49017c03cb2db0ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a446b148a63b3d3dc49017c03cb2db0ec">&#9670;&#160;</a></span>gemmi() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -698,8 +735,20 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td>
+          <td class="paramname"><em>layoutA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const std::vector&lt; fp_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td>
+          <td class="paramname"><em>layoutB</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -733,12 +782,12 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00683">683</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00726">726</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ae2df71715d235298cddb74f6420a83fe" name="ae2df71715d235298cddb74f6420a83fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2df71715d235298cddb74f6420a83fe">&#9670;&#160;</a></span>gemmi() <span class="overload">[2/2]</span></h2>
+<a id="a6e13b812f5e4f3aa910c101ef58d48b0" name="a6e13b812f5e4f3aa910c101ef58d48b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e13b812f5e4f3aa910c101ef58d48b0">&#9670;&#160;</a></span>gemmi() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -754,8 +803,20 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td>
+          <td class="paramname"><em>layoutA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const std::vector&lt; fp_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td>
+          <td class="paramname"><em>layoutB</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -839,7 +900,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00637">637</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00679">679</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
