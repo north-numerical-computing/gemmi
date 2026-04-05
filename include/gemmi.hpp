@@ -1,10 +1,13 @@
 #ifndef GEMMI_HPP
 #define GEMMI_HPP
 
+#include <algorithm>
 #include <bit>
-#include <cstdlib>
+#include <cmath>
+#include <cstdint>
+#include <limits>
+#include <type_traits>
 #include <vector>
-#include <iostream>
 
 /**
  * @file gemmi.hpp

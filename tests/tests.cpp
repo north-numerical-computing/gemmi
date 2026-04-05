@@ -1,15 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include <bit>
-#include <cmath>
-#include <cstdint>
-#include <iomanip>
-#include <limits>
 #include <random>
-#include <sstream>
-#include <string>
-#include <type_traits>
-#include <vector>
 
 #include "gemmi.hpp"
 #include "utilities.hpp"
