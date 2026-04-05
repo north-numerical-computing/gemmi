@@ -16,7 +16,7 @@ var gemmi_8hpp =
       [ "byCols", "dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1a52e5f0255c08ca998267e3a466832203", null ]
     ] ],
     [ "splittingStrategy", "dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9", [
-      [ "bitMasking", "dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a93dd9736b6843653ebf730c13b8cbd04", null ],
+      [ "truncation", "dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0274ba61f316aad9881d5e8bd946fcca", null ],
       [ "unsignedEncoding", "dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9af4ad70253d0174851f373fab0a220066", null ],
       [ "roundToNearest", "dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab", null ]
     ] ],

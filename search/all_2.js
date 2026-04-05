@@ -9,8 +9,8 @@ var searchData=
   ['computeproductswithfloatingpointaccumulation_6',['computeProductsWithFloatingPointAccumulation',['../dc/de8/gemmi_8hpp.html#a728c9242ff189075059ce45b0e2e0c93',1,'gemmi.hpp']]],
   ['computeproductswithintegeraccumulation_7',['computeProductsWithIntegerAccumulation',['../dc/de8/gemmi_8hpp.html#a161da4c01333e3851e12937441b09fd6',1,'gemmi.hpp']]],
   ['computeslicebitoffset_8',['computeSliceBitOffset',['../d0/d06/structMatrixSplit.html#ac2ec1f8804748b296f43b22a64b3d745',1,'MatrixSplit']]],
-  ['computesplitswithbitmasking_9',['computeSplitsWithBitMasking',['../d0/d06/structMatrixSplit.html#a2d6cccc4dabb6bcf4f6e0df07c830f9d',1,'MatrixSplit']]],
-  ['computesplitswithroundtonearest_10',['computeSplitsWithRoundToNearest',['../d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba',1,'MatrixSplit']]],
+  ['computesplitswithroundtonearest_9',['computeSplitsWithRoundToNearest',['../d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba',1,'MatrixSplit']]],
+  ['computesplitswithtruncation_10',['computeSplitsWithTruncation',['../d0/d06/structMatrixSplit.html#adf5508615f48122f41c3501ab3f5f76d',1,'MatrixSplit']]],
   ['computesplitswithunsignedencoding_11',['computeSplitsWithUnsignedEncoding',['../d0/d06/structMatrixSplit.html#afba567e7930b08676fe39bac63f9f465',1,'MatrixSplit']]],
   ['configuration_12',['Configuration',['../index.html#autotoc_md5',1,'']]]
 ];

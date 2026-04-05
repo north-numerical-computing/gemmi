@@ -150,9 +150,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a89a9cce819fd5dedbd4b7af2cfc26e38" id="r_a89a9cce819fd5dedbd4b7af2cfc26e38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a89a9cce819fd5dedbd4b7af2cfc26e38">computeFixedPointRepresentationVector</a> (std::vector&lt; uint_t &gt; &amp;fraction, std::vector&lt; bool &gt; &amp;sign, size_t i)</td></tr>
 <tr class="memdesc:a89a9cce819fd5dedbd4b7af2cfc26e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the block fixed-point representation of a row/column of the matrix. This function computes the fixed-point representation of a row/column of the matrix, which is used in the splitting algorithms. It extracts the significand and sign of each element in the row/column, and stores them in the provided vectors.  <br /></td></tr>
 <tr class="separator:a89a9cce819fd5dedbd4b7af2cfc26e38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d6cccc4dabb6bcf4f6e0df07c830f9d" id="r_a2d6cccc4dabb6bcf4f6e0df07c830f9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a2d6cccc4dabb6bcf4f6e0df07c830f9d">computeSplitsWithBitMasking</a> ()</td></tr>
-<tr class="memdesc:a2d6cccc4dabb6bcf4f6e0df07c830f9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using bit masking, which is equivalent to truncation.  <br /></td></tr>
-<tr class="separator:a2d6cccc4dabb6bcf4f6e0df07c830f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf5508615f48122f41c3501ab3f5f76d" id="r_adf5508615f48122f41c3501ab3f5f76d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#adf5508615f48122f41c3501ab3f5f76d">computeSplitsWithTruncation</a> ()</td></tr>
+<tr class="memdesc:adf5508615f48122f41c3501ab3f5f76d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using truncation.  <br /></td></tr>
+<tr class="separator:adf5508615f48122f41c3501ab3f5f76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afba567e7930b08676fe39bac63f9f465" id="r_afba567e7930b08676fe39bac63f9f465"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#afba567e7930b08676fe39bac63f9f465">computeSplitsWithUnsignedEncoding</a> ()</td></tr>
 <tr class="memdesc:afba567e7930b08676fe39bac63f9f465"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using unsigned slice encoding.  <br /></td></tr>
 <tr class="separator:afba567e7930b08676fe39bac63f9f465"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -454,39 +454,6 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 
 </div>
 </div>
-<a id="a2d6cccc4dabb6bcf4f6e0df07c830f9d" name="a2d6cccc4dabb6bcf4f6e0df07c830f9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d6cccc4dabb6bcf4f6e0df07c830f9d">&#9670;&#160;</a></span>computeSplitsWithBitMasking()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::computeSplitsWithBitMasking </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Split the matrix using bit masking, which is equivalent to truncation. </p>
-<p>This is an implementation of Algorithm 4 in:</p>
-<p>Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2024;38(4):297-313. DOI: 10.1177/10943420241239588 </p>
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00259">259</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
 <a id="ac0206c8b7906f066e397a6ba4494e6ba" name="ac0206c8b7906f066e397a6ba4494e6ba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac0206c8b7906f066e397a6ba4494e6ba">&#9670;&#160;</a></span>computeSplitsWithRoundToNearest()</h2>
 
@@ -517,6 +484,39 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <p>Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki scheme on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2025;39(3):462–476. DOI: 10.1177/10943420241313064 </p>
 
 <p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00464">464</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="adf5508615f48122f41c3501ab3f5f76d" name="adf5508615f48122f41c3501ab3f5f76d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf5508615f48122f41c3501ab3f5f76d">&#9670;&#160;</a></span>computeSplitsWithTruncation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename splitint_t , typename fp_t &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::computeSplitsWithTruncation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Split the matrix using truncation. </p>
+<p>This is an implementation of Algorithm 4 in:</p>
+<p>Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2024;38(4):297-313. DOI: 10.1177/10943420241239588 </p>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00259">259</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
