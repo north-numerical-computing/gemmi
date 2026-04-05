@@ -1,3 +1,6 @@
+#ifndef GEMMI_HPP
+#define GEMMI_HPP
+
 #include <bit>
 #include <cassert>
 #include <cstdlib>
@@ -680,3 +683,5 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const std::vector<fp_t> &B,
                          const size_t m, const size_t k, const size_t n, const size_t numSplits) {
     return gemmi <fp_t, splitint_t, accumulator_t> (A, B, m, k, n, numSplits, numSplits);
 }
+
+#endif // GEMMI_HPP
