@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['scalingexponents_0',['scalingExponents',['../d0/d06/structMatrixSplit.html#a0f4cb8d98c86c32ce48ce3dcb3c3125e',1,'MatrixSplit']]],
-  ['scheme_1',['Matrix–matrix multiply using integer Ozaki scheme',['../index.html',1,'']]],
-  ['splitindex_2',['splitIndex',['../d0/d06/structMatrixSplit.html#a4a9c391e2d279b7e47afcb2fa7d3cbfb',1,'MatrixSplit']]],
-  ['splittingstrategy_3',['splittingStrategy',['../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9',1,'gemmi.hpp']]],
-  ['splittype_4',['splitType',['../d0/d06/structMatrixSplit.html#a4a24d6ad9cf3fcd8014f77ee882e6e26',1,'MatrixSplit']]]
+  ['reduced_0',['reduced',['../dc/de8/gemmi_8hpp.html#a5904f8240cc14f85c5db0198e28df1b2a282fabc3aa55dcf5a73ad91ea6c62de6',1,'gemmi.hpp']]],
+  ['roundtonearest_1',['roundToNearest',['../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab',1,'gemmi.hpp']]],
+  ['rowmajor_2',['rowMajor',['../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a0edcf02e1f8904ff1fc5e0fb89d16232',1,'gemmi.hpp']]],
+  ['rows_3',['rows',['../da/dd9/structMatrixView.html#a43b3f775c00d784f7a8802f2d2d429f9',1,'MatrixView::rows'],['../d0/d06/structMatrixSplit.html#a19c50b5d03bce235e9ad6747e654e1db',1,'MatrixSplit::rows()']]]
 ];

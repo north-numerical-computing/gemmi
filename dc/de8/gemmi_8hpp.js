@@ -2,6 +2,7 @@ var gemmi_8hpp =
 [
     [ "FloatingPointTraits< float >", "d8/d0a/structFloatingPointTraits_3_01float_01_4.html", null ],
     [ "FloatingPointTraits< double >", "de/daa/structFloatingPointTraits_3_01double_01_4.html", null ],
+    [ "MatrixView< value_t >", "da/dd9/structMatrixView.html", "da/dd9/structMatrixView" ],
     [ "MatrixSplit< splitint_t, fp_t >", "d0/d06/structMatrixSplit.html", "d0/d06/structMatrixSplit" ],
     [ "accumulationStrategy", "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257", [
       [ "floatingPoint", "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2", null ],
@@ -28,5 +29,10 @@ var gemmi_8hpp =
     [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#a8d4de741ea49c745c16f283968bab441", null ],
     [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#a5f26a6763cc201d8098ee242fc7f1157", null ],
     [ "gemmi", "dc/de8/gemmi_8hpp.html#a4d39a1642692f0a90c1fb48efa4ca650", null ],
-    [ "getStoredFloatingPointExponent", "dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a", null ]
+    [ "getStoredFloatingPointExponent", "dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a", null ],
+    [ "makeConstMatrixView", "dc/de8/gemmi_8hpp.html#acef238561a934c8794afc05905014618", null ],
+    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a64ea61aee9763059cb6586c9674835e8", null ],
+    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a854fd03554072f0c3276f9b519995442", null ],
+    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#ac477ced2f82ba7f431db0290b06a80bc", null ],
+    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a668618f7ff32f3e366ec0141260067ad", null ]
 ];

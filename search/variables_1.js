@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dimension_0',['dimension',['../d0/d06/structMatrixSplit.html#adcee697acc6d99d405f774834d10fd5b',1,'MatrixSplit']]]
+  ['cols_0',['cols',['../da/dd9/structMatrixView.html#a6092a039eb5a4bc3d846b3b0a1c28a51',1,'MatrixView']]]
 ];

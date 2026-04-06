@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['operandindex_0',['operandIndex',['../d0/d06/structMatrixSplit.html#a5213ad1586c38a2cbdde796cae62c14a',1,'MatrixSplit']]],
-  ['outerdimension_1',['outerDimension',['../d0/d06/structMatrixSplit.html#a9dc22598abcc942a93a27866407a53fd',1,'MatrixSplit']]]
+  ['index_0',['index',['../da/dd9/structMatrixView.html#ac1956eeedac843ea631058409f9478ff',1,'MatrixView']]],
+  ['innerdimension_1',['innerDimension',['../d0/d06/structMatrixSplit.html#a560a3546dd4db46c9377033bf27daa64',1,'MatrixSplit']]]
 ];

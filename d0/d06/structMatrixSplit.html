@@ -107,110 +107,106 @@ Collaboration diagram for MatrixSplit&lt; splitint_t, fp_t &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d3/d74/structMatrixSplit__coll__graph.png" border="0" usemap="#aMatrixSplit_3_01splitint__t_00_01fp__t_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="aMatrixSplit_3_01splitint__t_00_01fp__t_01_4_coll__map" id="aMatrixSplit_3_01splitint__t_00_01fp__t_01_4_coll__map">
-<area shape="rect" title="Class to store the matrix slices for the Ozaki scheme." alt="" coords="189,108,342,148"/>
-<area shape="rect" title=" " alt="" coords="5,5,152,31"/>
-<area shape="poly" title=" " alt="" coords="105,37,172,82,220,106,218,110,169,86,102,41"/>
-<area shape="rect" title=" " alt="" coords="176,5,355,31"/>
-<area shape="poly" title=" " alt="" coords="268,45,268,108,263,108,263,45"/>
-<area shape="rect" title=" " alt="" coords="379,5,517,31"/>
-<area shape="poly" title=" " alt="" coords="418,40,299,110,296,105,415,35"/>
+<area shape="rect" title="Class to store the matrix slices for the Ozaki scheme." alt="" coords="363,73,516,113"/>
+<area shape="rect" href="../../da/dd9/structMatrixView.html" title=" " alt="" coords="5,5,196,31"/>
+<area shape="poly" title=" " alt="" coords="210,29,339,54,389,70,387,75,338,59,209,34"/>
+<area shape="rect" title=" " alt="" coords="11,55,190,80"/>
+<area shape="poly" title=" " alt="" coords="204,72,362,84,362,90,204,78"/>
+<area shape="rect" title=" " alt="" coords="27,104,174,129"/>
+<area shape="poly" title=" " alt="" coords="188,115,261,114,338,109,362,106,363,111,339,114,262,119,188,121"/>
+<area shape="rect" title=" " alt="" coords="31,153,170,179"/>
+<area shape="poly" title=" " alt="" coords="184,160,260,152,338,135,400,110,402,115,339,141,260,157,185,165"/>
 </map>
 <center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a2225cce8d7c4fdf88321eac8e8a1d5ca" id="r_a2225cce8d7c4fdf88321eac8e8a1d5ca"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a2225cce8d7c4fdf88321eac8e8a1d5ca">uint_t</a> = typename <a class="el" href="../../d8/d3f/structFloatingPointTraits.html">FloatingPointTraits</a>&lt; fp_t &gt;::StorageType</td></tr>
+<tr class="memitem:a2225cce8d7c4fdf88321eac8e8a1d5ca" id="r_a2225cce8d7c4fdf88321eac8e8a1d5ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a2225cce8d7c4fdf88321eac8e8a1d5ca">uint_t</a> = <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../d8/d3f/structFloatingPointTraits.html">FloatingPointTraits</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::StorageType</td></tr>
 <tr class="separator:a2225cce8d7c4fdf88321eac8e8a1d5ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1d8f121ecf820ae205560c5fcc66cf1" id="r_aa1d8f121ecf820ae205560c5fcc66cf1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#aa1d8f121ecf820ae205560c5fcc66cf1">wideint_t</a> = std::conditional_t&lt;(sizeof(splitint_t)&lt; sizeof(int)), int, std::intmax_t &gt;</td></tr>
+<tr class="memitem:aa1d8f121ecf820ae205560c5fcc66cf1" id="r_aa1d8f121ecf820ae205560c5fcc66cf1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#aa1d8f121ecf820ae205560c5fcc66cf1">wideint_t</a> = std::conditional_t&lt;(<a class="el" href="../../da/dd9/structMatrixView.html">sizeof</a>(<a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>)&lt; <a class="el" href="../../da/dd9/structMatrixView.html">sizeof</a>(<a class="el" href="../../da/dd9/structMatrixView.html">int</a>)), <a class="el" href="../../da/dd9/structMatrixView.html">int</a>, std::intmax_t &gt;</td></tr>
 <tr class="separator:aa1d8f121ecf820ae205560c5fcc66cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a35830a08c44f757142ca15fda6b1ac23" id="r_a35830a08c44f757142ca15fda6b1ac23"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a35830a08c44f757142ca15fda6b1ac23">MatrixSplit</a> (const std::vector&lt; fp_t &gt; &amp;<a class="el" href="../../d0/d06/structMatrixSplit.html#a5fcaae2ef394410f8a13bd58e97312b4">matrix</a>, const size_t <a class="el" href="../../d0/d06/structMatrixSplit.html#a6053c02cd2bf14cc1c129cc11ecc4987">m</a>, const size_t <a class="el" href="../../d0/d06/structMatrixSplit.html#a28cebbc0f7324f1202396086c4ec7dfe">n</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../d0/d06/structMatrixSplit.html#a908967b2bcb180eaa8d75297daa58d45">layout</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a> <a class="el" href="../../d0/d06/structMatrixSplit.html#a4a24d6ad9cf3fcd8014f77ee882e6e26">splitType</a>, size_t <a class="el" href="../../d0/d06/structMatrixSplit.html#af1741ad9ab0476c436736936f131aafb">numSplits</a>, size_t <a class="el" href="../../d0/d06/structMatrixSplit.html#a3162a662c7ebf8c2a6216ce3116518c0">bitsPerSlice</a>, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">normalisationDimension</a> <a class="el" href="../../d0/d06/structMatrixSplit.html#adcee697acc6d99d405f774834d10fd5b">dimension</a>)</td></tr>
-<tr class="memdesc:a35830a08c44f757142ca15fda6b1ac23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="../../d0/d06/structMatrixSplit.html" title="Class to store the matrix slices for the Ozaki scheme.">MatrixSplit</a> object and compute the splits.  <br /></td></tr>
-<tr class="separator:a35830a08c44f757142ca15fda6b1ac23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a560a3546dd4db46c9377033bf27daa64" id="r_a560a3546dd4db46c9377033bf27daa64"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a560a3546dd4db46c9377033bf27daa64">innerDimension</a> () const</td></tr>
+<tr class="memitem:a32ec4f3895f3541914cc9d09133dee7a" id="r_a32ec4f3895f3541914cc9d09133dee7a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a32ec4f3895f3541914cc9d09133dee7a">MatrixSplit</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../d0/d06/structMatrixSplit.html#a4726ff852c3d7369096ab8c41b87ff95">matrix</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a> <a class="el" href="../../d0/d06/structMatrixSplit.html#a4a24d6ad9cf3fcd8014f77ee882e6e26">splitType</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html#af1741ad9ab0476c436736936f131aafb">numSplits</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html#a3162a662c7ebf8c2a6216ce3116518c0">bitsPerSlice</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">normalisationDimension</a> <a class="el" href="../../d0/d06/structMatrixSplit.html#adcee697acc6d99d405f774834d10fd5b">dimension</a>)</td></tr>
+<tr class="memdesc:a32ec4f3895f3541914cc9d09133dee7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="../../d0/d06/structMatrixSplit.html" title="Class to store the matrix slices for the Ozaki scheme.">MatrixSplit</a> object and compute the splits.  <br /></td></tr>
+<tr class="separator:a32ec4f3895f3541914cc9d09133dee7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19c50b5d03bce235e9ad6747e654e1db" id="r_a19c50b5d03bce235e9ad6747e654e1db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a19c50b5d03bce235e9ad6747e654e1db">rows</a> () <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
+<tr class="memdesc:a19c50b5d03bce235e9ad6747e654e1db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of rows in the original matrix.  <br /></td></tr>
+<tr class="separator:a19c50b5d03bce235e9ad6747e654e1db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00d899f56f3b6915221083d0a53e2d29" id="r_a00d899f56f3b6915221083d0a53e2d29"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a00d899f56f3b6915221083d0a53e2d29">cols</a> () <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
+<tr class="memdesc:a00d899f56f3b6915221083d0a53e2d29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of columns in the original matrix.  <br /></td></tr>
+<tr class="separator:a00d899f56f3b6915221083d0a53e2d29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a560a3546dd4db46c9377033bf27daa64" id="r_a560a3546dd4db46c9377033bf27daa64"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a560a3546dd4db46c9377033bf27daa64">innerDimension</a> () <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
 <tr class="memdesc:a560a3546dd4db46c9377033bf27daa64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the dimension along which the inner product is calculated.  <br /></td></tr>
 <tr class="separator:a560a3546dd4db46c9377033bf27daa64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9dc22598abcc942a93a27866407a53fd" id="r_a9dc22598abcc942a93a27866407a53fd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a9dc22598abcc942a93a27866407a53fd">outerDimension</a> () const</td></tr>
+<tr class="memitem:a9dc22598abcc942a93a27866407a53fd" id="r_a9dc22598abcc942a93a27866407a53fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a9dc22598abcc942a93a27866407a53fd">outerDimension</a> () <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
 <tr class="memdesc:a9dc22598abcc942a93a27866407a53fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the dimension not used in the inner product.  <br /></td></tr>
 <tr class="separator:a9dc22598abcc942a93a27866407a53fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cfc397acff1bd103a48f2ec238676bf" id="r_a2cfc397acff1bd103a48f2ec238676bf"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a2cfc397acff1bd103a48f2ec238676bf">matrixIndex</a> (size_t i, size_t j) const</td></tr>
-<tr class="memdesc:a2cfc397acff1bd103a48f2ec238676bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the index for a given element in the matrix.  <br /></td></tr>
-<tr class="separator:a2cfc397acff1bd103a48f2ec238676bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5213ad1586c38a2cbdde796cae62c14a" id="r_a5213ad1586c38a2cbdde796cae62c14a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a5213ad1586c38a2cbdde796cae62c14a">operandIndex</a> (size_t outer, size_t inner) const</td></tr>
+<tr class="memitem:a5213ad1586c38a2cbdde796cae62c14a" id="r_a5213ad1586c38a2cbdde796cae62c14a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a5213ad1586c38a2cbdde796cae62c14a">operandIndex</a> (<a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">outer</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">inner</a>) <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
 <tr class="memdesc:a5213ad1586c38a2cbdde796cae62c14a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the index for a given operand in the matrix.  <br /></td></tr>
 <tr class="separator:a5213ad1586c38a2cbdde796cae62c14a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a9c391e2d279b7e47afcb2fa7d3cbfb" id="r_a4a9c391e2d279b7e47afcb2fa7d3cbfb"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a4a9c391e2d279b7e47afcb2fa7d3cbfb">splitIndex</a> (size_t outer, size_t inner, size_t slice) const</td></tr>
+<tr class="memitem:a4a9c391e2d279b7e47afcb2fa7d3cbfb" id="r_a4a9c391e2d279b7e47afcb2fa7d3cbfb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a4a9c391e2d279b7e47afcb2fa7d3cbfb">splitIndex</a> (<a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">outer</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">inner</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">slice</a>) <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
 <tr class="memdesc:a4a9c391e2d279b7e47afcb2fa7d3cbfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the index for a given slice of an element in the matrix.  <br /></td></tr>
 <tr class="separator:a4a9c391e2d279b7e47afcb2fa7d3cbfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fa0ebfa23c056bb8723012fa22944f1" id="r_a2fa0ebfa23c056bb8723012fa22944f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a2fa0ebfa23c056bb8723012fa22944f1">computeNormalisationVectors</a> ()</td></tr>
+<tr class="memitem:a2fa0ebfa23c056bb8723012fa22944f1" id="r_a2fa0ebfa23c056bb8723012fa22944f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a2fa0ebfa23c056bb8723012fa22944f1">computeNormalisationVectors</a> ()</td></tr>
 <tr class="memdesc:a2fa0ebfa23c056bb8723012fa22944f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute normalization vectors for the matrix.  <br /></td></tr>
 <tr class="separator:a2fa0ebfa23c056bb8723012fa22944f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2ec1f8804748b296f43b22a64b3d745" id="r_ac2ec1f8804748b296f43b22a64b3d745"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#ac2ec1f8804748b296f43b22a64b3d745">computeSliceBitOffset</a> (size_t slice) const</td></tr>
+<tr class="memitem:ac2ec1f8804748b296f43b22a64b3d745" id="r_ac2ec1f8804748b296f43b22a64b3d745"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#ac2ec1f8804748b296f43b22a64b3d745">computeSliceBitOffset</a> (<a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">slice</a>) <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
 <tr class="memdesc:ac2ec1f8804748b296f43b22a64b3d745"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the bit offset for a given slice.  <br /></td></tr>
 <tr class="separator:ac2ec1f8804748b296f43b22a64b3d745"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad66a297834fb4e54467ffaa14f6f5880" id="r_ad66a297834fb4e54467ffaa14f6f5880"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#ad66a297834fb4e54467ffaa14f6f5880">computeFixedPointRepresentationVector</a> (std::vector&lt; uint_t &gt; &amp;fraction, std::vector&lt; bool &gt; &amp;sign, size_t outer)</td></tr>
+<tr class="memitem:ad66a297834fb4e54467ffaa14f6f5880" id="r_ad66a297834fb4e54467ffaa14f6f5880"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#ad66a297834fb4e54467ffaa14f6f5880">computeFixedPointRepresentationVector</a> (std::vector&lt; uint_t &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">fraction</a>, std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">bool</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">sign</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">outer</a>)</td></tr>
 <tr class="memdesc:ad66a297834fb4e54467ffaa14f6f5880"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the block fixed-point representation of a row/column of the matrix. This function computes the fixed-point representation of a row/column of the matrix, which is used in the splitting algorithms. It extracts the significand and sign of each element in the row/column, and stores them in the provided vectors.  <br /></td></tr>
 <tr class="separator:ad66a297834fb4e54467ffaa14f6f5880"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf5508615f48122f41c3501ab3f5f76d" id="r_adf5508615f48122f41c3501ab3f5f76d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#adf5508615f48122f41c3501ab3f5f76d">computeSplitsWithTruncation</a> ()</td></tr>
+<tr class="memitem:adf5508615f48122f41c3501ab3f5f76d" id="r_adf5508615f48122f41c3501ab3f5f76d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#adf5508615f48122f41c3501ab3f5f76d">computeSplitsWithTruncation</a> ()</td></tr>
 <tr class="memdesc:adf5508615f48122f41c3501ab3f5f76d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using truncation.  <br /></td></tr>
 <tr class="separator:adf5508615f48122f41c3501ab3f5f76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afba567e7930b08676fe39bac63f9f465" id="r_afba567e7930b08676fe39bac63f9f465"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#afba567e7930b08676fe39bac63f9f465">computeSplitsWithUnsignedEncoding</a> ()</td></tr>
+<tr class="memitem:afba567e7930b08676fe39bac63f9f465" id="r_afba567e7930b08676fe39bac63f9f465"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#afba567e7930b08676fe39bac63f9f465">computeSplitsWithUnsignedEncoding</a> ()</td></tr>
 <tr class="memdesc:afba567e7930b08676fe39bac63f9f465"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using unsigned slice encoding.  <br /></td></tr>
 <tr class="separator:afba567e7930b08676fe39bac63f9f465"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0206c8b7906f066e397a6ba4494e6ba" id="r_ac0206c8b7906f066e397a6ba4494e6ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba">computeSplitsWithRoundToNearest</a> ()</td></tr>
+<tr class="memitem:ac0206c8b7906f066e397a6ba4494e6ba" id="r_ac0206c8b7906f066e397a6ba4494e6ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#ac0206c8b7906f066e397a6ba4494e6ba">computeSplitsWithRoundToNearest</a> ()</td></tr>
 <tr class="memdesc:ac0206c8b7906f066e397a6ba4494e6ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using round-to-nearest.  <br /></td></tr>
 <tr class="separator:ac0206c8b7906f066e397a6ba4494e6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a6053c02cd2bf14cc1c129cc11ecc4987" id="r_a6053c02cd2bf14cc1c129cc11ecc4987"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a6053c02cd2bf14cc1c129cc11ecc4987">m</a></td></tr>
-<tr class="memdesc:a6053c02cd2bf14cc1c129cc11ecc4987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of rows in the matrix.  <br /></td></tr>
-<tr class="separator:a6053c02cd2bf14cc1c129cc11ecc4987"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28cebbc0f7324f1202396086c4ec7dfe" id="r_a28cebbc0f7324f1202396086c4ec7dfe"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a28cebbc0f7324f1202396086c4ec7dfe">n</a></td></tr>
-<tr class="memdesc:a28cebbc0f7324f1202396086c4ec7dfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of columns in the matrix.  <br /></td></tr>
-<tr class="separator:a28cebbc0f7324f1202396086c4ec7dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a908967b2bcb180eaa8d75297daa58d45" id="r_a908967b2bcb180eaa8d75297daa58d45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a908967b2bcb180eaa8d75297daa58d45">layout</a></td></tr>
-<tr class="memdesc:a908967b2bcb180eaa8d75297daa58d45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Layout of the matrix in memory.  <br /></td></tr>
-<tr class="separator:a908967b2bcb180eaa8d75297daa58d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4726ff852c3d7369096ab8c41b87ff95" id="r_a4726ff852c3d7369096ab8c41b87ff95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a4726ff852c3d7369096ab8c41b87ff95">matrix</a></td></tr>
+<tr class="memdesc:a4726ff852c3d7369096ab8c41b87ff95"><td class="mdescLeft">&#160;</td><td class="mdescRight">View of original matrix.  <br /></td></tr>
+<tr class="separator:a4726ff852c3d7369096ab8c41b87ff95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a24d6ad9cf3fcd8014f77ee882e6e26" id="r_a4a24d6ad9cf3fcd8014f77ee882e6e26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a4a24d6ad9cf3fcd8014f77ee882e6e26">splitType</a></td></tr>
 <tr class="memdesc:a4a24d6ad9cf3fcd8014f77ee882e6e26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splitting strategy used.  <br /></td></tr>
 <tr class="separator:a4a24d6ad9cf3fcd8014f77ee882e6e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1741ad9ab0476c436736936f131aafb" id="r_af1741ad9ab0476c436736936f131aafb"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#af1741ad9ab0476c436736936f131aafb">numSplits</a></td></tr>
+<tr class="memitem:af1741ad9ab0476c436736936f131aafb" id="r_af1741ad9ab0476c436736936f131aafb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#af1741ad9ab0476c436736936f131aafb">numSplits</a></td></tr>
 <tr class="memdesc:af1741ad9ab0476c436736936f131aafb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of splits to use.  <br /></td></tr>
 <tr class="separator:af1741ad9ab0476c436736936f131aafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3162a662c7ebf8c2a6216ce3116518c0" id="r_a3162a662c7ebf8c2a6216ce3116518c0"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a3162a662c7ebf8c2a6216ce3116518c0">bitsPerSlice</a></td></tr>
+<tr class="memitem:a3162a662c7ebf8c2a6216ce3116518c0" id="r_a3162a662c7ebf8c2a6216ce3116518c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a3162a662c7ebf8c2a6216ce3116518c0">bitsPerSlice</a></td></tr>
 <tr class="memdesc:a3162a662c7ebf8c2a6216ce3116518c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bits per slice.  <br /></td></tr>
 <tr class="separator:a3162a662c7ebf8c2a6216ce3116518c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcee697acc6d99d405f774834d10fd5b" id="r_adcee697acc6d99d405f774834d10fd5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">normalisationDimension</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#adcee697acc6d99d405f774834d10fd5b">dimension</a></td></tr>
 <tr class="memdesc:adcee697acc6d99d405f774834d10fd5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dimension along wich to normalize.  <br /></td></tr>
 <tr class="separator:adcee697acc6d99d405f774834d10fd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fcaae2ef394410f8a13bd58e97312b4" id="r_a5fcaae2ef394410f8a13bd58e97312b4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a5fcaae2ef394410f8a13bd58e97312b4">matrix</a></td></tr>
-<tr class="memdesc:a5fcaae2ef394410f8a13bd58e97312b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Original matrix.  <br /></td></tr>
-<tr class="separator:a5fcaae2ef394410f8a13bd58e97312b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ffaa1f379b2bae41396f14c3784f0f0" id="r_a3ffaa1f379b2bae41396f14c3784f0f0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; splitint_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a3ffaa1f379b2bae41396f14c3784f0f0">memory</a></td></tr>
+<tr class="memitem:a3ffaa1f379b2bae41396f14c3784f0f0" id="r_a3ffaa1f379b2bae41396f14c3784f0f0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a3ffaa1f379b2bae41396f14c3784f0f0">memory</a></td></tr>
 <tr class="memdesc:a3ffaa1f379b2bae41396f14c3784f0f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory to store the split slices.  <br /></td></tr>
 <tr class="separator:a3ffaa1f379b2bae41396f14c3784f0f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cd728640328c94ccf6bc7cb64249ca1" id="r_a1cd728640328c94ccf6bc7cb64249ca1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; fp_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a1cd728640328c94ccf6bc7cb64249ca1">powersVector</a></td></tr>
+<tr class="memitem:a1cd728640328c94ccf6bc7cb64249ca1" id="r_a1cd728640328c94ccf6bc7cb64249ca1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a1cd728640328c94ccf6bc7cb64249ca1">powersVector</a></td></tr>
 <tr class="memdesc:a1cd728640328c94ccf6bc7cb64249ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalisation vector.  <br /></td></tr>
 <tr class="separator:a1cd728640328c94ccf6bc7cb64249ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f4cb8d98c86c32ce48ce3dcb3c3125e" id="r_a0f4cb8d98c86c32ce48ce3dcb3c3125e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a0f4cb8d98c86c32ce48ce3dcb3c3125e">scalingExponents</a></td></tr>
+<tr class="memitem:a0f4cb8d98c86c32ce48ce3dcb3c3125e" id="r_a0f4cb8d98c86c32ce48ce3dcb3c3125e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">int</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html#a0f4cb8d98c86c32ce48ce3dcb3c3125e">scalingExponents</a></td></tr>
 <tr class="memdesc:a0f4cb8d98c86c32ce48ce3dcb3c3125e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaling exponents.  <br /></td></tr>
 <tr class="separator:a0f4cb8d98c86c32ce48ce3dcb3c3125e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename splitint_t, typename fp_t&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a>&gt;<br />
 struct MatrixSplit&lt; splitint_t, fp_t &gt;</div><p>Class to store the matrix slices for the Ozaki scheme. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">splitint_t</td><td>Type used to store the integer slices. </td></tr>
-    <tr><td class="paramname">fp_t</td><td>Floating-point type (e.g., float, double). </td></tr>
+    <tr><td class="paramname">fp_t</td><td>Floating-point type (<a class="el" href="../../da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">e.g</a>., float, double). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00110">110</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00293">293</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a2225cce8d7c4fdf88321eac8e8a1d5ca" name="a2225cce8d7c4fdf88321eac8e8a1d5ca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2225cce8d7c4fdf88321eac8e8a1d5ca">&#9670;&#160;</a></span>uint_t</h2>
@@ -218,15 +214,15 @@ struct MatrixSplit&lt; splitint_t, fp_t &gt;</div><p>Class to store the matrix s
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::uint_t =  typename <a class="el" href="../../d8/d3f/structFloatingPointTraits.html">FloatingPointTraits</a>&lt;fp_t&gt;::StorageType</td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">using</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::uint_t =  <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../d8/d3f/structFloatingPointTraits.html">FloatingPointTraits</a>&lt;<a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a>&gt;::StorageType</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00124">124</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00304">304</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -236,76 +232,58 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::wideint_t =  std::conditional_t&lt;(sizeof(splitint_t) &lt; sizeof(int)), int, std::intmax_t&gt;</td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">using</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::wideint_t =  std::conditional_t&lt;(<a class="el" href="../../da/dd9/structMatrixView.html">sizeof</a>(<a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>) &lt; <a class="el" href="../../da/dd9/structMatrixView.html">sizeof</a>(<a class="el" href="../../da/dd9/structMatrixView.html">int</a>)), <a class="el" href="../../da/dd9/structMatrixView.html">int</a>, std::intmax_t&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00125">125</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00305">305</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a35830a08c44f757142ca15fda6b1ac23" name="a35830a08c44f757142ca15fda6b1ac23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35830a08c44f757142ca15fda6b1ac23">&#9670;&#160;</a></span>MatrixSplit()</h2>
+<a id="a32ec4f3895f3541914cc9d09133dee7a" name="a32ec4f3895f3541914cc9d09133dee7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32ec4f3895f3541914cc9d09133dee7a">&#9670;&#160;</a></span>MatrixSplit()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;<a class="el" href="../../d0/d06/structMatrixSplit.html">::MatrixSplit</a> </td>
+          <td class="memname"><a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;<a class="el" href="../../d0/d06/structMatrixSplit.html">::MatrixSplit</a> </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; fp_t &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>matrix</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const size_t&#160;</td>
-          <td class="paramname"><em>m</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const size_t&#160;</td>
-          <td class="paramname"><em>n</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a>&#160;</td>
-          <td class="paramname"><em>layout</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a>&#160;</td>
           <td class="paramname"><em>splitType</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>numSplits</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>bitsPerSlice</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">normalisationDimension</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">normalisationDimension</a>&#160;</td>
           <td class="paramname"><em>dimension</em>&#160;</td>
         </tr>
         <tr>
@@ -324,10 +302,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <p>Construct a <a class="el" href="../../d0/d06/structMatrixSplit.html" title="Class to store the matrix slices for the Ozaki scheme.">MatrixSplit</a> object and compute the splits. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">matrix</td><td>Original matrix. </td></tr>
-    <tr><td class="paramname">m</td><td>Number of rows. </td></tr>
-    <tr><td class="paramname">n</td><td>Number of columns. </td></tr>
-    <tr><td class="paramname">layout</td><td>Layout of the matrix in memory. </td></tr>
+    <tr><td class="paramname">matrix</td><td>View of original matrix. </td></tr>
     <tr><td class="paramname">splitType</td><td>Splitting strategy. </td></tr>
     <tr><td class="paramname">numSplits</td><td>Number of splits. </td></tr>
     <tr><td class="paramname">bitsPerSlice</td><td>Number of bits per slice. </td></tr>
@@ -336,24 +311,56 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00138">138</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00315">315</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a00d899f56f3b6915221083d0a53e2d29" name="a00d899f56f3b6915221083d0a53e2d29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00d899f56f3b6915221083d0a53e2d29">&#9670;&#160;</a></span>cols()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::cols </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the number of columns in the original matrix. </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of columns. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00349">349</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
 <a id="ad66a297834fb4e54467ffaa14f6f5880" name="ad66a297834fb4e54467ffaa14f6f5880"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad66a297834fb4e54467ffaa14f6f5880">&#9670;&#160;</a></span>computeFixedPointRepresentationVector()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::computeFixedPointRepresentationVector </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::computeFixedPointRepresentationVector </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; uint_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>fraction</em>, </td>
@@ -361,13 +368,13 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; bool &gt; &amp;&#160;</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">bool</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>sign</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>outer</em>&#160;</td>
         </tr>
         <tr>
@@ -393,7 +400,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00268">268</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00452">452</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -403,13 +410,13 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::computeNormalisationVectors </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::computeNormalisationVectors </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -424,7 +431,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 
 <p>Compute normalization vectors for the matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00214">214</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00398">398</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -434,15 +441,15 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::computeSliceBitOffset </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">int</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::computeSliceBitOffset </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>slice</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -463,7 +470,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The bit offset for the specified slice. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00238">238</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00422">422</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -473,13 +480,13 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::computeSplitsWithRoundToNearest </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::computeSplitsWithRoundToNearest </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -494,9 +501,9 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 
 <p>Split the matrix using round-to-nearest. </p>
 <p>This is an implementation of Algorithm 8 in:</p>
-<p>Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki scheme on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2025;39(3):462–476. DOI: 10.1177/10943420241313064 </p>
+<p>Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki scheme on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2025;39(3):462–476. DOI: <a class="el" href="../../da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">10.1177</a>/10943420241313064 </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00494">494</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00678">678</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -506,13 +513,13 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::computeSplitsWithTruncation </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::computeSplitsWithTruncation </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -527,9 +534,9 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 
 <p>Split the matrix using truncation. </p>
 <p>This is an implementation of Algorithm 4 in:</p>
-<p>Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2024;38(4):297-313. DOI: 10.1177/10943420241239588 </p>
+<p>Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2024;38(4):297-313. DOI: <a class="el" href="../../da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">10.1177</a>/10943420241239588 </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00293">293</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00477">477</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -539,13 +546,13 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::computeSplitsWithUnsignedEncoding </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::computeSplitsWithUnsignedEncoding </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -560,9 +567,9 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 
 <p>Split the matrix using unsigned slice encoding. </p>
 <p>This is an implementation of the algorithm in section 3 of:</p>
-<p>Schwarz A., Anders A., Brower C., Bayraktar H., Gunnels J., Clark K., Xu R. G., Rodriguez S., Cayrols S., Tabaszewski P., Podlozhnyuk V. Guaranteed DGEMM accuracy while using reduced precision tensor cores throguh extensions of the Ozaki scheme. SCA/HPCAsia 2026. DOI: 10.1145/3773656.3773670 </p>
+<p>Schwarz A., Anders A., Brower C., Bayraktar H., Gunnels J., Clark K., Xu R. G., Rodriguez S., Cayrols S., Tabaszewski P., Podlozhnyuk V. Guaranteed DGEMM accuracy while using reduced precision tensor cores throguh extensions of the Ozaki scheme. SCA/HPCAsia 2026. DOI: <a class="el" href="../../da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">10.1145</a>/3773656.3773670 </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00346">346</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00530">530</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -572,13 +579,13 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::innerDimension </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::innerDimension </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -594,57 +601,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <p>Return the dimension along which the inner product is calculated. </p>
 <dl class="section return"><dt>Returns</dt><dd>Inner product dimension. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00165">165</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a2cfc397acff1bd103a48f2ec238676bf" name="a2cfc397acff1bd103a48f2ec238676bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cfc397acff1bd103a48f2ec238676bf">&#9670;&#160;</a></span>matrixIndex()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::matrixIndex </td>
-          <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>i</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>j</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Compute the index for a given element in the matrix. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">i</td><td>The row index. </td></tr>
-    <tr><td class="paramname">j</td><td>The column index. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The index of the element in the matrix. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00183">183</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00357">357</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -654,21 +611,21 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::operandIndex </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::operandIndex </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>outer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>inner</em>&#160;</td>
         </tr>
         <tr>
@@ -694,7 +651,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The index of the operand in the matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00193">193</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00377">377</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -704,13 +661,13 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::outerDimension </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::outerDimension </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -726,7 +683,39 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <p>Return the dimension not used in the inner product. </p>
 <dl class="section return"><dt>Returns</dt><dd>Dimension not used in the inner product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00173">173</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00366">366</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a19c50b5d03bce235e9ad6747e654e1db" name="a19c50b5d03bce235e9ad6747e654e1db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19c50b5d03bce235e9ad6747e654e1db">&#9670;&#160;</a></span>rows()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::rows </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the number of rows in the original matrix. </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of rows. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00341">341</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -736,27 +725,27 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::splitIndex </td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::splitIndex </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>outer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>inner</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
           <td class="paramname"><em>slice</em>&#160;</td>
         </tr>
         <tr>
@@ -783,7 +772,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The index of the slice in the memory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00206">206</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00390">390</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -794,17 +783,17 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::bitsPerSlice</td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::bitsPerSlice</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Number of bits per slice. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00116">116</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00297">297</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -814,77 +803,37 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">normalisationDimension</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::dimension</td>
+          <td class="memname"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1">normalisationDimension</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::dimension</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Dimension along wich to normalize. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00117">117</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00298">298</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a908967b2bcb180eaa8d75297daa58d45" name="a908967b2bcb180eaa8d75297daa58d45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a908967b2bcb180eaa8d75297daa58d45">&#9670;&#160;</a></span>layout</h2>
+<a id="a4726ff852c3d7369096ab8c41b87ff95" name="a4726ff852c3d7369096ab8c41b87ff95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4726ff852c3d7369096ab8c41b87ff95">&#9670;&#160;</a></span>matrix</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::layout</td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt;<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a>&gt; <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::matrix</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Layout of the matrix in memory. </p>
+<p>View of original matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00113">113</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a6053c02cd2bf14cc1c129cc11ecc4987" name="a6053c02cd2bf14cc1c129cc11ecc4987"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6053c02cd2bf14cc1c129cc11ecc4987">&#9670;&#160;</a></span>m</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::m</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Number of rows in the matrix. </p>
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00111">111</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a5fcaae2ef394410f8a13bd58e97312b4" name="a5fcaae2ef394410f8a13bd58e97312b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fcaae2ef394410f8a13bd58e97312b4">&#9670;&#160;</a></span>matrix</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;fp_t&gt; <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::matrix</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Original matrix. </p>
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00119">119</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00294">294</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -894,37 +843,17 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;splitint_t&gt; <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::memory</td>
+          <td class="memname">std::vector&lt;<a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>&gt; <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::memory</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Memory to store the split slices. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00120">120</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a28cebbc0f7324f1202396086c4ec7dfe" name="a28cebbc0f7324f1202396086c4ec7dfe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28cebbc0f7324f1202396086c4ec7dfe">&#9670;&#160;</a></span>n</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::n</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Number of columns in the matrix. </p>
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00112">112</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00300">300</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -934,17 +863,17 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::numSplits</td>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::numSplits</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Number of splits to use. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00115">115</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00296">296</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -954,17 +883,17 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;fp_t&gt; <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::powersVector</td>
+          <td class="memname">std::vector&lt;<a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a>&gt; <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::powersVector</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Normalisation vector. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00121">121</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00301">301</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -974,17 +903,17 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;int&gt; <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::scalingExponents</td>
+          <td class="memname">std::vector&lt;<a class="el" href="../../da/dd9/structMatrixView.html">int</a>&gt; <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::scalingExponents</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Scaling exponents. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00122">122</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00302">302</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -994,17 +923,17 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename splitint_t , typename fp_t &gt; </div>
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt;::splitType</td>
+          <td class="memname"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9">splittingStrategy</a> <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::splitType</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Splitting strategy used. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00114">114</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00295">295</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

@@ -102,7 +102,7 @@ Build</h1>
 Mex interface</h2>
 <p>The MEX interface can be compiled with: </p><div class="fragment"><div class="line">cmake -S. -Bbuild</div>
 <div class="line">cmake --build build</div>
-</div><!-- fragment --><p> If the compilation is successful, these commands will produce the the MEX file <code>build/gemmi.$(mexext)</code>, where <code>$(mexext)</code> is <code>mexa64</code> on Linux, <code>mexmaci64</code> or <code>mexmaca64</code> on MacOS , and <code>mexw64</code> on Windows. The file <code>build/gemmi.m</code> contains the documentation for the MATLAB <code>gemmi</code> function.</p>
+</div><!-- fragment --><p> If the compilation is successful, these commands will produce the the MEX file <code>build/gemmi.$(mexext)</code>, where <code>$(mexext)</code> is <code>mexa64</code> on Linux, <code>mexmaci64</code> or <code>mexmaca64</code> on MacOS , and <code>mexw64</code> on Windows. The file <code><a class="el" href="da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">build/gemmi.m</a></code> contains the documentation for the MATLAB <code>gemmi</code> function.</p>
 <p>Building the interface can be disabled by setting the CMake variable <code>BUILD_MEX</code> to false: </p><div class="fragment"><div class="line">cmake -S. -Bbuild -DBUILD_MEX=False</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
 Catch2 tests</h2>
@@ -113,7 +113,7 @@ Configuration</h1>
 </div><!-- fragment --><p> Here, <code>&lt;preferred_compiler&gt;</code> must be either an executable on the search path or the path to the chosen compiler.</p>
 <h1><a class="anchor" id="autotoc_md6"></a>
 Notes on the MEX interface</h1>
-<p>Systems without <code>CMake</code> can use the function <code>mex/compile_mex.m</code> to compile the MEX interface. In MATLAB, this can be achieved by using the following commands: </p><div class="fragment"><div class="line">cd mex</div>
+<p>Systems without <code>CMake</code> can use the function <code><a class="el" href="da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">mex/compile_mex.m</a></code> to compile the MEX interface. In MATLAB, this can be achieved by using the following commands: </p><div class="fragment"><div class="line">cd mex</div>
 <div class="line">compile_mex</div>
 </div><!-- fragment --><p> The MEX interface and the corresponding documentation will be in the local directory (<code>mex/</code>). </p>
 </div></div><!-- PageDoc -->
