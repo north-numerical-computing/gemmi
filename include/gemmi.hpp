@@ -158,6 +158,15 @@ struct MatrixView {
         }
         return data[index(i, j)];
     }
+
+    /**
+     * @brief Access element by linear index.
+     * @param idx Linear index.
+     * @return Reference to the element.
+     */
+    value_t& linear(size_t idx) const {
+        return data[idx];
+    }
 };
 
 /**
@@ -375,6 +384,37 @@ struct MatrixSplit {
         return operandIndex(outer, inner) + slice * matrix.size();
     }
 
+    /**
+     * @brief Access the operand at the given outer and inner indices.
+     * @param outer The outer index.
+     * @param inner The inner index.
+     * @return Reference to the operand at the specified indices.
+     */
+    const fp_t& operand(size_t outer, size_t inner) const {
+    return matrix.linear(operandIndex(outer, inner));
+    }
+
+    /**
+     * @brief Access the split value at the given indices.
+     * @param outer The outer index.
+     * @param inner The inner index.
+     * @param slice The slice index.
+     * @return Mutable reference to the split value at the specified indices.
+     */
+    splitint_t& splitValue(size_t outer, size_t inner, size_t slice) {
+        return memory[splitIndex(outer, inner, slice)];
+    }
+
+    /**
+     * @brief Access the split value at the given indices (const version).
+     * @param outer The outer index.
+     * @param inner The inner index.
+     * @param slice The slice index.
+     * @return Read-only reference to the split value at the specified indices.
+     */
+    const splitint_t& splitValue(size_t outer, size_t inner, size_t slice) const {
+        return memory[splitIndex(outer, inner, slice)];
+    }
 
     /**
      * @brief Compute normalization vectors for the matrix.
@@ -384,9 +424,8 @@ struct MatrixSplit {
         for (size_t outer = 0; outer < this->outerDimension(); outer++) {
             this->powersVector[outer] = 0.0;
             for (size_t j = 0; j < this->innerDimension(); j++) {
-                const size_t matrixIndex = operandIndex(outer, j);
                 this->powersVector[outer] = std::max(this->powersVector[outer],
-                                                  std::abs(this->matrix.data[matrixIndex]));
+                                                  std::abs(this->operand(outer, j)));
             }
             // Compute the smallest power of 2 that is strictly greater than the
             // maximum value in the row/column.
@@ -436,8 +475,7 @@ struct MatrixSplit {
     void computeFixedPointRepresentationVector(std::vector<uint_t> &fraction, std::vector<bool> &sign, size_t outer) {
         constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
         for (size_t inner = 0; inner < this->innerDimension(); inner++) {
-                const size_t matrixIndex = operandIndex(outer, inner);
-                fp_t value = this->matrix.data[matrixIndex];
+                fp_t value = this->operand(outer, inner);
                 fraction[inner] = std::bit_cast<uint_t>(value);
                 sign[inner] = std::signbit(value);
                 uint_t bitmask = (static_cast<uint_t>(1) << (numSignificandBits - 1)) - 1;
@@ -476,7 +514,7 @@ struct MatrixSplit {
             for (size_t inner = 0; inner < this->innerDimension(); inner++) {
                 // NOTE: I could have a special path for 0.
                 int16_t shiftCounter = numSignificandBits - bitsPerSlice;
-                int currentExponent = getStoredFloatingPointExponent(this->matrix.data[operandIndex(outer, inner)]);
+                int currentExponent = getStoredFloatingPointExponent(this->operand(outer, inner));
                 int16_t exponentDifference = scalingExponents[outer] - currentExponent;
                 for (size_t slice = 0; slice < numSplits; slice++) {
                     if (exponentDifference > (signed)bitsPerSlice) {
@@ -492,7 +530,7 @@ struct MatrixSplit {
                             currentSlice >> shiftCounter :
                             currentSlice << -shiftCounter;
                         splitint_t value = (splitint_t)(currentSplit) * (sign[inner] ? -1 : 1);
-                        this->memory[splitIndex(outer, inner, slice)] = value;
+                        this->splitValue(outer, inner, slice) = value;
                         shiftCounter -= bitsPerSlice;
                     }
                 }
@@ -541,7 +579,7 @@ struct MatrixSplit {
 
                 // NOTE: I could have a special path for 0.
                 int16_t shiftCounter;
-                int currentExponent = getStoredFloatingPointExponent(this->matrix.data[matrixIndex]);
+                int currentExponent = getStoredFloatingPointExponent(this->operand(outer, inner));
                 int16_t exponentDifference = scalingExponents[outer] - currentExponent;
 
                 splitint_t value = 0;
@@ -593,8 +631,8 @@ struct MatrixSplit {
                     if (exponentDifference > (signed)(bitsPerSlice + 1)) {
                         exponentDifference -= (bitsPerSlice + 1);
                         if (sign[inner]) {
-                            this->memory[splitIndex(outer, inner, slice - 1)] = static_cast<splitint_t>(0);
-                            this->memory[splitIndex(outer, inner, slice)] = static_cast<splitint_t>(-1);
+                            this->splitValue(outer, inner, slice - 1) = static_cast<splitint_t>(0);
+                            this->splitValue(outer, inner, slice) = static_cast<splitint_t>(-1);
                         }
                     } else {
                         shiftCounter += exponentDifference;
@@ -619,17 +657,15 @@ struct MatrixSplit {
                         // Update previous slices if currentSplit is negative in splitint_t.
                         // Carry must propoagate upward until slice 0 if necessary.
                         if (currentSplit > static_cast<uint_t>(digitMax)) {
-                            int nextSlice = static_cast<int>(slice) - 1;
+                            int prevSliceIndex = static_cast<int>(slice) - 1;
                             while (true) {
-                                const size_t prevIdx = splitIndex(outer, inner, nextSlice);
-                                auto newValue = static_cast<wideint_t>(this->memory[prevIdx]) + 1;
-
+                                auto newValue = static_cast<wideint_t>(this->splitValue(outer, inner, prevSliceIndex)) + 1;
                                 if (newValue <= digitMax) {
-                                    this->memory[prevIdx] = static_cast<splitint_t>(newValue);
+                                    this->splitValue(outer, inner, prevSliceIndex) = static_cast<splitint_t>(newValue);
                                     break;
                                 } else {
-                                    this->memory[prevIdx] = static_cast<splitint_t>(digitMin);
-                                    nextSlice--;
+                                    this->splitValue(outer, inner, prevSliceIndex) = static_cast<splitint_t>(digitMin);
+                                    prevSliceIndex--;
                                 }
                             }
                         }
@@ -642,7 +678,7 @@ struct MatrixSplit {
                             signedDigit -= base;
                         }
 
-                        this->memory[splitIndex(outer, inner, slice)] = static_cast<splitint_t>(signedDigit);
+                        this->splitValue(outer, inner, slice) = static_cast<splitint_t>(signedDigit);
                         shiftCounter -= (bitsPerSlice + 1);
                     }
                 }
@@ -674,7 +710,7 @@ struct MatrixSplit {
                     value -= sigma;
                     localMatrix[matrixIndex] -= value;
                     value = value / powersVector[outer] * ldexp(1.0, bitsPerSlice * slice + bitsPerSlice - 1);
-                    this->memory[splitIndex(outer, inner, slice)] = value;
+                    this->splitValue(outer, inner, slice) = value;
                 }
             }
         }
@@ -721,7 +757,7 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
         for (size_t col = 0; col < B.cols(); col++) {
             for (size_t ell = 0; ell < A.innerDimension(); ell++) {
                 auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
-                C[index] += A.memory[A.splitIndex(row, ell, iBlock)] * B.memory[B.splitIndex(col, ell, jBlock)];
+                C[index] += A.splitValue(row, ell, iBlock) * B.splitValue(col, ell, jBlock);
             }
         }
     }
