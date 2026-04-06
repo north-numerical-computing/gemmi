@@ -61,6 +61,14 @@ int getStoredFloatingPointExponent(fp_t value) {
 }
 
 /**
+ * @brief Enum to specify the dimension used for normalization.
+ */
+enum class normalisationDimension {
+    byRows, ///< Normalise by rows (matrix on the left of the product).
+    byCols  ///< Normalise by columns (matrix on the right of the product).
+};
+
+/**
  * @brief Enum to specify the layout of the matrix in memory.
  */
 enum class matrixLayout {
@@ -256,13 +264,7 @@ MatrixView<const value_t> makeConstMatrixView(MatrixView<value_t> view) {
     return MatrixView<const value_t>(view.data, view.rows, view.cols, view.layout);
 }
 
-/**
- * @brief Enum to specify the dimension used for normalization.
- */
-enum class normalisationDimension {
-    byRows, ///< Normalise by rows (matrix on the left of the product).
-    byCols  ///< Normalise by columns (matrix on the right of the product).
-};
+namespace multiterm {
 
 /**
  * @brief Enum to specify the splitting strategy to use.
@@ -287,6 +289,14 @@ enum class accumulationStrategy {
 enum class multiplicationStrategy {
     full,       ///< Compute all products.
     reduced     ///< Only compute products above the main anti-diagonal.
+};
+
+/**
+ * @brief Enum to specify the accumulation strategy to use.
+ */
+enum class reductionStrategy {
+    floatingPoint, ///< Accumulate products in floating-point arithmetic.
+    integer        ///< Accumulate products in integer arithmetic.
 };
 
 /**
@@ -867,6 +877,8 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
     return C;
 }
 
+}
+
 /**
  * @brief Compute the matrix product C = C + A * B.
  * @tparam fp_t Floating-point type of the matrix elements.
@@ -890,9 +902,9 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
                          const size_t m, const size_t k, const size_t n,
                          const size_t numSplitsA, const size_t numSplitsB,
                          const matrixLayout layoutC = matrixLayout::columnMajor,
-                         const splittingStrategy splitType = splittingStrategy::roundToNearest,
-                         const accumulationStrategy accType = accumulationStrategy::floatingPoint,
-                         const multiplicationStrategy multType = multiplicationStrategy::reduced) {
+                         const multiterm::splittingStrategy splitType = multiterm::splittingStrategy::roundToNearest,
+                         const multiterm::reductionStrategy accType = multiterm::reductionStrategy::floatingPoint,
+                         const multiterm::multiplicationStrategy multType = multiterm::multiplicationStrategy::reduced) {
 
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
     const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
@@ -905,19 +917,19 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
     auto viewA = makeMatrixView(A, m, k, layoutA);
     auto viewB = makeMatrixView(B, k, n, layoutB);
 
-    auto splitA = MatrixSplit<splitint_t, fp_t>(viewA, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
-    auto splitB = MatrixSplit<splitint_t, fp_t>(viewB, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
+    auto splitA = multiterm::MatrixSplit<splitint_t, fp_t>(viewA, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
+    auto splitB = multiterm::MatrixSplit<splitint_t, fp_t>(viewB, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
 
     splitA.prepare();
     splitB.prepare();
 
     size_t numDiagonals;
     switch (multType) {
-        case multiplicationStrategy::reduced:
+        case multiterm::multiplicationStrategy::reduced:
             // Products below the main anti-diagonal are ignored.
             numDiagonals = std::max(splitA.numSplits, splitB.numSplits) - 1;
             break;
-        case multiplicationStrategy::full:
+        case multiterm::multiplicationStrategy::full:
             // All products are computed.
             numDiagonals = splitA.numSplits + splitB.numSplits - 1;
             break;
@@ -928,13 +940,13 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
     }
 
     switch (accType) {
-        case accumulationStrategy::floatingPoint:
+        case multiterm::reductionStrategy::floatingPoint:
             return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, layoutC, numDiagonals);
-        case accumulationStrategy::integer:
+        case multiterm::reductionStrategy::integer:
             return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, layoutC, numDiagonals);
         // LCOV_EXCL_START
         default:
-            throw std::logic_error("Unhandled accumulationStrategy");
+            throw std::logic_error("Unhandled reductionStrategy");
         // LCOV_EXCL_STOP   
     }
 }

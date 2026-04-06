@@ -15,13 +15,13 @@ constexpr double tolerance<float>() { return 1e-6; }
 template <>
 constexpr double tolerance<double>() { return 1e-15; }
 
-std::string toString(splittingStrategy strategy) {
+std::string toString(multiterm::splittingStrategy strategy) {
 	switch (strategy) {
-	case splittingStrategy::truncation:
+	case multiterm::splittingStrategy::truncation:
 		return "truncation";
-	case splittingStrategy::unsignedEncoding:
+	case multiterm::splittingStrategy::unsignedEncoding:
 		return "unsignedEncoding";
-	case splittingStrategy::roundToNearest:
+	case multiterm::splittingStrategy::roundToNearest:
 		return "roundToNearest";
 	// LCOV_EXCL_START
 	default:
@@ -30,11 +30,11 @@ std::string toString(splittingStrategy strategy) {
 	}
 }
 
-std::string toString(accumulationStrategy strategy) {
+std::string toString(multiterm::reductionStrategy strategy) {
 	switch (strategy) {
-	case accumulationStrategy::floatingPoint:
+	case multiterm::reductionStrategy::floatingPoint:
 		return "floatingPoint";
-	case accumulationStrategy::integer:
+	case multiterm::reductionStrategy::integer:
 		return "integer";
 	// LCOV_EXCL_START
 	default:
@@ -43,11 +43,11 @@ std::string toString(accumulationStrategy strategy) {
 	}
 }
 
-std::string toString(multiplicationStrategy strategy) {
+std::string toString(multiterm::multiplicationStrategy strategy) {
 	switch (strategy) {
-	case multiplicationStrategy::reduced:
+	case multiterm::multiplicationStrategy::reduced:
 		return "reduced";
-	case multiplicationStrategy::full:
+	case multiterm::multiplicationStrategy::full:
 		return "full";
 	// LCOV_EXCL_START
 	default:
@@ -176,7 +176,7 @@ std::vector<fp_t> makeRandomMatrix(size_t rows, size_t cols,
  ************************/
 
 template <typename splitint_t, typename fp_t>
-std::vector<fp_t> reconstructFromSplit(const MatrixSplit<splitint_t, fp_t> &split) {
+std::vector<fp_t> reconstructFromSplit(const multiterm::MatrixSplit<splitint_t, fp_t> &split) {
 	std::vector<fp_t> reconstructed(split.matrix.size(), fp_t{0});
 	for (size_t i = 0; i < split.outerDimension(); ++i) {
 		for (size_t j = 0; j < split.innerDimension(); ++j) {
@@ -218,17 +218,17 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
     for (auto [m, n] : shapes) {
 		for (auto layout : {matrixLayout::rowMajor,
 			                matrixLayout::columnMajor}) {
-			for (auto strategy : {splittingStrategy::truncation,
-								splittingStrategy::unsignedEncoding,
-								splittingStrategy::roundToNearest}) {
+			for (auto strategy : {multiterm::splittingStrategy::truncation,
+								multiterm::splittingStrategy::unsignedEncoding,
+								multiterm::splittingStrategy::roundToNearest}) {
 				for (auto dim : {normalisationDimension::byRows,
-								normalisationDimension::byCols}) {
+								 normalisationDimension::byCols}) {
 					DYNAMIC_SECTION(
 						"type=" << (std::is_same_v<fp_t,float> ? "float" : "double")
 						<< ", strategy=" << toString(strategy)
 						<< ", dim=" << (dim == normalisationDimension::byRows ? "rows" : "cols")
 						<< ", shape=" << m << "x" << n) {
-						MatrixSplit<int8_t, fp_t> split(
+						multiterm::MatrixSplit<int8_t, fp_t> split(
 							makeMatrixView(testValues, m, n, layout),
 							strategy,
 							numSplits,
@@ -257,13 +257,13 @@ void runGemmiAccuracyTests() {
 				for (size_t m : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
 					for (size_t k : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
 						for (size_t n : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
-							for (auto splitType : {splittingStrategy::truncation,
-												splittingStrategy::unsignedEncoding,
-												splittingStrategy::roundToNearest}) {
-								for (auto accumulationType : {accumulationStrategy::floatingPoint,
-															accumulationStrategy::integer}) {
-									for (auto multiplicationType : {multiplicationStrategy::reduced,
-																	multiplicationStrategy::full}) {
+							for (auto splitType : {multiterm::splittingStrategy::truncation,
+												   multiterm::splittingStrategy::unsignedEncoding,
+												   multiterm::splittingStrategy::roundToNearest}) {
+								for (auto accumulationType : {multiterm::reductionStrategy::floatingPoint,
+															  multiterm::reductionStrategy::integer}) {
+									for (auto multiplicationType : {multiterm::multiplicationStrategy::reduced,
+																	multiterm::multiplicationStrategy::full}) {
 										for (size_t numSplitA : {10u, 15u}) {
 											for (size_t numSplitB : {10u, 15u}) {
 												DYNAMIC_SECTION(

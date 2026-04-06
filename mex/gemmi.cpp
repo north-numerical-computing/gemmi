@@ -5,9 +5,9 @@
 /*
 */
 typedef struct {
-    splittingStrategy splitType;
-    multiplicationStrategy multType;
-    accumulationStrategy accType;
+    multiterm::splittingStrategy splitType;
+    multiterm::multiplicationStrategy multType;
+    multiterm::reductionStrategy accType;
 } algorithmOptions;
 static std::unique_ptr<algorithmOptions> options = nullptr;
 
@@ -17,9 +17,9 @@ public:
 
         if (options == nullptr) {
             options = std::make_unique<algorithmOptions>();
-            options->splitType = splittingStrategy::roundToNearest;
-            options->accType = accumulationStrategy::integer;
-            options->multType = multiplicationStrategy::reduced;
+            options->splitType = multiterm::splittingStrategy::roundToNearest;
+            options->accType = multiterm::reductionStrategy::integer;
+            options->multType = multiterm::multiplicationStrategy::reduced;
         }
 
         // Validate input.
@@ -48,9 +48,22 @@ public:
         if (outputs.size() == 2) {
             matlab::data::ArrayFactory factory;
             matlab::data::StructArray S = factory.createStructArray({1, 1}, {"split", "acc", "mult"});
-            S[0]["split"] = factory.createCharArray(options->splitType == splittingStrategy::roundToNearest ? "n" : "b");
-            S[0]["acc"] = factory.createCharArray(options->accType == accumulationStrategy::floatingPoint ? "f" : "i");
-            S[0]["mult"] = factory.createCharArray(options->multType == multiplicationStrategy::full ? "f" : "r");
+            switch (options->splitType) {
+                case multiterm::splittingStrategy::truncation:
+                    S[0]["split"] = factory.createCharArray("t");
+                    break;
+                case multiterm::splittingStrategy::unsignedEncoding:
+                    S[0]["split"] = factory.createCharArray("u");
+                    break;
+                case multiterm::splittingStrategy::roundToNearest:
+                    S[0]["split"] = factory.createCharArray("n");
+                    break;
+                default:
+                    S[0]["split"] = factory.createCharArray("unknown");
+                    break;
+            }
+            S[0]["acc"] = factory.createCharArray(options->accType == multiterm::reductionStrategy::floatingPoint ? "f" : "i");
+            S[0]["mult"] = factory.createCharArray(options->multType == multiterm::multiplicationStrategy::full ? "f" : "r");
             outputs[1] = std::move(S);
         }
     }
@@ -173,13 +186,13 @@ private:
                     if (std::string(field) == "split") {
                         switch ((char)data[0]) {
                             case 't':
-                                options->splitType = splittingStrategy::truncation;
+                                options->splitType = multiterm::splittingStrategy::truncation;
                                 break;
                             case 'u':
-                                options->splitType = splittingStrategy::unsignedEncoding;
+                                options->splitType = multiterm::splittingStrategy::unsignedEncoding;
                                 break;
                             case 'n':
-                                options->splitType = splittingStrategy::roundToNearest;
+                                options->splitType = multiterm::splittingStrategy::roundToNearest;
                                 break;
                             default:
                                 matlabPtr->feval(u"error",
@@ -189,10 +202,10 @@ private:
                     } else if (std::string(field) == "acc") {
                         switch ((char)data[0]) {
                             case 'f':
-                                options->accType = accumulationStrategy::floatingPoint;
+                                options->accType = multiterm::reductionStrategy::floatingPoint;
                                 break;
                             case 'i':
-                                options->accType = accumulationStrategy::integer;
+                                options->accType = multiterm::reductionStrategy::integer;
                                 break;
                             default:
                                 matlabPtr->feval(u"error",
@@ -202,10 +215,10 @@ private:
                     } else if (std::string(field) == "mult") {
                         switch ((char)(data[0])) {
                             case 'f':
-                                options->multType = multiplicationStrategy::full;
+                                options->multType = multiterm::multiplicationStrategy::full;
                                 break;
                             case 'r':
-                                options->multType = multiplicationStrategy::reduced;
+                                options->multType = multiterm::multiplicationStrategy::reduced;
                                 break;
                             default:
                                 matlabPtr->feval(u"error",
