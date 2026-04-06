@@ -125,6 +125,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a87df5074ff0119396fbb43baa565bcc7" id="r_a87df5074ff0119396fbb43baa565bcc7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">value_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dd9/structMatrixView.html#a87df5074ff0119396fbb43baa565bcc7">at</a> (<a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">i</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">j</a>) <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
 <tr class="memdesc:a87df5074ff0119396fbb43baa565bcc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access element (i, j) explicitly.  <br /></td></tr>
 <tr class="separator:a87df5074ff0119396fbb43baa565bcc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dc264b3be3103a77a866e965ac317fe" id="r_a9dc264b3be3103a77a866e965ac317fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">value_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dd9/structMatrixView.html#a9dc264b3be3103a77a866e965ac317fe">linear</a> (<a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">idx</a>) <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
+<tr class="memdesc:a9dc264b3be3103a77a866e965ac317fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access element by linear index.  <br /></td></tr>
+<tr class="separator:a9dc264b3be3103a77a866e965ac317fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -379,6 +382,45 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 <dl class="section return"><dt>Returns</dt><dd>Linear index into the underlying data array. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00127">127</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a9dc264b3be3103a77a866e965ac317fe" name="a9dc264b3be3103a77a866e965ac317fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dc264b3be3103a77a866e965ac317fe">&#9670;&#160;</a></span>linear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">value_t</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">value_t</a> &amp; <a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">value_t</a> &gt;::linear </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Access element by linear index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>Linear index. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to the element. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00167">167</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

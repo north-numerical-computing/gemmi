@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['operand_0',['operand',['../d0/d06/structMatrixSplit.html#a70bc55e2d87beeea24dd85ea70a58b13',1,'MatrixSplit']]],
-  ['operandindex_1',['operandIndex',['../d0/d06/structMatrixSplit.html#a5213ad1586c38a2cbdde796cae62c14a',1,'MatrixSplit']]],
-  ['operator_28_29_2',['operator()',['../da/dd9/structMatrixView.html#ab07ab18c7bae1461dbbff888521598fd',1,'MatrixView']]],
-  ['outerdimension_3',['outerDimension',['../d0/d06/structMatrixSplit.html#a9dc22598abcc942a93a27866407a53fd',1,'MatrixSplit']]]
+  ['makeconstmatrixview_0',['makeConstMatrixView',['../dc/de8/gemmi_8hpp.html#acef238561a934c8794afc05905014618',1,'gemmi.hpp']]],
+  ['makematrixview_1',['makematrixview',['../dc/de8/gemmi_8hpp.html#a668618f7ff32f3e366ec0141260067ad',1,'makeMatrixView(value_t *data, size_t rows, size_t cols, matrixLayout layout):&#160;gemmi.hpp'],['../dc/de8/gemmi_8hpp.html#a854fd03554072f0c3276f9b519995442',1,'makeMatrixView(const value_t *data, size_t rows, size_t cols, matrixLayout layout):&#160;gemmi.hpp'],['../dc/de8/gemmi_8hpp.html#ac477ced2f82ba7f431db0290b06a80bc',1,'makeMatrixView(std::vector&lt; value_t &gt; &amp;matrix, size_t rows, size_t cols, matrixLayout layout):&#160;gemmi.hpp'],['../dc/de8/gemmi_8hpp.html#a64ea61aee9763059cb6586c9674835e8',1,'makeMatrixView(const std::vector&lt; value_t &gt; &amp;matrix, size_t rows, size_t cols, matrixLayout layout):&#160;gemmi.hpp']]],
+  ['matrixsplit_2',['MatrixSplit',['../d0/d06/structMatrixSplit.html#a32ec4f3895f3541914cc9d09133dee7a',1,'MatrixSplit']]],
+  ['matrixview_3',['matrixview',['../da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5',1,'MatrixView::MatrixView()'],['../da/dd9/structMatrixView.html#ae8db07292bcc4b16eabf3c77d3c58931',1,'MatrixView::MatrixView(value_t *data, size_t rows, size_t cols, matrixLayout layout)']]]
 ];
