@@ -7,18 +7,34 @@
 #include <vector>
 
 template <typename fp_t>
-std::vector<fp_t> reference_gemm (const std::vector<fp_t> &A,
-                                  const std::vector<fp_t> &B,
-                         const size_t m, const size_t p, const size_t n) {
-    std::vector<fp_t> C (m * n);
-    for (size_t i = 0; i < m; i++) {
-        for (size_t j = 0; j < n; j++) {
-            C[i + j * m] = 0;
-            for (size_t k = 0; k < p; k++) {
-                C[i + j * m] += A[i + k * m] * B[k + j * p];
+size_t matrixIndex(size_t i, size_t j,
+                   size_t rows, size_t cols,
+                   matrixLayout layout) {
+    return (layout == matrixLayout::rowMajor)
+        ? (i * cols + j)
+        : (j * rows + i);
+}
+
+template <typename fp_t>
+std::vector<fp_t> referenceGemm(
+    const std::vector<fp_t>& A, matrixLayout layoutA,
+    const std::vector<fp_t>& B, matrixLayout layoutB,
+    size_t m, size_t k, size_t n,
+    matrixLayout layoutC)
+{
+    std::vector<fp_t> C(m * n, fp_t{0});
+
+    for (size_t i = 0; i < m; ++i) {
+        for (size_t j = 0; j < n; ++j) {
+            fp_t sum = 0;
+            for (size_t ell = 0; ell < k; ++ell) {
+                sum += A[matrixIndex<fp_t>(i, ell, m, k, layoutA)]
+                    * B[matrixIndex<fp_t>(ell, j, k, n, layoutB)];
             }
+            C[matrixIndex<fp_t>(i, j, m, n, layoutC)] = sum;
         }
     }
+
     return C;
 }
 

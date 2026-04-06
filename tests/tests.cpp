@@ -202,23 +202,20 @@ template <>
 constexpr size_t numSlicesForExactRoundTrip<double>() { return 32; }
 
 template <typename fp_t>
-void runSplitRoundTripTests(const size_t bitsPerSlice, std::vector<fp_t> testValues) {
+void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> testValues) {
     const size_t numSplits = numSlicesForExactRoundTrip<fp_t>();
 
     // Generate an even number of subnormals.
-    const size_t subnormalCount = testValues.size();
+    const size_t testCount = testValues.size();
 
     struct Shape { size_t m, n; };
     std::vector<Shape> shapes = {
-        {1, subnormalCount},
-        {2, subnormalCount / 2},
-        {subnormalCount / 2, 2},
+        {1, testCount},
+        {2, testCount / 2},
+        {testCount / 2, 2},
     };
 
     for (auto [m, n] : shapes) {
-        std::vector<fp_t> mat(m * n);
-        for (size_t i = 0; i < m * n; ++i)
-            mat[i] = testValues[i % subnormalCount];
 		for (auto layout : {matrixLayout::rowMajor,
 			                matrixLayout::columnMajor}) {
 			for (auto strategy : {splittingStrategy::truncation,
@@ -230,18 +227,16 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, std::vector<fp_t> testVal
 						"type=" << (std::is_same_v<fp_t,float> ? "float" : "double")
 						<< ", strategy=" << toString(strategy)
 						<< ", dim=" << (dim == normalisationDimension::byRows ? "rows" : "cols")
-						<< ", shape=" << m << "x" << n)
-					{
+						<< ", shape=" << m << "x" << n) {
 						MatrixSplit<int8_t, fp_t> split(
-							mat, m, n,
-							layout,
+							testValues, m, n, layout,
 							strategy,
 							numSplits,
 							bitsPerSlice,
 							dim);
 
 						const auto recon = reconstructFromSplit(split);
-						requireBitwiseIdenticalVectors(recon, mat);
+						requireBitwiseIdenticalVectors(recon, testValues);
 					}
 				}
 			}
@@ -286,11 +281,11 @@ void runGemmiAccuracyTests() {
 														layoutC,
 														splitType, accumulationType, multiplicationType);
 
-													const auto C_ref = reference_gemm(A, B, m, k, n);
+													const auto C_ref = referenceGemm<fp_t>(A, layoutA, B, layoutB, m, k, n, layoutC);
 
 													const double relative_error =
 														frobenius_norm<fp_t, double>(C - C_ref) /
-														frobenius_norm<fp_t, double>(C);
+														frobenius_norm<fp_t, double>(C_ref);
 
 													INFO("relative_error = " << relative_error);
 													INFO("tolerance = " << tolerance<fp_t>());
