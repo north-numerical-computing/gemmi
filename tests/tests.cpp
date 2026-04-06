@@ -57,7 +57,7 @@ std::string toString(multiplicationStrategy strategy) {
 }
 
 template <typename fp_t>
-using storage_t = typename getStorageFormat<fp_t>::storage_format;
+using storage_t = typename FloatingPointTraits<fp_t>::StorageType;
 
 template <typename fp_t>
 std::string hexBits(fp_t value) {
@@ -90,8 +90,8 @@ void requireBitwiseIdenticalVectors(const std::vector<fp_t> &actual,
 
 template <typename fp_t>
 inline void pushWithBothSigns(std::vector<fp_t>& out,
-                              typename getStorageFormat<fp_t>::storage_format bits) {
-    using uint_t = typename getStorageFormat<fp_t>::storage_format;
+							  typename FloatingPointTraits<fp_t>::StorageType bits) {
+	using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
     const size_t totalBits = sizeof(uint_t) * 8;
     const uint_t signMask  = static_cast<uint_t>(1) << (totalBits - 1);
     out.push_back(std::bit_cast<fp_t>(bits));
@@ -99,17 +99,17 @@ inline void pushWithBothSigns(std::vector<fp_t>& out,
 }
 
 template <typename fp_t>
-std::vector<fp_t> generateValuesWithSignificand(typename getStorageFormat<fp_t>::storage_format pattern,
+std::vector<fp_t> generateValuesWithSignificand(typename FloatingPointTraits<fp_t>::StorageType pattern,
         									    int expMin, int expMax) {
-    using uint_t = typename getStorageFormat<fp_t>::storage_format;
+	using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
 
-    const size_t fracBits = computeNumFracBits<fp_t>();
-    const size_t expBits  = computeNumExpBits<fp_t>();
+	constexpr size_t significandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+	constexpr size_t expBits  = FloatingPointTraits<fp_t>::numExponentBits;
 
-    const uint_t fracMask = (static_cast<uint_t>(1) << fracBits) - 1;
+    const uint_t fractionMask = (static_cast<uint_t>(1) << significandBits) - 1;
     const uint_t expMask  = (static_cast<uint_t>(1) << expBits) - 1;
 
-    const uint_t fracPart = pattern & fracMask;
+    const uint_t fraction = pattern & fractionMask;
     const int bias = (static_cast<int>(1) << (expBits - 1)) - 1;
 
     std::vector<fp_t> result;
@@ -120,7 +120,7 @@ std::vector<fp_t> generateValuesWithSignificand(typename getStorageFormat<fp_t>:
         if (stored <= 0 || stored >= int(expMask))
 			continue; // Skip subnormals, infs, and NaNs.
 
-        uint_t bits = (static_cast<uint_t>(stored) << (fracBits - 1)) | fracPart;
+        uint_t bits = (static_cast<uint_t>(stored) << (significandBits - 1)) | fraction;
         pushWithBothSigns<fp_t>(result, bits);
     }
 
@@ -129,25 +129,25 @@ std::vector<fp_t> generateValuesWithSignificand(typename getStorageFormat<fp_t>:
 
 template <typename fp_t>
 std::vector<fp_t> generateTestValues(int targetExponent) {
-    using uint_t = typename getStorageFormat<fp_t>::storage_format;
-    const size_t fracBits = computeNumFracBits<fp_t>();
-	const size_t expBits = computeNumExpBits<fp_t>();
+	using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
+	constexpr size_t significandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+	constexpr size_t expBits = FloatingPointTraits<fp_t>::numExponentBits;
 
 	const int bias = (static_cast<int>(1) << (expBits - 1)) - 1;
-    const uint_t expField = static_cast<uint_t>(targetExponent + bias) << (fracBits - 1);
+    const uint_t expField = static_cast<uint_t>(targetExponent + bias) << (significandBits - 1);
 
     std::vector<fp_t> result;
-    result.reserve(4 * (fracBits - 1) + 2);
+    result.reserve(4 * (significandBits - 1) + 2);
 
 	// Add powers of 2 and preceding values.
-    for (size_t i = 1; i < fracBits; ++i) {
+    for (size_t i = 1; i < significandBits; ++i) {
         uint_t frac = static_cast<uint_t>(1) << i;
         pushWithBothSigns(result, expField | (frac - 1));
         pushWithBothSigns(result, expField | frac);
     }
 
 	// Add largest subnormal values in magnitude.
-	uint_t largestPositiveSubnormal = expField | ((static_cast<uint_t>(1) << fracBits) - 1);
+	uint_t largestPositiveSubnormal = expField | ((static_cast<uint_t>(1) << significandBits) - 1);
 	pushWithBothSigns(result, largestPositiveSubnormal);
 
     return result;

@@ -11,34 +11,41 @@
 
 /**
  * @file gemmi.hpp
- * @brief Integer matrix multiplication using the Ozaki scheme.
+ * @brief Floating-point matrix multiplication using integer emulation.
  */
 
 /**
- * @brief Number of bits in the exponent field of a floating-point type.
- * @tparam fp_t Floating-point type (e.g., float, double).
- * @return Number of bits in the exponent field.
+ * @brief Traits describing IEEE-754 layout properties for a floating-point type.
+ *
+ * This trait centralizes all compile-time metadata about floating-point types.
+ * - StorageType: unsigned integer type for to bit-cast values.
+ * - numExponentBits: number of bits in the exponent field.
+ * - numSignificandBits: number of significand bits, including the implicit bit.
+ *
+ * @tparam fp_t Supported floating-point type.
  */
-template <typename fp_t> size_t computeNumExpBits() {return 0;}
-template <> size_t computeNumExpBits<float>() {return 8;}
-template <> size_t computeNumExpBits<double>() {return 11;}
+template <typename fp_t>
+struct FloatingPointTraits;
 
 /**
- * @brief Number of bits in the fraction field of a floating-point type.
- * @tparam fp_t Floating-point type (e.g., float, double).
- * @return Number of bits in the fraction field.
+ * @brief IEEE-754 traits for single-precision floating point.
  */
-template <typename fp_t> size_t computeNumFracBits() {return 0;}
-template <> size_t computeNumFracBits<float>() {return 24;}
-template <> size_t computeNumFracBits<double>() {return 53;}
+template <>
+struct FloatingPointTraits<float> {
+    using StorageType = uint32_t;
+    static constexpr size_t numExponentBits = 8;
+    static constexpr size_t numSignificandBits = 24;
+};
 
 /**
- * @brief Map floating-point type to its corresponding storage format.
- * @tparam fp_t Floating-point type (e.g., float, double).
+ * @brief IEEE-754 traits for double-precision floating point.
  */
-template <typename fp_t> struct getStorageFormat;
-template <> struct getStorageFormat<float> {using storage_format = uint32_t;};
-template <> struct getStorageFormat<double> {using storage_format = uint64_t;};
+template <>
+struct FloatingPointTraits<double> {
+    using StorageType = uint64_t;
+    static constexpr size_t numExponentBits = 11;
+    static constexpr size_t numSignificandBits = 53;
+};
 
 /**
  * @brief Get the exponent of a floating-point value.
@@ -47,13 +54,10 @@ template <> struct getStorageFormat<double> {using storage_format = uint64_t;};
  * @return The value stored in the exponent field of the value, as an integer.
  */
 template <typename fp_t>
-int getFloatingPointExponent(fp_t value) {
-    if (value == 0.0) {
-        return 0; // Exponent for zero is typically represented as all zeros.
-    } else {
-        return std::max(std::numeric_limits<fp_t>::min_exponent,
-                        std::ilogb(std::abs(value)) + 1);
-    }
+int getStoredFloatingPointExponent(fp_t value) {
+    return (value == 0.0) ?
+        0 :
+        std::max(std::numeric_limits<fp_t>::min_exponent, std::ilogb(std::abs(value)) + 1);
 }
 
 /**
@@ -117,7 +121,7 @@ struct MatrixSplit {
     std::vector<fp_t> powersVector;    ///< Normalisation vector.
     std::vector<int> scalingExponents; ///< Scaling exponents.
 
-    using uint_t = typename getStorageFormat<fp_t>::storage_format;
+    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
     using wideint_t = std::conditional_t<(sizeof(splitint_t) < sizeof(int)), int, std::intmax_t>;
 
     /**
@@ -221,7 +225,7 @@ struct MatrixSplit {
             // NOTE 1: This is not the technique used in uoi24.
             // NOTE 2: I use exponents instead of powers of 2, as I need the former
             //         to shift correctly.
-            this->scalingExponents[outer] = getFloatingPointExponent(this->powersVector[outer]);
+            this->scalingExponents[outer] = getStoredFloatingPointExponent(this->powersVector[outer]);
             this->powersVector[outer] = std::ldexp(1.0, this->scalingExponents[outer]);
         }
     }
@@ -262,18 +266,18 @@ struct MatrixSplit {
      * @param i The index of the row/column for which to compute the fixed-point representation.
      */
     void computeFixedPointRepresentationVector(std::vector<uint_t> &fraction, std::vector<bool> &sign, size_t outer) {
-        auto numFracBits = computeNumFracBits<fp_t>();
+        constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
         for (size_t inner = 0; inner < this->innerDimension(); inner++) {
                 const size_t matrixIndex = operandIndex(outer, inner);
                 fp_t value = this->matrix[matrixIndex];
                 fraction[inner] = std::bit_cast<uint_t>(value);
                 sign[inner] = std::signbit(value);
-                uint_t bitmask = (static_cast<uint_t>(1) << (numFracBits - 1)) - 1;
+                uint_t bitmask = (static_cast<uint_t>(1) << (numSignificandBits - 1)) - 1;
                 fraction[inner] = fraction[inner] & bitmask;
                 // Restore implicit bit for normal numbers.
                 // NOTE: NaNs and infs are currently not supported.
                 if (std::fpclassify(value) == FP_NORMAL)
-                    fraction[inner] |= (static_cast<uint_t>(1) << (numFracBits - 1));
+                    fraction[inner] |= (static_cast<uint_t>(1) << (numSignificandBits - 1));
             }
     }
 
@@ -289,7 +293,7 @@ struct MatrixSplit {
     void computeSplitsWithTruncation() {
         this->splitType = splittingStrategy::truncation;
         // Compute splits one row/column at a time.
-        auto numFracBits = computeNumFracBits<fp_t>();
+        constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
         auto bitsPerSlice = this->bitsPerSlice;
         std::vector<uint_t> fraction (this->innerDimension());
         std::vector<bool> sign (this->innerDimension());
@@ -303,8 +307,8 @@ struct MatrixSplit {
             // Perform the split.
             for (size_t inner = 0; inner < this->innerDimension(); inner++) {
                 // NOTE: I could have a special path for 0.
-                int16_t shiftCounter = numFracBits - bitsPerSlice;
-                int currentExponent = getFloatingPointExponent(this->matrix[operandIndex(outer, inner)]);
+                int16_t shiftCounter = numSignificandBits - bitsPerSlice;
+                int currentExponent = getStoredFloatingPointExponent(this->matrix[operandIndex(outer, inner)]);
                 int16_t exponentDifference = scalingExponents[outer] - currentExponent;
                 for (size_t slice = 0; slice < numSplits; slice++) {
                     if (exponentDifference > (signed)bitsPerSlice) {
@@ -342,7 +346,7 @@ struct MatrixSplit {
     void computeSplitsWithUnsignedEncoding() {
         this->splitType = splittingStrategy::unsignedEncoding;
         // Compute splits one row/column at a time.
-        auto numFracBits = computeNumFracBits<fp_t>();
+        constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
         auto bitsPerSlice = this->bitsPerSlice;
         std::vector<uint_t> fraction (this->innerDimension());
         std::vector<bool> sign (this->innerDimension());
@@ -369,7 +373,7 @@ struct MatrixSplit {
 
                 // NOTE: I could have a special path for 0.
                 int16_t shiftCounter;
-                int currentExponent = getFloatingPointExponent(this->matrix[matrixIndex]);
+                int currentExponent = getStoredFloatingPointExponent(this->matrix[matrixIndex]);
                 int16_t exponentDifference = scalingExponents[outer] - currentExponent;
 
                 splitint_t value = 0;
@@ -384,10 +388,10 @@ struct MatrixSplit {
                             (static_cast<uint_t>(1) << (sizeof(uint_t) * 8 - 1)) :
                         fraction[inner];
                     exponentDifference -= (bitsPerSlice - 1);
-                    shiftCounter = numFracBits - (bitsPerSlice + 1);
+                    shiftCounter = numSignificandBits - (bitsPerSlice + 1);
                 } else {
                     // Truncation.
-                    shiftCounter = numFracBits - (bitsPerSlice - 1) + exponentDifference;
+                    shiftCounter = numSignificandBits - (bitsPerSlice - 1) + exponentDifference;
                     exponentDifference = 0;
                     uint_t bitmask = (shiftCounter > 0)
                         ? (smallBitmask << shiftCounter)
@@ -493,7 +497,9 @@ struct MatrixSplit {
         auto localMatrix = this->matrix;
         for (size_t slice = 0; slice < numSplits; slice++) {
             for (size_t outer = 0; outer < this->outerDimension(); outer++) {
-                fp_t sigma = ldexp(0.75, computeNumFracBits<fp_t>() - bitsPerSlice * slice + 1 - bitsPerSlice) * powersVector[outer];
+                fp_t sigma = ldexp(0.75,
+                                   FloatingPointTraits<fp_t>::numSignificandBits - bitsPerSlice * slice + 1 - bitsPerSlice) *
+                             powersVector[outer];
                 for (size_t inner = 0; inner < this->innerDimension(); inner++) {
                     auto matrixIndex = operandIndex(outer, inner);
                     auto value = (localMatrix[matrixIndex] + sigma);
