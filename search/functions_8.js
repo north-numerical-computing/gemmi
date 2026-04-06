@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rows_0',['rows',['../d0/d06/structMatrixSplit.html#a19c50b5d03bce235e9ad6747e654e1db',1,'MatrixSplit']]]
+  ['rows_0',['rows',['../df/dc6/structmultiterm_1_1MatrixSplit.html#a0dd868204e79b9fec3282ef616fba293',1,'multiterm::MatrixSplit']]]
 ];

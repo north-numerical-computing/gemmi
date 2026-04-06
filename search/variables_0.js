@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bitsperslice_0',['bitsPerSlice',['../d0/d06/structMatrixSplit.html#a3162a662c7ebf8c2a6216ce3116518c0',1,'MatrixSplit']]]
+  ['bitsperslice_0',['bitsPerSlice',['../df/dc6/structmultiterm_1_1MatrixSplit.html#a11864d3b01350b7af1994a07083e9de4',1,'multiterm::MatrixSplit']]]
 ];

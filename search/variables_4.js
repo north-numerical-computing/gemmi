@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['matrix_0',['matrix',['../d0/d06/structMatrixSplit.html#a4726ff852c3d7369096ab8c41b87ff95',1,'MatrixSplit']]],
-  ['memory_1',['memory',['../d0/d06/structMatrixSplit.html#a3ffaa1f379b2bae41396f14c3784f0f0',1,'MatrixSplit']]]
+  ['matrix_0',['matrix',['../df/dc6/structmultiterm_1_1MatrixSplit.html#aa28155a05059e3a8177b76723dda9f0b',1,'multiterm::MatrixSplit']]],
+  ['memory_1',['memory',['../df/dc6/structmultiterm_1_1MatrixSplit.html#ab02586dd9a04b0f7d3df9422afee3aa9',1,'multiterm::MatrixSplit']]]
 ];

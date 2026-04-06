@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['scalingexponents_0',['scalingExponents',['../d0/d06/structMatrixSplit.html#a0f4cb8d98c86c32ce48ce3dcb3c3125e',1,'MatrixSplit']]],
-  ['splittype_1',['splitType',['../d0/d06/structMatrixSplit.html#a4a24d6ad9cf3fcd8014f77ee882e6e26',1,'MatrixSplit']]]
+  ['scalingexponents_0',['scalingExponents',['../df/dc6/structmultiterm_1_1MatrixSplit.html#ae91db22a58044e6b2b6baae3097b3076',1,'multiterm::MatrixSplit']]],
+  ['splittype_1',['splitType',['../df/dc6/structmultiterm_1_1MatrixSplit.html#a2ae0b90b8ab9bef1ba6aaf7f80064861',1,'multiterm::MatrixSplit']]]
 ];
