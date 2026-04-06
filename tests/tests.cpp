@@ -234,6 +234,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
 							numSplits,
 							bitsPerSlice,
 							dim);
+						split.prepare();
 
 						const auto recon = reconstructFromSplit(split);
 						requireBitwiseIdenticalVectors(recon, testValues);

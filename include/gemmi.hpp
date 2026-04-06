@@ -316,18 +316,6 @@ struct MatrixSplit {
         this->memory.resize(matrix.rows * matrix.cols * numSplits);
         this->powersVector.resize(this->outerDimension());
         this->scalingExponents.resize(this->outerDimension());
-        this->computeNormalisationVectors();
-        switch (splitType) {
-            case splittingStrategy::truncation:
-                this->computeSplitsWithTruncation();
-                break;
-            case splittingStrategy::unsignedEncoding:
-                this->computeSplitsWithUnsignedEncoding();
-                break;
-            case splittingStrategy::roundToNearest:
-                this->computeSplitsWithRoundToNearest();
-                break;
-            }
     }
 
     /**
@@ -691,7 +679,26 @@ struct MatrixSplit {
             }
         }
     }
+
+    void prepare() {
+        this->computeNormalisationVectors();
+        switch (this->splitType) {
+            case splittingStrategy::truncation:
+                this->computeSplitsWithTruncation();
+                break;
+            case splittingStrategy::unsignedEncoding:
+                this->computeSplitsWithUnsignedEncoding();
+                break;
+            case splittingStrategy::roundToNearest:
+                this->computeSplitsWithRoundToNearest();
+                break;
+        }
+    }
 };
+
+/*************************************
+ * Perform the matrix multiplication *
+ *************************************/
 
 /**
  * @brief Compute the exact integer GEMM (General Matrix-Matrix Multiplication).
@@ -864,6 +871,9 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
 
     auto splitA = MatrixSplit<splitint_t, fp_t>(viewA, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
     auto splitB = MatrixSplit<splitint_t, fp_t>(viewB, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
+
+    splitA.prepare();
+    splitB.prepare();
 
     size_t numDiagonals;
     switch (multType) {
