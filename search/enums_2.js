@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['normalisationdimension_0',['normalisationDimension',['../dc/de8/gemmi_8hpp.html#ab3f5bfb1c3081bf0041b4eb3aff4faf1',1,'gemmi.hpp']]]
+  ['reductionstrategy_0',['reductionStrategy',['../dc/de8/gemmi_8hpp.html#a8b41b39270218ae8815f982fb0e6d453',1,'multiterm']]]
 ];

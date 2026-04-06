@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['powersvector_0',['powersVector',['../df/dc6/structmultiterm_1_1MatrixSplit.html#aaf2f5487cbce503a978f00b2307d31e1',1,'multiterm::MatrixSplit']]]
+  ['powersvector_0',['powersVector',['../d7/d90/structmultiterm_1_1Decomposition.html#abfc29deac6e3290fce36fec6acf22d7e',1,'multiterm::Decomposition']]]
 ];

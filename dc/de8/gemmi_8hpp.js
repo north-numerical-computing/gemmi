@@ -3,11 +3,7 @@ var gemmi_8hpp =
     [ "FloatingPointTraits< float >", "d8/d0a/structFloatingPointTraits_3_01float_01_4.html", null ],
     [ "FloatingPointTraits< double >", "de/daa/structFloatingPointTraits_3_01double_01_4.html", null ],
     [ "MatrixView< value_t >", "da/dd9/structMatrixView.html", "da/dd9/structMatrixView" ],
-    [ "multiterm::MatrixSplit< splitint_t, fp_t >", "df/dc6/structmultiterm_1_1MatrixSplit.html", "df/dc6/structmultiterm_1_1MatrixSplit" ],
-    [ "accumulationStrategy", "dc/de8/gemmi_8hpp.html#a883a95bbbf8eab5c26d143765ad881b4", [
-      [ "floatingPoint", "dc/de8/gemmi_8hpp.html#a883a95bbbf8eab5c26d143765ad881b4a7b34ebf73d296927412803297706dba2", null ],
-      [ "integer", "dc/de8/gemmi_8hpp.html#a883a95bbbf8eab5c26d143765ad881b4a157db7df530023575515d366c9b672e8", null ]
-    ] ],
+    [ "multiterm::Decomposition< splitint_t, fp_t >", "d7/d90/structmultiterm_1_1Decomposition.html", "d7/d90/structmultiterm_1_1Decomposition" ],
     [ "matrixLayout", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68", [
       [ "rowMajor", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a0edcf02e1f8904ff1fc5e0fb89d16232", null ],
       [ "columnMajor", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a5bccb53123b3512007f3f32b68077d7c", null ]
@@ -29,9 +25,9 @@ var gemmi_8hpp =
       [ "unsignedEncoding", "dc/de8/gemmi_8hpp.html#af99d2566e5e288f282d8570ce4e6fc79af4ad70253d0174851f373fab0a220066", null ],
       [ "roundToNearest", "dc/de8/gemmi_8hpp.html#af99d2566e5e288f282d8570ce4e6fc79a0487e454e553d12df80ec42f42d5aaab", null ]
     ] ],
-    [ "computeExactIntegerGEMM", "dc/de8/gemmi_8hpp.html#ac670b40696e964298e9549210c30df37", null ],
-    [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#aa28358de20b8d0f950770ba466b6955b", null ],
-    [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#afb944c2d0cd68d2d64cc0c19b84bb2d9", null ],
+    [ "computeExactIntegerGEMM", "dc/de8/gemmi_8hpp.html#a1f1d257c8642df1a8094b6a4064a57b0", null ],
+    [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#ae98f59d0951bc194204c8ba5f47336ca", null ],
+    [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#a808bee199a8492ac1d4f2fc6a9cc8ffe", null ],
     [ "gemmi", "dc/de8/gemmi_8hpp.html#a40a3bf4a6175fbc75b17ccf855c4ca7d", null ],
     [ "getStoredFloatingPointExponent", "dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a", null ],
     [ "makeConstMatrixView", "dc/de8/gemmi_8hpp.html#acef238561a934c8794afc05905014618", null ],

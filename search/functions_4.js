@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['index_0',['index',['../da/dd9/structMatrixView.html#ac1956eeedac843ea631058409f9478ff',1,'MatrixView']]],
-  ['innerdimension_1',['innerDimension',['../df/dc6/structmultiterm_1_1MatrixSplit.html#a3655772d552d2b665592923536f9acdf',1,'multiterm::MatrixSplit']]]
+  ['gemmi_0',['gemmi',['../dc/de8/gemmi_8hpp.html#a40a3bf4a6175fbc75b17ccf855c4ca7d',1,'gemmi.hpp']]],
+  ['getstoredfloatingpointexponent_1',['getStoredFloatingPointExponent',['../dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a',1,'gemmi.hpp']]]
 ];
