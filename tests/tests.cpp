@@ -229,7 +229,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
 						<< ", dim=" << (dim == normalisationDimension::byRows ? "rows" : "cols")
 						<< ", shape=" << m << "x" << n) {
 						MatrixSplit<int8_t, fp_t> split(
-							testValues, m, n, layout,
+							makeMatrixView(testValues, m, n, layout),
 							strategy,
 							numSplits,
 							bitsPerSlice,

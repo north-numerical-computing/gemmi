@@ -64,9 +64,188 @@ int getStoredFloatingPointExponent(fp_t value) {
  * @brief Enum to specify the layout of the matrix in memory.
  */
 enum class matrixLayout {
-    rowMajor, ///< Matrix stored in row-major order.
+    rowMajor,    ///< Matrix stored in row-major order.
     columnMajor  ///< Matrix stored in column-major order.
 };
+
+/**
+ * @brief Lightweight view of a dense matrix.
+ *
+ * It does not own the underlying memory but provides read and write to it.
+ *
+ * @tparam value_t Element type.
+ */
+template <typename value_t>
+struct MatrixView {
+    value_t* data;        ///< Pointer to the matrix data.
+    size_t rows;          ///< Number of rows in the matrix.
+    size_t cols;          ///< Number of columns in the matrix.
+    matrixLayout layout;  ///< Layout of the matrix in memory.
+
+    /**
+     * @brief Default constructor.
+     */
+    MatrixView() :
+        data(nullptr), rows(0), cols(0), layout(matrixLayout::rowMajor) {}
+
+    /**
+     * @brief Contruct a matrix biew from raw parts.
+     *
+     * @param data Pointer to the first matrix element.
+     * @param rows Number of rows.
+     * @param cols Number of columns.
+     * @param layout Memory layout.
+     */
+    MatrixView(value_t* data, size_t rows, size_t cols, matrixLayout layout) :
+        data(data), rows(rows), cols(cols), layout(layout) {}
+
+    /**
+     * @brief Return the number of stored elements.
+     *
+     * @return rows * cols
+     */
+    size_t size() const {
+        return rows * cols;
+    }
+
+    /**
+     * @brief Return true if the view is empty.
+     *
+     * @return true if rows == 0 or cols == 0
+     */
+    bool empty() const {
+        return rows == 0 || cols == 0;
+    }
+
+    /**
+     * @brief Compute the linear index of element (i, j).
+     *
+     * @param i Row index.
+     * @param j Column index.
+     * @return Linear index into the underlying data array.
+     */
+    size_t index(size_t i, size_t j) const {
+        return (layout == matrixLayout::rowMajor)
+            ? (i * cols + j)
+            : (j * rows + i);
+    }
+
+    /**
+     * @brief Access element (i, j).
+     *
+     * @param i Row index.
+     * @param j Column index.
+     * @return Reference to the element.
+     */
+    value_t& operator()(size_t i, size_t j) const {
+        return data[index(i, j)];
+    }
+
+    /**
+     * @brief Access element (i, j) explicitly.
+     *
+     * This method throws an exception if the access is out of bounds.
+     * It is a safe alternative to operator(), which does not perform
+     * bounds checking.
+     *
+     * @param i Row index.
+     * @param j Column index.
+     * @return Reference to the element.
+     */
+    value_t& at(size_t i, size_t j) const {
+        if (i >= rows || j >= cols) {
+            throw std::out_of_range("MatrixView index out of range");
+        }
+        return data[index(i, j)];
+    }
+};
+
+/**
+ * @brief Create a mutable matrix view from raw pointer.
+ *
+ * @tparam value_t Element type.
+ * @param data Pointer to the first matrix element.
+ * @param rows Number of rows.
+ * @param cols Number of columns.
+ * @param layout Memory layout.
+ * @return MatrixView<value_t>
+ */
+template <typename value_t>
+MatrixView<value_t> makeMatrixView(value_t* data,
+                                   size_t rows,
+                                   size_t cols,
+                                   matrixLayout layout) {
+    return MatrixView<value_t>(data, rows, cols, layout);
+}
+
+/**
+ * @brief Create a read-only matrix view from raw pointer.
+ *
+ * @tparam value_t Element type.
+ * @param data Pointer to the first matrix element.
+ * @param rows Number of rows.
+ * @param cols Number of columns.
+ * @param layout Memory layout.
+ * @return MatrixView<const value_t>
+ */
+template <typename value_t>
+MatrixView<const value_t> makeMatrixView(const value_t* data,
+                                         size_t rows,
+                                         size_t cols,
+                                         matrixLayout layout) {
+    return MatrixView<const value_t>(data, rows, cols, layout);
+}
+
+/**
+ * @brief Create a mutable matrix view from a std::vector.
+ *
+ * @tparam value_t Element type.
+ * @param matrix Matrix storage.
+ * @param rows Number of rows.
+ * @param cols Number of columns.
+ * @param layout Memory layout.
+ * @return MatrixView<value_t>
+ */
+template <typename value_t>
+MatrixView<value_t> makeMatrixView(std::vector<value_t>& matrix,
+                                   size_t rows,
+                                   size_t cols,
+                                   matrixLayout layout) {
+    return MatrixView<value_t>(matrix.data(), rows, cols, layout);
+}
+
+/**
+ * @brief Create a read-only matrix view from a const std::vector.
+ *
+ * @tparam value_t Element type.
+ * @param matrix Matrix storage.
+ * @param rows Number of rows.
+ * @param cols Number of columns.
+ * @param layout Memory layout.
+ * @return MatrixView<const value_t>
+ */
+template <typename value_t>
+MatrixView<const value_t> makeMatrixView(const std::vector<value_t>& matrix,
+                                         size_t rows,
+                                         size_t cols,
+                                         matrixLayout layout) {
+    return MatrixView<const value_t>(matrix.data(), rows, cols, layout);
+}
+
+/**
+ * @brief Create a read-only matrix view from a mutable MatrixView.
+ *
+ * This is useful to pass a mutable view into code that expects a read-only
+ * view without rebuilding it manually.
+ *
+ * @tparam value_t Element type.
+ * @param view Mutable matrix view.
+ * @return MatrixView<const value_t>
+ */
+template <typename value_t>
+MatrixView<const value_t> makeConstMatrixView(MatrixView<value_t> view) {
+    return MatrixView<const value_t>(view.data, view.rows, view.cols, view.layout);
+}
 
 /**
  * @brief Enum to specify the dimension used for normalization.
@@ -108,15 +287,12 @@ enum class multiplicationStrategy {
  */
 template <typename splitint_t, typename fp_t>
 struct MatrixSplit {
-    size_t m;                         ///< Number of rows in the matrix.
-    size_t n;                         ///< Number of columns in the matrix.
-    matrixLayout layout;              ///< Layout of the matrix in memory.
+    MatrixView<const fp_t> matrix;    ///< View of original matrix.
     splittingStrategy splitType;      ///< Splitting strategy used.
     size_t numSplits;                 ///< Number of splits to use.
     size_t bitsPerSlice;              ///< Number of bits per slice.
     normalisationDimension dimension; ///< Dimension along wich to normalize.
 
-    std::vector<fp_t> matrix;          ///< Original matrix.
     std::vector<splitint_t> memory;    ///< Memory to store the split slices.
     std::vector<fp_t> powersVector;    ///< Normalisation vector.
     std::vector<int> scalingExponents; ///< Scaling exponents.
@@ -126,22 +302,18 @@ struct MatrixSplit {
 
     /**
      * @brief Construct a MatrixSplit object and compute the splits.
-     * @param matrix Original matrix.
-     * @param m Number of rows.
-     * @param n Number of columns.
-     * @param layout Layout of the matrix in memory.
+     * @param matrix View of original matrix.
      * @param splitType Splitting strategy.
      * @param numSplits Number of splits.
      * @param bitsPerSlice Number of bits per slice.
      * @param dimension Normalization dimension.
      */
-    MatrixSplit(const std::vector<fp_t>& matrix,
-                const size_t m, const size_t n, const matrixLayout layout,
+    MatrixSplit(const MatrixView<const fp_t>& matrix,
                 const splittingStrategy splitType, size_t numSplits, size_t bitsPerSlice,
                 const normalisationDimension dimension) :
-                m(m), n(n), layout(layout), splitType(splitType), numSplits(numSplits), bitsPerSlice(bitsPerSlice),
-                dimension(dimension), matrix(matrix) {
-        this->memory.resize(m * n * numSplits);
+                matrix(matrix), splitType(splitType), numSplits(numSplits), bitsPerSlice(bitsPerSlice),
+                dimension(dimension) {
+        this->memory.resize(matrix.rows * matrix.cols * numSplits);
         this->powersVector.resize(this->outerDimension());
         this->scalingExponents.resize(this->outerDimension());
         this->computeNormalisationVectors();
@@ -159,11 +331,28 @@ struct MatrixSplit {
     }
 
     /**
+     * @brief Return the number of rows in the original matrix.
+     * @return Number of rows.
+     */
+    size_t rows() const {
+        return matrix.rows;
+    }
+
+    /**
+     * @brief Return the number of columns in the original matrix.
+     * @return Number of columns.
+     */
+    size_t cols() const {
+        return matrix.cols;
+    }
+
+    /**
      * @brief Return the dimension along which the inner product is calculated.
      * @return Inner product dimension.
      */
     size_t innerDimension() const {
-        return (dimension == normalisationDimension::byRows) ? n : m;
+        return (dimension == normalisationDimension::byRows) ?
+            matrix.cols : matrix.rows;
     }
 
     /**
@@ -171,17 +360,8 @@ struct MatrixSplit {
      * @return Dimension not used in the inner product.
      */
     size_t outerDimension() const {
-        return (dimension == normalisationDimension::byRows) ? m : n;
-    }
-
-    /**
-     * @brief Compute the index for a given element in the matrix.
-     * @param i The row index.
-     * @param j The column index.
-     * @return The index of the element in the matrix.
-     */
-    size_t matrixIndex (size_t i, size_t j) const {
-        return (layout == matrixLayout::rowMajor) ? (i * n + j) : (j * m + i);
+        return (dimension == normalisationDimension::byRows) ?
+            matrix.rows : matrix.cols;
     }
 
     /**
@@ -192,8 +372,8 @@ struct MatrixSplit {
      */
     size_t operandIndex(size_t outer, size_t inner) const {
         return (dimension == normalisationDimension::byRows) ?
-            matrixIndex(outer, inner) :
-            matrixIndex(inner, outer);
+            matrix.index(outer, inner) :
+            matrix.index(inner, outer);
     }
 
     /**
@@ -218,7 +398,7 @@ struct MatrixSplit {
             for (size_t j = 0; j < this->innerDimension(); j++) {
                 const size_t matrixIndex = operandIndex(outer, j);
                 this->powersVector[outer] = std::max(this->powersVector[outer],
-                                                  std::abs(this->matrix[matrixIndex]));
+                                                  std::abs(this->matrix.data[matrixIndex]));
             }
             // Compute the smallest power of 2 that is strictly greater than the
             // maximum value in the row/column.
@@ -269,7 +449,7 @@ struct MatrixSplit {
         constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
         for (size_t inner = 0; inner < this->innerDimension(); inner++) {
                 const size_t matrixIndex = operandIndex(outer, inner);
-                fp_t value = this->matrix[matrixIndex];
+                fp_t value = this->matrix.data[matrixIndex];
                 fraction[inner] = std::bit_cast<uint_t>(value);
                 sign[inner] = std::signbit(value);
                 uint_t bitmask = (static_cast<uint_t>(1) << (numSignificandBits - 1)) - 1;
@@ -308,7 +488,7 @@ struct MatrixSplit {
             for (size_t inner = 0; inner < this->innerDimension(); inner++) {
                 // NOTE: I could have a special path for 0.
                 int16_t shiftCounter = numSignificandBits - bitsPerSlice;
-                int currentExponent = getStoredFloatingPointExponent(this->matrix[operandIndex(outer, inner)]);
+                int currentExponent = getStoredFloatingPointExponent(this->matrix.data[operandIndex(outer, inner)]);
                 int16_t exponentDifference = scalingExponents[outer] - currentExponent;
                 for (size_t slice = 0; slice < numSplits; slice++) {
                     if (exponentDifference > (signed)bitsPerSlice) {
@@ -373,7 +553,7 @@ struct MatrixSplit {
 
                 // NOTE: I could have a special path for 0.
                 int16_t shiftCounter;
-                int currentExponent = getStoredFloatingPointExponent(this->matrix[matrixIndex]);
+                int currentExponent = getStoredFloatingPointExponent(this->matrix.data[matrixIndex]);
                 int16_t exponentDifference = scalingExponents[outer] - currentExponent;
 
                 splitint_t value = 0;
@@ -494,7 +674,7 @@ struct MatrixSplit {
     void computeSplitsWithRoundToNearest() {
         this->splitType = splittingStrategy::roundToNearest;
         auto bitsPerSlice = this->bitsPerSlice;
-        auto localMatrix = this->matrix;
+        auto localMatrix = std::vector<fp_t>(this->matrix.data, this->matrix.data + this->matrix.size());
         for (size_t slice = 0; slice < numSplits; slice++) {
             for (size_t outer = 0; outer < this->outerDimension(); outer++) {
                 fp_t sigma = ldexp(0.75,
@@ -530,10 +710,10 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
                              std::vector<accumulator_t> &C,
                              const matrixLayout layoutC,
                              size_t iBlock, size_t jBlock) {
-    for (size_t row = 0; row < A.m; row++) {
-        for (size_t col = 0; col < B.n; col++) {
-            for (size_t ell = 0; ell < A.n; ell++) {
-                auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.m) : (col + row * B.n);
+    for (size_t row = 0; row < A.rows(); row++) {
+        for (size_t col = 0; col < B.cols(); col++) {
+            for (size_t ell = 0; ell < A.innerDimension(); ell++) {
+                auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
                 C[index] += A.memory[A.splitIndex(row, ell, iBlock)] * B.memory[B.splitIndex(col, ell, jBlock)];
             }
         }
@@ -565,17 +745,17 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
                                                                const MatrixSplit<splitint_t, fp_t> &B,
                                                                const matrixLayout layoutC,
                                                                const size_t numDiagonals) {
-    std::vector<fp_t> C (A.m * B.n, 0.0);
+    std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
         int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
         size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
         while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
-            std::vector<accumulator_t> accumulator (A.m * B.n, 0.0);
+            std::vector<accumulator_t> accumulator (A.rows() * B.cols(), 0.0);
             computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
-            for (size_t row = 0; row < A.m; row++) {
-                for (size_t col = 0; col < B.n; col++) {
+            for (size_t row = 0; row < A.rows(); row++) {
+                for (size_t col = 0; col < B.cols(); col++) {
                     int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
-                    auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.m) : (col + row * B.n);
+                    auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
                     fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[index]), -totalShift);
                     fp_t scalingFactor = A.powersVector[row] * B.powersVector[col];
                     C[index] += scaledSum * scalingFactor;
@@ -615,7 +795,7 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
                                                          const matrixLayout layoutC,
                                                          const size_t numDiagonals) {
     
-    std::vector<fp_t> C (A.m * B.n, 0.0);
+    std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
     for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
         int Aindex = diagonal < A.numSplits ? static_cast<int>(diagonal) : static_cast<int>(A.numSplits - 1);
         size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
@@ -623,7 +803,7 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
         const int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
 
         // Compute and accumulate all products along this anti-diagonal in integer arithmetic.
-        std::vector<accumulator_t> accumulator(A.m * B.n, 0);
+        std::vector<accumulator_t> accumulator(A.rows() * B.cols(), 0);
         while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
             computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
             Aindex--;
@@ -631,9 +811,9 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<split
         }
 
         // Scale the accumulated products and accumulate in floating-point arithmetic across diagonals.
-        for (size_t row = 0; row < A.m; row++) {
-            for (size_t col = 0; col < B.n; col++) {
-                auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.m) : (col + row * B.n);
+        for (size_t row = 0; row < A.rows(); row++) {
+            for (size_t col = 0; col < B.cols(); col++) {
+                auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
                 fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[index]), -totalShift);
                 fp_t scalingFactor = A.powersVector[row] * B.powersVector[col];
                 C[index] += scaledSum * scalingFactor;
@@ -679,8 +859,11 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
     const size_t alpha = std::floor((bitsInAccumulator - log2(k)) / 2);
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
-    auto splitA = MatrixSplit<splitint_t, fp_t>(A, m, k, layoutA, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
-    auto splitB = MatrixSplit<splitint_t, fp_t>(B, k, n, layoutB, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
+    auto viewA = makeMatrixView(A, m, k, layoutA);
+    auto viewB = makeMatrixView(B, k, n, layoutB);
+
+    auto splitA = MatrixSplit<splitint_t, fp_t>(viewA, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
+    auto splitB = MatrixSplit<splitint_t, fp_t>(viewB, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
 
     size_t numDiagonals;
     switch (multType) {
