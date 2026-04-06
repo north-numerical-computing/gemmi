@@ -276,14 +276,6 @@ enum class splittingStrategy {
 };
 
 /**
- * @brief Enum to specify the accumulation strategy to use.
- */
-enum class accumulationStrategy {
-    floatingPoint, ///< Accumulate products in floating-point arithmetic.
-    integer        ///< Accumulate products in integer arithmetic.
-};
-
-/**
  * @brief Enum to specify the multiplication strategy to use.
  */
 enum class multiplicationStrategy {
@@ -305,7 +297,7 @@ enum class reductionStrategy {
  * @tparam fp_t Floating-point type (e.g., float, double).
  */
 template <typename splitint_t, typename fp_t>
-struct MatrixSplit {
+struct Decomposition {
     MatrixView<const fp_t> matrix;    ///< View of original matrix.
     splittingStrategy splitType;      ///< Splitting strategy used.
     size_t numSplits;                 ///< Number of splits to use.
@@ -320,14 +312,14 @@ struct MatrixSplit {
     using wideint_t = std::conditional_t<(sizeof(splitint_t) < sizeof(int)), int, std::intmax_t>;
 
     /**
-     * @brief Construct a MatrixSplit object and compute the splits.
+     * @brief Construct a Decomposition object.
      * @param matrix View of original matrix.
      * @param splitType Splitting strategy.
      * @param numSplits Number of splits.
      * @param bitsPerSlice Number of bits per slice.
      * @param dimension Normalization dimension.
      */
-    MatrixSplit(const MatrixView<const fp_t>& matrix,
+    Decomposition(const MatrixView<const fp_t>& matrix,
                 const splittingStrategy splitType, size_t numSplits, size_t bitsPerSlice,
                 const normalisationDimension dimension) :
                 matrix(matrix), splitType(splitType), numSplits(numSplits), bitsPerSlice(bitsPerSlice),
@@ -758,8 +750,8 @@ struct MatrixSplit {
  * @param jBlock Block index for matrix B.
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
-void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
-                             const MatrixSplit<splitint_t, fp_t> &B,
+void computeExactIntegerGEMM(const Decomposition<splitint_t, fp_t> &A,
+                             const Decomposition<splitint_t, fp_t> &B,
                              std::vector<accumulator_t> &C,
                              const matrixLayout layoutC,
                              size_t iBlock, size_t jBlock) {
@@ -794,8 +786,8 @@ void computeExactIntegerGEMM(const MatrixSplit<splitint_t, fp_t> &A,
  *
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
-std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
-                                                               const MatrixSplit<splitint_t, fp_t> &B,
+std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const Decomposition<splitint_t, fp_t> &A,
+                                                               const Decomposition<splitint_t, fp_t> &B,
                                                                const matrixLayout layoutC,
                                                                const size_t numDiagonals) {
     std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
@@ -843,8 +835,8 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const MatrixSplit
  * @return Resulting matrix C.
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
-std::vector<fp_t> computeProductsWithIntegerAccumulation(const MatrixSplit<splitint_t, fp_t> &A,
-                                                         const MatrixSplit<splitint_t, fp_t> &B,
+std::vector<fp_t> computeProductsWithIntegerAccumulation(const Decomposition<splitint_t, fp_t> &A,
+                                                         const Decomposition<splitint_t, fp_t> &B,
                                                          const matrixLayout layoutC,
                                                          const size_t numDiagonals) {
     
@@ -917,8 +909,8 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
     auto viewA = makeMatrixView(A, m, k, layoutA);
     auto viewB = makeMatrixView(B, k, n, layoutB);
 
-    auto splitA = multiterm::MatrixSplit<splitint_t, fp_t>(viewA, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
-    auto splitB = multiterm::MatrixSplit<splitint_t, fp_t>(viewB, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
+    auto splitA = multiterm::Decomposition<splitint_t, fp_t>(viewA, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
+    auto splitB = multiterm::Decomposition<splitint_t, fp_t>(viewB, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
 
     splitA.prepare();
     splitB.prepare();

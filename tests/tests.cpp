@@ -176,7 +176,7 @@ std::vector<fp_t> makeRandomMatrix(size_t rows, size_t cols,
  ************************/
 
 template <typename splitint_t, typename fp_t>
-std::vector<fp_t> reconstructFromSplit(const multiterm::MatrixSplit<splitint_t, fp_t> &split) {
+std::vector<fp_t> reconstructFromMultitermDecomposition(const multiterm::Decomposition<splitint_t, fp_t> &split) {
 	std::vector<fp_t> reconstructed(split.matrix.size(), fp_t{0});
 	for (size_t i = 0; i < split.outerDimension(); ++i) {
 		for (size_t j = 0; j < split.innerDimension(); ++j) {
@@ -228,7 +228,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
 						<< ", strategy=" << toString(strategy)
 						<< ", dim=" << (dim == normalisationDimension::byRows ? "rows" : "cols")
 						<< ", shape=" << m << "x" << n) {
-						multiterm::MatrixSplit<int8_t, fp_t> split(
+						multiterm::Decomposition<int8_t, fp_t> split(
 							makeMatrixView(testValues, m, n, layout),
 							strategy,
 							numSplits,
@@ -236,7 +236,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
 							dim);
 						split.prepare();
 
-						const auto recon = reconstructFromSplit(split);
+						const auto recon = reconstructFromMultitermDecomposition(split);
 						requireBitwiseIdenticalVectors(recon, testValues);
 					}
 				}
