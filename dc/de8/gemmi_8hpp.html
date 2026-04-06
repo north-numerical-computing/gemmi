@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('dc/de8/gemmi_8hpp.html','../../'); ini
 </div><!--header-->
 <div class="contents">
 
-<p>Integer matrix multiplication using the Ozaki scheme.  
+<p>Integer matrix multiplication using integer emulation.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;bit&gt;</code><br />
@@ -111,7 +111,7 @@ Include dependency graph for gemmi.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../df/d1c/gemmi_8hpp__incl.png" border="0" usemap="#ainclude_2gemmi_8hpp" alt=""/></div>
 <map name="ainclude_2gemmi_8hpp" id="ainclude_2gemmi_8hpp">
-<area shape="rect" title="Integer matrix multiplication using the Ozaki scheme." alt="" coords="225,5,372,31"/>
+<area shape="rect" title="Integer matrix multiplication using integer emulation." alt="" coords="225,5,372,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,91,104"/>
 <area shape="poly" title=" " alt="" coords="259,33,103,77,101,72,258,28"/>
 <area shape="rect" title=" " alt="" coords="115,79,154,104"/>
@@ -133,9 +133,11 @@ Include dependency graph for gemmi.hpp:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d55/structgetStorageFormat_3_01float_01_4.html">getStorageFormat&lt; float &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d0a/structFloatingPointTraits_3_01float_01_4.html">FloatingPointTraits&lt; float &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">IEEE-754 traits for single-precision floating point.  <a href="../../d8/d0a/structFloatingPointTraits_3_01float_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de9/structgetStorageFormat_3_01double_01_4.html">getStorageFormat&lt; double &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/daa/structFloatingPointTraits_3_01double_01_4.html">FloatingPointTraits&lt; double &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">IEEE-754 traits for double-precision floating point.  <a href="../../de/daa/structFloatingPointTraits_3_01double_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit&lt; splitint_t, fp_t &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to store the matrix slices for the Ozaki scheme.  <a href="../../d0/d06/structMatrixSplit.html#details">More...</a><br /></td></tr>
@@ -172,30 +174,10 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a573a0a7d443f19d3349d43d87fd590b6" id="r_a573a0a7d443f19d3349d43d87fd590b6"><td class="memTemplParams" colspan="2">template&lt;typename fp_t &gt; </td></tr>
-<tr class="memitem:a573a0a7d443f19d3349d43d87fd590b6"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a573a0a7d443f19d3349d43d87fd590b6">computeNumExpBits</a> ()</td></tr>
-<tr class="memdesc:a573a0a7d443f19d3349d43d87fd590b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bits in the exponent field of a floating-point type.  <br /></td></tr>
-<tr class="separator:a573a0a7d443f19d3349d43d87fd590b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae49af32744bfc214b55a73da1a0b4ddc" id="r_ae49af32744bfc214b55a73da1a0b4ddc"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:ae49af32744bfc214b55a73da1a0b4ddc"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ae49af32744bfc214b55a73da1a0b4ddc">computeNumExpBits&lt; float &gt;</a> ()</td></tr>
-<tr class="separator:ae49af32744bfc214b55a73da1a0b4ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87798f5897ad8e6002afb9f7c96052e0" id="r_a87798f5897ad8e6002afb9f7c96052e0"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a87798f5897ad8e6002afb9f7c96052e0"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a87798f5897ad8e6002afb9f7c96052e0">computeNumExpBits&lt; double &gt;</a> ()</td></tr>
-<tr class="separator:a87798f5897ad8e6002afb9f7c96052e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3896af2c30eccd1d3469f60ac979ffe" id="r_aa3896af2c30eccd1d3469f60ac979ffe"><td class="memTemplParams" colspan="2">template&lt;typename fp_t &gt; </td></tr>
-<tr class="memitem:aa3896af2c30eccd1d3469f60ac979ffe"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aa3896af2c30eccd1d3469f60ac979ffe">computeNumFracBits</a> ()</td></tr>
-<tr class="memdesc:aa3896af2c30eccd1d3469f60ac979ffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bits in the fraction field of a floating-point type.  <br /></td></tr>
-<tr class="separator:aa3896af2c30eccd1d3469f60ac979ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30f5b536f819efe0f35ceda5a5fb8e4c" id="r_a30f5b536f819efe0f35ceda5a5fb8e4c"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a30f5b536f819efe0f35ceda5a5fb8e4c"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a30f5b536f819efe0f35ceda5a5fb8e4c">computeNumFracBits&lt; float &gt;</a> ()</td></tr>
-<tr class="separator:a30f5b536f819efe0f35ceda5a5fb8e4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae33421be0afbbc2fb0fbb0e798a19c86" id="r_ae33421be0afbbc2fb0fbb0e798a19c86"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:ae33421be0afbbc2fb0fbb0e798a19c86"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ae33421be0afbbc2fb0fbb0e798a19c86">computeNumFracBits&lt; double &gt;</a> ()</td></tr>
-<tr class="separator:ae33421be0afbbc2fb0fbb0e798a19c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb1d0263552eafdec96a166772d5ee8e" id="r_adb1d0263552eafdec96a166772d5ee8e"><td class="memTemplParams" colspan="2">template&lt;typename fp_t &gt; </td></tr>
-<tr class="memitem:adb1d0263552eafdec96a166772d5ee8e"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#adb1d0263552eafdec96a166772d5ee8e">getFloatingPointExponent</a> (fp_t value)</td></tr>
-<tr class="memdesc:adb1d0263552eafdec96a166772d5ee8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the exponent of a floating-point value.  <br /></td></tr>
-<tr class="separator:adb1d0263552eafdec96a166772d5ee8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15f4760c6e7a9fb20c145b30553d4a3a" id="r_a15f4760c6e7a9fb20c145b30553d4a3a"><td class="memTemplParams" colspan="2">template&lt;typename fp_t &gt; </td></tr>
+<tr class="memitem:a15f4760c6e7a9fb20c145b30553d4a3a"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a">getStoredFloatingPointExponent</a> (fp_t value)</td></tr>
+<tr class="memdesc:a15f4760c6e7a9fb20c145b30553d4a3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the exponent of a floating-point value.  <br /></td></tr>
+<tr class="separator:a15f4760c6e7a9fb20c145b30553d4a3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab41115c653500ecf5b58ebbd0bc9750" id="r_aab41115c653500ecf5b58ebbd0bc9750"><td class="memTemplParams" colspan="2">template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </td></tr>
 <tr class="memitem:aab41115c653500ecf5b58ebbd0bc9750"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aab41115c653500ecf5b58ebbd0bc9750">computeExactIntegerGEMM</a> (const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;A, const <a class="el" href="../../d0/d06/structMatrixSplit.html">MatrixSplit</a>&lt; splitint_t, fp_t &gt; &amp;B, std::vector&lt; accumulator_t &gt; &amp;C, const <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> layoutC, size_t iBlock, size_t jBlock)</td></tr>
 <tr class="memdesc:aab41115c653500ecf5b58ebbd0bc9750"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the exact integer GEMM (General Matrix-Matrix Multiplication).  <br /></td></tr>
@@ -217,7 +199,7 @@ Functions</h2></td></tr>
 <tr class="separator:a446b148a63b3d3dc49017c03cb2db0ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Integer matrix multiplication using the Ozaki scheme. </p>
+<div class="textblock"><p>Integer matrix multiplication using integer emulation. </p>
 
 <p class="definition">Definition in file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
@@ -249,7 +231,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00087">87</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00093">93</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -281,7 +263,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00062">62</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00068">68</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -313,7 +295,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00095">95</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00101">101</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -345,7 +327,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00070">70</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00076">76</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -379,7 +361,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00078">78</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00084">84</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -456,151 +438,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00522">522</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a573a0a7d443f19d3349d43d87fd590b6" name="a573a0a7d443f19d3349d43d87fd590b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a573a0a7d443f19d3349d43d87fd590b6">&#9670;&#160;</a></span>computeNumExpBits()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename fp_t &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t computeNumExpBits </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Number of bits in the exponent field of a floating-point type. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">fp_t</td><td>Floating-point type (e.g., float, double). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of bits in the exponent field. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00022">22</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a87798f5897ad8e6002afb9f7c96052e0" name="a87798f5897ad8e6002afb9f7c96052e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87798f5897ad8e6002afb9f7c96052e0">&#9670;&#160;</a></span>computeNumExpBits&lt; double &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t <a class="el" href="../../dc/de8/gemmi_8hpp.html#a573a0a7d443f19d3349d43d87fd590b6">computeNumExpBits</a>&lt; double &gt; </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00024">24</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ae49af32744bfc214b55a73da1a0b4ddc" name="ae49af32744bfc214b55a73da1a0b4ddc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae49af32744bfc214b55a73da1a0b4ddc">&#9670;&#160;</a></span>computeNumExpBits&lt; float &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t <a class="el" href="../../dc/de8/gemmi_8hpp.html#a573a0a7d443f19d3349d43d87fd590b6">computeNumExpBits</a>&lt; float &gt; </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00023">23</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="aa3896af2c30eccd1d3469f60ac979ffe" name="aa3896af2c30eccd1d3469f60ac979ffe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3896af2c30eccd1d3469f60ac979ffe">&#9670;&#160;</a></span>computeNumFracBits()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename fp_t &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t computeNumFracBits </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Number of bits in the fraction field of a floating-point type. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">fp_t</td><td>Floating-point type (e.g., float, double). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of bits in the fraction field. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00031">31</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ae33421be0afbbc2fb0fbb0e798a19c86" name="ae33421be0afbbc2fb0fbb0e798a19c86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae33421be0afbbc2fb0fbb0e798a19c86">&#9670;&#160;</a></span>computeNumFracBits&lt; double &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t <a class="el" href="../../dc/de8/gemmi_8hpp.html#aa3896af2c30eccd1d3469f60ac979ffe">computeNumFracBits</a>&lt; double &gt; </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00033">33</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a30f5b536f819efe0f35ceda5a5fb8e4c" name="a30f5b536f819efe0f35ceda5a5fb8e4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30f5b536f819efe0f35ceda5a5fb8e4c">&#9670;&#160;</a></span>computeNumFracBits&lt; float &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t <a class="el" href="../../dc/de8/gemmi_8hpp.html#aa3896af2c30eccd1d3469f60ac979ffe">computeNumFracBits</a>&lt; float &gt; </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00032">32</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00530">530</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -666,7 +504,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00558">558</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00566">566</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -732,7 +570,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00607">607</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00615">615</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -800,7 +638,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00708">708</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00716">716</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -924,12 +762,12 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00659">659</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00667">667</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
-<a id="adb1d0263552eafdec96a166772d5ee8e" name="adb1d0263552eafdec96a166772d5ee8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb1d0263552eafdec96a166772d5ee8e">&#9670;&#160;</a></span>getFloatingPointExponent()</h2>
+<a id="a15f4760c6e7a9fb20c145b30553d4a3a" name="a15f4760c6e7a9fb20c145b30553d4a3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15f4760c6e7a9fb20c145b30553d4a3a">&#9670;&#160;</a></span>getStoredFloatingPointExponent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -937,7 +775,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
 template&lt;typename fp_t &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int getFloatingPointExponent </td>
+          <td class="memname">int getStoredFloatingPointExponent </td>
           <td>(</td>
           <td class="paramtype">fp_t&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
@@ -961,7 +799,7 @@ template&lt;typename fp_t &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The value stored in the exponent field of the value, as an integer. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00050">50</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00059">59</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

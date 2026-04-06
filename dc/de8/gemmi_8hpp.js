@@ -1,7 +1,7 @@
 var gemmi_8hpp =
 [
-    [ "getStorageFormat< float >", "de/d55/structgetStorageFormat_3_01float_01_4.html", null ],
-    [ "getStorageFormat< double >", "dc/de9/structgetStorageFormat_3_01double_01_4.html", null ],
+    [ "FloatingPointTraits< float >", "d8/d0a/structFloatingPointTraits_3_01float_01_4.html", null ],
+    [ "FloatingPointTraits< double >", "de/daa/structFloatingPointTraits_3_01double_01_4.html", null ],
     [ "MatrixSplit< splitint_t, fp_t >", "d0/d06/structMatrixSplit.html", "d0/d06/structMatrixSplit" ],
     [ "accumulationStrategy", "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257", [
       [ "floatingPoint", "dc/de8/gemmi_8hpp.html#ad925e10f6dbebf51116f9fcf7e7f4257a7b34ebf73d296927412803297706dba2", null ],
@@ -25,10 +25,8 @@ var gemmi_8hpp =
       [ "roundToNearest", "dc/de8/gemmi_8hpp.html#aad8ea3a11b81457b42367460195a49e9a0487e454e553d12df80ec42f42d5aaab", null ]
     ] ],
     [ "computeExactIntegerGEMM", "dc/de8/gemmi_8hpp.html#aab41115c653500ecf5b58ebbd0bc9750", null ],
-    [ "computeNumExpBits", "dc/de8/gemmi_8hpp.html#a573a0a7d443f19d3349d43d87fd590b6", null ],
-    [ "computeNumFracBits", "dc/de8/gemmi_8hpp.html#aa3896af2c30eccd1d3469f60ac979ffe", null ],
     [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#a8d4de741ea49c745c16f283968bab441", null ],
     [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#a5f26a6763cc201d8098ee242fc7f1157", null ],
     [ "gemmi", "dc/de8/gemmi_8hpp.html#a4d39a1642692f0a90c1fb48efa4ca650", null ],
-    [ "getFloatingPointExponent", "dc/de8/gemmi_8hpp.html#adb1d0263552eafdec96a166772d5ee8e", null ]
+    [ "getStoredFloatingPointExponent", "dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a", null ]
 ];

@@ -1,5 +1,5 @@
 <map id="include/gemmi.hpp" name="include/gemmi.hpp">
-<area shape="rect" id="Node000001" title="Integer matrix multiplication using the Ozaki scheme." alt="" coords="225,5,372,31"/>
+<area shape="rect" id="Node000001" title="Integer matrix multiplication using integer emulation." alt="" coords="225,5,372,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,91,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,33,103,77,101,72,258,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="115,79,154,104"/>
