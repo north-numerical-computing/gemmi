@@ -729,7 +729,7 @@ void computeSplitsWithTruncation(preparedOperand<splitint_t, fp_t>& operand) {
                     uint_t currentSplit = shiftCounter > 0 ?
                         currentSlice >> shiftCounter :
                         currentSlice << -shiftCounter;
-                    splitint_t value = (splitint_t)(currentSplit) * (sign[inner] ? -1 : 1);
+                    splitint_t value = static_cast<splitint_t>(currentSplit) * (sign[inner] ? -1 : 1);
                     operand.splitValue(outer, inner, slice) = value;
                     shiftCounter -= bitsPerSlice;
                 }
@@ -912,15 +912,14 @@ void computeSplitsWithRoundToNearest(preparedOperand<splitint_t, fp_t>& operand)
     auto localMatrix = std::vector<fp_t>(operand.matrix.data, operand.matrix.data + operand.matrix.size());
     for (size_t slice = 0; slice < operand.prepConfig.numSplits; slice++) {
         for (size_t outer = 0; outer < operand.outerDimension(); outer++) {
-            fp_t sigma = ldexp(0.75,
-                                FloatingPointTraits<fp_t>::numSignificandBits - bitsPerSlice * slice + 1 - bitsPerSlice) *
-                            operand.powersVector[outer];
+            fp_t sigma = std::ldexp(0.75,
+                    FloatingPointTraits<fp_t>::numSignificandBits - bitsPerSlice * slice + 1 - bitsPerSlice) * operand.powersVector[outer];
             for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
                 auto matrixIndex = operand.operandIndex(outer, inner);
                 auto value = (localMatrix[matrixIndex] + sigma);
                 value -= sigma;
                 localMatrix[matrixIndex] -= value;
-                value = value / operand.powersVector[outer] * ldexp(1.0, bitsPerSlice * slice + bitsPerSlice - 1);
+                value = value / operand.powersVector[outer] * std::ldexp(1.0, bitsPerSlice * slice + bitsPerSlice - 1);
                 operand.splitValue(outer, inner, slice) = value;
             }
         }
