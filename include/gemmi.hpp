@@ -661,16 +661,16 @@ void computeFixedPointRepresentationVector(std::vector<typename FloatingPointTra
     using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
     constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
     for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
-            fp_t value = operand.operand(outer, inner);
-            fraction[inner] = std::bit_cast<uint_t>(value);
-            sign[inner] = std::signbit(value);
-            uint_t bitmask = (static_cast<uint_t>(1) << (numSignificandBits - 1)) - 1;
-            fraction[inner] = fraction[inner] & bitmask;
-            // Restore implicit bit for normal numbers.
-            // NOTE: NaNs and infs are currently not supported.
-            if (std::fpclassify(value) == FP_NORMAL)
-                fraction[inner] |= (static_cast<uint_t>(1) << (numSignificandBits - 1));
-        }
+        fp_t value = operand.operand(outer, inner);
+        fraction[inner] = std::bit_cast<uint_t>(value);
+        sign[inner] = std::signbit(value);
+        uint_t bitmask = (static_cast<uint_t>(1) << (numSignificandBits - 1)) - 1;
+        fraction[inner] = fraction[inner] & bitmask;
+        // Restore implicit bit for normal numbers.
+        // NOTE: NaNs and infs are currently not supported.
+        if (std::fpclassify(value) == FP_NORMAL)
+            fraction[inner] |= (static_cast<uint_t>(1) << (numSignificandBits - 1));
+    }
 }
 
 /**
