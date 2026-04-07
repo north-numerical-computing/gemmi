@@ -1071,15 +1071,15 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const preparedOpe
     auto numSplitsB = B.prepConfig.numSplits;
     std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
     for (size_t diagonal = 0; diagonal <= numSplitsA + numSplitsB - 1; diagonal++) {
-        int Aindex = diagonal < numSplitsA - 1 ? diagonal : numSplitsA - 1;
+        int Aindex = diagonal < numSplitsA ? static_cast<int>(diagonal) : static_cast<int>(numSplitsA - 1);
         size_t Bindex = diagonal > numSplitsA - 1 ? diagonal - numSplitsA + 1 : 0;
         while (Aindex >= 0 && Bindex <= std::min(diagonal, numSplitsB - 1)) {
             std::vector<accumulator_t> accumulator (A.rows() * B.cols(), 0.0);
             if (schedule(Aindex, Bindex)) {
+                int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
                 computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
                 for (size_t row = 0; row < A.rows(); row++) {
                     for (size_t col = 0; col < B.cols(); col++) {
-                        int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
                         auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
                         fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[index]), -totalShift);
                         fp_t scalingFactor = A.powersVector[row] * B.powersVector[col];
