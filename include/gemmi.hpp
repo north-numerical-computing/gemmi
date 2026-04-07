@@ -94,7 +94,7 @@ enum class matrixLayout {
 /**
  * @brief Lightweight view of a dense matrix.
  *
- * It does not own the underlying memory but provides read and write to it.
+ * It does not own the underlying memory but provides read and write access to it.
  *
  * @tparam value_t Element type.
  */
@@ -112,7 +112,7 @@ struct MatrixView {
         data(nullptr), rows(0), cols(0), layout(matrixLayout::rowMajor) {}
 
     /**
-     * @brief Contruct a matrix biew from raw parts.
+     * @brief Construct a matrix view from raw parts.
      *
      * @param data Pointer to the first matrix element.
      * @param rows Number of rows.
@@ -125,7 +125,7 @@ struct MatrixView {
     /**
      * @brief Return the number of stored elements.
      *
-     * @return rows * cols
+     * @return Number of rows by number of columns.
      */
     size_t size() const {
         return rows * cols;
@@ -134,7 +134,7 @@ struct MatrixView {
     /**
      * @brief Return true if the view is empty.
      *
-     * @return true if rows == 0 or cols == 0
+     * @return `true` if `rows == 0` or `cols == 0`
      */
     bool empty() const {
         return rows == 0 || cols == 0;
@@ -155,6 +155,11 @@ struct MatrixView {
 
     /**
      * @brief Access element (i, j).
+     *
+     * The `const` qualifier applies to the view metadata (pointer, dimensions,
+     * and layout), and not to the pointed-to data. Mutability of the returned
+     * reference is controlled by `value_t`. `MatrixView<const T>` should be
+     * used for a read-only view.
      *
      * @param i Row index.
      * @param j Column index.
@@ -200,7 +205,7 @@ struct MatrixView {
  * @param rows Number of rows.
  * @param cols Number of columns.
  * @param layout Memory layout.
- * @return MatrixView<value_t>
+ * @return `MatrixView<value_t>`
  */
 template <typename value_t>
 MatrixView<value_t> makeMatrixView(value_t* data,
@@ -218,7 +223,7 @@ MatrixView<value_t> makeMatrixView(value_t* data,
  * @param rows Number of rows.
  * @param cols Number of columns.
  * @param layout Memory layout.
- * @return MatrixView<const value_t>
+ * @return `MatrixView<const value_t>`
  */
 template <typename value_t>
 MatrixView<const value_t> makeMatrixView(const value_t* data,
@@ -236,7 +241,7 @@ MatrixView<const value_t> makeMatrixView(const value_t* data,
  * @param rows Number of rows.
  * @param cols Number of columns.
  * @param layout Memory layout.
- * @return MatrixView<value_t>
+ * @return `MatrixView<value_t>`
  */
 template <typename value_t>
 MatrixView<value_t> makeMatrixView(std::vector<value_t>& matrix,
@@ -254,7 +259,7 @@ MatrixView<value_t> makeMatrixView(std::vector<value_t>& matrix,
  * @param rows Number of rows.
  * @param cols Number of columns.
  * @param layout Memory layout.
- * @return MatrixView<const value_t>
+ * @return `MatrixView<const value_t>`
  */
 template <typename value_t>
 MatrixView<const value_t> makeMatrixView(const std::vector<value_t>& matrix,
@@ -490,6 +495,7 @@ struct OperandPreparationConfig {
 
 /**
  * @brief Class to store the matrix slices for the Ozaki scheme.
+ * 
  * @tparam splitint_t Type used to store the integer slices.
  * @tparam fp_t Floating-point type of the matrix elements.
  */
@@ -645,9 +651,11 @@ void computeNormalisationVectors(preparedOperand<splitint_t, fp_t>& operand) {
 
 /**
  * @brief Compute the block fixed-point representation of a row/column of the matrix.
+ * 
  * This function computes the fixed-point representation of a row/column of the
  * matrix, which is used in the splitting algorithms. It extracts the significand
  * and sign of each element in the row/column, and stores them in the provided vectors.
+ * 
  * @tparam splitint_t Type used to store the integer slices.
  * @tparam fp_t Floating-point type of the matrix elements.
  * @param fraction Vector to store the fixed-point representation of the elements.
@@ -958,6 +966,7 @@ preparedOperand<splitint_t, fp_t> prepareOperand(MatrixView<const fp_t> matrix,
 
 /**
  * @brief Class to store the multiplication schedule for the Ozaki scheme.
+ * 
  * The multiplication schedule specifies which products of slices of A and B
  * should be computed. It can be constructed from a config object.
  */
@@ -976,8 +985,10 @@ preparedOperand<splitint_t, fp_t> prepareOperand(MatrixView<const fp_t> matrix,
 
 /**
  * @brief Create a multiplication schedule from a config object.
+ * 
  * This function creates a multiplication schedule based on the multiplication
  * specification in the config object.
+ * 
  * @param config The config object containing the multiplication specification.
  * @return multiplicationSchedule The resulting multiplication schedule.
  * @throws std::invalid_argument if the multiplication specification is invalid.
@@ -1016,6 +1027,7 @@ inline multiplicationSchedule makeSchedule(const config& config) {
 }
 /**
  * @brief Compute the exact integer GEMM (General Matrix-Matrix Multiplication).
+ * 
  * @tparam splitint_t Integer type used for splits.
  * @tparam accumulator_t Accumulator type.
  * @tparam fp_t Floating-point type (e.g., float, double).
@@ -1056,7 +1068,6 @@ void computeExactIntegerGEMM(const preparedOperand<splitint_t, fp_t> &A,
  * @tparam fp_t Floating-point type (e.g., float, double).
  * @param A Slices of matrix A.
  * @param B Slices of matrix B.
- * @param bitsPerSlice Number of bits per slice.
  * @param schedule Multiplication schedule specifying which slice products to compute.
  * @param layoutC Layout of the output matrix C.
  * @return Resulting matrix C.
@@ -1111,7 +1122,6 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const preparedOpe
  * @tparam fp_t Floating-point type (e.g., float, double).
  * @param A Slices of matrix A.
  * @param B Slices of matrix B.
- * @param bitsPerSlice Number of bits per slice.
  * @param schedule Multiplication schedule specifying which slice products to compute.
  * @param layoutC Layout of the output matrix C.
  * @return Resulting matrix C.
@@ -1158,6 +1168,7 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const preparedOperand<s
 
 /**
  * @brief Compute the matrix product C = C + A * B.
+ * 
  * @tparam fp_t Floating-point type of the matrix elements.
  * @tparam splitint_t Integer type used for splits.
  * @tparam accumulator_t Accumulator type.
@@ -1166,7 +1177,7 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const preparedOperand<s
  * @param m Number of rows in A.
  * @param k Number of columns in A and rows in B.
  * @param n Number of columns in B.
- * @param config Configuration .
+ * @param config Configuration parameters.
  * @return Resulting matrix product.
  */
 template <typename fp_t, typename splitint_t, typename accumulator_t>
