@@ -326,14 +326,14 @@ using multiplicationSpecification = std::variant<multiplicationStrategy, std::ve
  *
  * The user may specify the multiplication schedule as either:
  *
- *   **(1) a predefined strategy **, using a `mutliplicationStrategy` value, or
+ *   **(1) a predefined strategy **, using a `multiplicationStrategy` value, or
  *
  *   **(2) a custom mask**, using an explicit std::vector<bool> with
  *       `numSplitsA * numSplitsB` elements.
  *
- * If the custom maks is used, the vector is interpreted as a matrix stored in
+ * If the custom mask is used, the vector is interpreted as a matrix stored in
  * row-major order, where each column represents a slice of `A` and each row
- * represents a slice of `B`. Prodcuts are computed only for those slice pairs
+ * represents a slice of `B`. Products are computed only for those slice pairs
  * (i,j) where the mask is true.
  *
  *
@@ -1172,10 +1172,13 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const preparedOperand<s
  * @tparam splitint_t Integer type used for splits.
  * @tparam accumulator_t Accumulator type.
  * @param A Matrix A.
+ * @param layoutA Layout of matrix A.
  * @param B Matrix B.
+ * @param layoutB Layout of matrix B.
  * @param m Number of rows in A.
  * @param k Number of columns in A and rows in B.
  * @param n Number of columns in B.
+ * @param layoutC Layout of the output matrix C.
  * @param config Configuration parameters.
  * @return Resulting matrix product.
  */
