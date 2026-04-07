@@ -991,24 +991,16 @@ inline multiplicationSchedule makeSchedule(const config& config) {
     std::visit([&](auto&& spec) {
         using T = std::decay_t<decltype(spec)>;
 
-        // Predefined strategy (full or reduced).
         if constexpr (std::is_same_v<T, multiplicationStrategy>) {
-
             if (spec == multiplicationStrategy::full) {
                 std::fill(schedule.mask.begin(), schedule.mask.end(), true);
-            }
-            else {  // reduced (anti‑diagonal rule)
+            } else {
                 size_t limit = std::max(config.numSplitsA, config.numSplitsB) - 1;
-
                 for (size_t i = 0; i < config.numSplitsA; ++i)
                     for (size_t j = 0; j < config.numSplitsB; ++j)
-                        if (i + j <= limit)
-                            schedule(i, j) = true;
+                        schedule(i, j) = i + j <= limit;
             }
-        }
-
-        // Custom boolean mask.
-        else if constexpr (std::is_same_v<T, std::vector<bool>>) {
+        } else if constexpr (std::is_same_v<T, std::vector<bool>>) {
 
             const auto& mask = spec;
 
