@@ -402,42 +402,28 @@ inline void validateConfig(const config& config) {
  ***********************/
 
 /**
- * @brief Class to store the matrix slices for the Ozaki scheme.
- * @tparam splitint_t Type used to store the integer slices.
- * @tparam fp_t Floating-point type (e.g., float, double).
+ * @brief Configuration for operand preparation.
  */
-template <typename splitint_t, typename fp_t>
-struct Decomposition {
-    MatrixView<const fp_t> matrix;    ///< View of original matrix.
-    splittingStrategy splitType;      ///< Splitting strategy used.
+struct OperandPreparationConfig {
+    splittingStrategy splitType;      ///< Splitting strategy to use.
     size_t numSplits;                 ///< Number of splits to use.
     size_t bitsPerSlice;              ///< Number of bits per slice.
-    normalisationDimension dimension; ///< Dimension along wich to normalize.
+    normalisationDimension dimension; ///< Dimension along which to normalize.
+};
 
-    std::vector<splitint_t> memory;    ///< Memory to store the split slices.
-    std::vector<fp_t> powersVector;    ///< Normalisation vector.
-    std::vector<int> scalingExponents; ///< Scaling exponents.
+/**
+ * @brief Class to store the matrix slices for the Ozaki scheme.
+ * @tparam splitint_t Type used to store the integer slices.
+ * @tparam fp_t Floating-point type of the matrix elements.
+ */
+template <typename splitint_t, typename fp_t>
+struct preparedOperand {
+    MatrixView<const fp_t> matrix;       ///< View of original matrix.
+    OperandPreparationConfig prepConfig; ///< Configuration for operand preparation.
 
-    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
-    using wideint_t = std::conditional_t<(sizeof(splitint_t) < sizeof(int)), int, std::intmax_t>;
-
-    /**
-     * @brief Construct a Decomposition object.
-     * @param matrix View of original matrix.
-     * @param splitType Splitting strategy.
-     * @param numSplits Number of splits.
-     * @param bitsPerSlice Number of bits per slice.
-     * @param dimension Normalization dimension.
-     */
-    Decomposition(const MatrixView<const fp_t>& matrix,
-                const splittingStrategy splitType, size_t numSplits, size_t bitsPerSlice,
-                const normalisationDimension dimension) :
-                matrix(matrix), splitType(splitType), numSplits(numSplits), bitsPerSlice(bitsPerSlice),
-                dimension(dimension) {
-        this->memory.resize(matrix.rows * matrix.cols * numSplits);
-        this->powersVector.resize(this->outerDimension());
-        this->scalingExponents.resize(this->outerDimension());
-    }
+    std::vector<splitint_t> memory;      ///< Memory to store the split slices.
+    std::vector<fp_t> powersVector;      ///< Normalisation vector.
+    std::vector<int> scalingExponents;   ///< Scaling exponents.
 
     /**
      * @brief Return the number of rows in the original matrix.
@@ -460,7 +446,7 @@ struct Decomposition {
      * @return Inner product dimension.
      */
     size_t innerDimension() const {
-        return (dimension == normalisationDimension::byRows) ?
+        return (prepConfig.dimension == normalisationDimension::byRows) ?
             matrix.cols : matrix.rows;
     }
 
@@ -469,7 +455,7 @@ struct Decomposition {
      * @return Dimension not used in the inner product.
      */
     size_t outerDimension() const {
-        return (dimension == normalisationDimension::byRows) ?
+        return (prepConfig.dimension == normalisationDimension::byRows) ?
             matrix.rows : matrix.cols;
     }
 
@@ -480,7 +466,7 @@ struct Decomposition {
      * @return The index of the operand in the matrix.
      */
     size_t operandIndex(size_t outer, size_t inner) const {
-        return (dimension == normalisationDimension::byRows) ?
+        return (prepConfig.dimension == normalisationDimension::byRows) ?
             matrix.index(outer, inner) :
             matrix.index(inner, outer);
     }
@@ -503,7 +489,7 @@ struct Decomposition {
      * @return Reference to the operand at the specified indices.
      */
     const fp_t& operand(size_t outer, size_t inner) const {
-    return matrix.linear(operandIndex(outer, inner));
+        return matrix.linear(operandIndex(outer, inner));
     }
 
     /**
@@ -529,33 +515,13 @@ struct Decomposition {
     }
 
     /**
-     * @brief Compute normalization vectors for the matrix.
-     */
-    void computeNormalisationVectors() {
-        // Compute normalisation vector.
-        for (size_t outer = 0; outer < this->outerDimension(); outer++) {
-            this->powersVector[outer] = 0.0;
-            for (size_t j = 0; j < this->innerDimension(); j++) {
-                this->powersVector[outer] = std::max(this->powersVector[outer],
-                                                  std::abs(this->operand(outer, j)));
-            }
-            // Compute the smallest power of 2 that is strictly greater than the
-            // maximum value in the row/column.
-            // NOTE 1: This is not the technique used in uoi24.
-            // NOTE 2: I use exponents instead of powers of 2, as I need the former
-            //         to shift correctly.
-            this->scalingExponents[outer] = getStoredFloatingPointExponent(this->powersVector[outer]);
-            this->powersVector[outer] = std::ldexp(1.0, this->scalingExponents[outer]);
-        }
-    }
-
-    /**
      * @brief Compute the bit offset for a given slice.
      * @param slice The slice for which to compute the bit offset.
      * @return The bit offset for the specified slice.
      */
     int computeSliceBitOffset(size_t slice) const {
-        switch (splitType) {
+        auto bitsPerSlice = prepConfig.bitsPerSlice;
+        switch (prepConfig.splitType) {
             case splittingStrategy::truncation:
                 // Slice k -> k * b
                 return static_cast<int>((slice + 1) * bitsPerSlice);
@@ -576,273 +542,338 @@ struct Decomposition {
             // LCOV_EXCL_STOP
         }
     }
+};
 
-    /**
-     * @brief Compute the block fixed-point representation of a row/column of the matrix.
-     * This function computes the fixed-point representation of a row/column of the matrix, which is used in the splitting algorithms. It extracts the significand and sign of each element in the row/column, and stores them in the provided vectors.
-     * @param fraction Vector to store the fixed-point representation of the elements.
-     * @param sign Vector to store the signs of the elements.
-     * @param i The index of the row/column for which to compute the fixed-point representation.
-     */
-    void computeFixedPointRepresentationVector(std::vector<uint_t> &fraction, std::vector<bool> &sign, size_t outer) {
-        constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
-        for (size_t inner = 0; inner < this->innerDimension(); inner++) {
-                fp_t value = this->operand(outer, inner);
-                fraction[inner] = std::bit_cast<uint_t>(value);
-                sign[inner] = std::signbit(value);
-                uint_t bitmask = (static_cast<uint_t>(1) << (numSignificandBits - 1)) - 1;
-                fraction[inner] = fraction[inner] & bitmask;
-                // Restore implicit bit for normal numbers.
-                // NOTE: NaNs and infs are currently not supported.
-                if (std::fpclassify(value) == FP_NORMAL)
-                    fraction[inner] |= (static_cast<uint_t>(1) << (numSignificandBits - 1));
-            }
+/**
+ * @brief Compute normalization vectors for the matrix.
+ */
+template <typename splitint_t, typename fp_t>
+void computeNormalisationVectors(preparedOperand<splitint_t, fp_t>& operand) {
+    // Compute normalisation vector.
+    for (size_t outer = 0; outer < operand.outerDimension(); outer++) {
+        operand.powersVector[outer] = 0.0;
+        for (size_t j = 0; j < operand.innerDimension(); j++) {
+            operand.powersVector[outer] = std::max(operand.powersVector[outer],
+                                                std::abs(operand.operand(outer, j)));
+        }
+        // Compute the smallest power of 2 that is strictly greater than the
+        // maximum value in the row/column.
+        // NOTE 1: This is not the technique used in uoi24.
+        // NOTE 2: I use exponents instead of powers of 2, as I need the former
+        //         to shift correctly.
+        operand.scalingExponents[outer] = getStoredFloatingPointExponent(operand.powersVector[outer]);
+        operand.powersVector[outer] = std::ldexp(1.0, operand.scalingExponents[outer]);
     }
+}
 
-    /**
-     * @brief Split the matrix using truncation.
-     *
-     * This is an implementation of Algorithm 4 in:
-     *
-     *    Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication
-     *    unit. Int. J. High Performance Comput. App. 2024;38(4):297-313.
-     *    DOI: 10.1177/10943420241239588
-     */
-    void computeSplitsWithTruncation() {
-        this->splitType = splittingStrategy::truncation;
-        // Compute splits one row/column at a time.
-        constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
-        auto bitsPerSlice = this->bitsPerSlice;
-        std::vector<uint_t> fraction (this->innerDimension());
-        std::vector<bool> sign (this->innerDimension());
-        for (size_t outer = 0; outer < this->outerDimension(); outer++) {
-            // Get binary representation of significands of normalised row/column.
-            computeFixedPointRepresentationVector(fraction, sign, outer);
+/**
+ * @brief Compute the block fixed-point representation of a row/column of the matrix.
+ * This function computes the fixed-point representation of a row/column of the
+ * matrix, which is used in the splitting algorithms. It extracts the significand
+ * and sign of each element in the row/column, and stores them in the provided vectors.
+ * @tparam splitint_t Type used to store the integer slices.
+ * @tparam fp_t Floating-point type of the matrix elements.
+ * @param fraction Vector to store the fixed-point representation of the elements.
+ * @param sign Vector to store the signs of the elements.
+ * @param i The index of the row/column for which to compute the fixed-point representation.
+ */
+template <typename splitint_t, typename fp_t>
+void computeFixedPointRepresentationVector(std::vector<typename FloatingPointTraits<fp_t>::StorageType> &fraction,
+                                           std::vector<bool> &sign, size_t outer,
+                                           const preparedOperand<splitint_t, fp_t>& operand) {
+    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
+    constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+    for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
+            fp_t value = operand.operand(outer, inner);
+            fraction[inner] = std::bit_cast<uint_t>(value);
+            sign[inner] = std::signbit(value);
+            uint_t bitmask = (static_cast<uint_t>(1) << (numSignificandBits - 1)) - 1;
+            fraction[inner] = fraction[inner] & bitmask;
+            // Restore implicit bit for normal numbers.
+            // NOTE: NaNs and infs are currently not supported.
+            if (std::fpclassify(value) == FP_NORMAL)
+                fraction[inner] |= (static_cast<uint_t>(1) << (numSignificandBits - 1));
+        }
+}
 
-            // Create bitmask.
-            const uint_t smallBitmask = (static_cast<uint_t>(1) << bitsPerSlice) - 1;
+/**
+ * @brief Split the matrix using truncation.
+ *
+ * This is an implementation of Algorithm 4 in:
+ *
+ *    Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication
+ *    unit. Int. J. High Performance Comput. App. 2024;38(4):297-313.
+ *    DOI: 10.1177/10943420241239588
+ *
+ * @tparam splitint_t Type used to store the integer slices.
+ * @tparam fp_t Floating-point type of the matrix elements.
+ * @param operand The operand to split.
+ */
+template <typename splitint_t, typename fp_t>
+void computeSplitsWithTruncation(preparedOperand<splitint_t, fp_t>& operand) {
+    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
 
-            // Perform the split.
-            for (size_t inner = 0; inner < this->innerDimension(); inner++) {
-                // NOTE: I could have a special path for 0.
-                int16_t shiftCounter = numSignificandBits - bitsPerSlice;
-                int currentExponent = getStoredFloatingPointExponent(this->operand(outer, inner));
-                int16_t exponentDifference = scalingExponents[outer] - currentExponent;
-                for (size_t slice = 0; slice < numSplits; slice++) {
-                    if (exponentDifference > (signed)bitsPerSlice) {
-                        exponentDifference -= bitsPerSlice;
-                    } else {
-                        shiftCounter += exponentDifference;
-                        exponentDifference = 0;
-                        uint_t bitmask = shiftCounter > 0 ?
-                            smallBitmask << shiftCounter :
-                            smallBitmask >> -shiftCounter;
-                        uint_t currentSlice = fraction[inner] & bitmask;
-                        uint_t currentSplit = shiftCounter > 0 ?
-                            currentSlice >> shiftCounter :
-                            currentSlice << -shiftCounter;
-                        splitint_t value = (splitint_t)(currentSplit) * (sign[inner] ? -1 : 1);
-                        this->splitValue(outer, inner, slice) = value;
-                        shiftCounter -= bitsPerSlice;
-                    }
+    // Compute splits one row/column at a time.
+    constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+    auto bitsPerSlice = operand.prepConfig.bitsPerSlice;
+    std::vector<uint_t> fraction (operand.innerDimension());
+    std::vector<bool> sign (operand.innerDimension());
+    for (size_t outer = 0; outer < operand.outerDimension(); outer++) {
+        // Get binary representation of significands of normalised row/column.
+        computeFixedPointRepresentationVector(fraction, sign, outer, operand);
+
+        // Create bitmask.
+        const uint_t smallBitmask = (static_cast<uint_t>(1) << bitsPerSlice) - 1;
+
+        // Perform the split.
+        for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
+            // NOTE: I could have a special path for 0.
+            int16_t shiftCounter = numSignificandBits - bitsPerSlice;
+            int currentExponent = getStoredFloatingPointExponent(operand.operand(outer, inner));
+            int16_t exponentDifference = operand.scalingExponents[outer] - currentExponent;
+            for (size_t slice = 0; slice < operand.prepConfig.numSplits; slice++) {
+                if (exponentDifference > (signed)bitsPerSlice) {
+                    exponentDifference -= bitsPerSlice;
+                } else {
+                    shiftCounter += exponentDifference;
+                    exponentDifference = 0;
+                    uint_t bitmask = shiftCounter > 0 ?
+                        smallBitmask << shiftCounter :
+                        smallBitmask >> -shiftCounter;
+                    uint_t currentSlice = fraction[inner] & bitmask;
+                    uint_t currentSplit = shiftCounter > 0 ?
+                        currentSlice >> shiftCounter :
+                        currentSlice << -shiftCounter;
+                    splitint_t value = (splitint_t)(currentSplit) * (sign[inner] ? -1 : 1);
+                    operand.splitValue(outer, inner, slice) = value;
+                    shiftCounter -= bitsPerSlice;
                 }
             }
         }
     }
+}
 
-    /**
-     * @brief Split the matrix using unsigned slice encoding.
-     *
-     * This is an implementation of the algorithm in section 3 of:
-     *
-     *    Schwarz A., Anders A., Brower C., Bayraktar H., Gunnels J., Clark K.,
-     *    Xu R. G., Rodriguez S., Cayrols S., Tabaszewski P., Podlozhnyuk V.
-     *    Guaranteed DGEMM accuracy while using reduced precision tensor cores
-     *    throguh extensions of the Ozaki scheme. SCA/HPCAsia 2026.
-     *    DOI: 10.1145/3773656.3773670
-     */
-    void computeSplitsWithUnsignedEncoding() {
-        this->splitType = splittingStrategy::unsignedEncoding;
-        // Compute splits one row/column at a time.
-        constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
-        auto bitsPerSlice = this->bitsPerSlice;
-        std::vector<uint_t> fraction (this->innerDimension());
-        std::vector<bool> sign (this->innerDimension());
-        for (size_t outer = 0; outer < this->outerDimension(); outer++) {
-            // Get binary representation of significands of normalised row/column.
-            computeFixedPointRepresentationVector(fraction, sign, outer);
+/**
+ * @brief Split the matrix using unsigned slice encoding.
+ *
+ * This is an implementation of the algorithm in section 3 of:
+ *
+ *    Schwarz A., Anders A., Brower C., Bayraktar H., Gunnels J., Clark K.,
+ *    Xu R. G., Rodriguez S., Cayrols S., Tabaszewski P., Podlozhnyuk V.
+ *    Guaranteed DGEMM accuracy while using reduced precision tensor cores
+ *    throguh extensions of the Ozaki scheme. SCA/HPCAsia 2026.
+ *    DOI: 10.1145/3773656.3773670
+ *
+ * @tparam splitint_t Type used to store the integer slices.
+ * @tparam fp_t Floating-point type of the matrix elements.
+ * @param operand The operand to split.
+ */
+template <typename splitint_t, typename fp_t>
+void computeSplitsWithUnsignedEncoding(preparedOperand<splitint_t, fp_t>& operand) {
+    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
+    using wideint_t = std::conditional_t<(sizeof(splitint_t) < sizeof(int)), int, std::intmax_t>;
 
-            // Create bitmasks.
-            // This algorithm uses (bitsPerSlice - 1) bits for the first slice
-            // and (bitsPerSlice + 1) bits for subsequent slices. This choice 
-            // is to keep the algorithm consistent with the bitmasking approach
-            // above.
-            // NOTE: I am using a first slice with (bitsPerSlice - 1) bits. This
-            // is not mentioned in sabb26, but it seems necessary to do this to
-            // ensure that the first (signed) slice does not overflow if the full
-            // bitwidth of splitint_t is used and the second slice is negative in
-            // two's complement.
-            const uint_t smallBitmask = (static_cast<uint_t>(1) << (bitsPerSlice - 1)) - 1;
-            const uint_t largeBitmask = (static_cast<uint_t>(1) << (bitsPerSlice + 1)) - 1;
+    // Compute splits one row/column at a time.
+    constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+    auto bitsPerSlice = operand.prepConfig.bitsPerSlice;
+    std::vector<uint_t> fraction (operand.innerDimension());
+    std::vector<bool> sign (operand.innerDimension());
+    for (size_t outer = 0; outer < operand.outerDimension(); outer++) {
+        // Get binary representation of significands of normalised row/column.
+        computeFixedPointRepresentationVector(fraction, sign, outer, operand);
 
-            for (size_t inner = 0; inner < this->innerDimension(); inner++) {
+        // Create bitmasks.
+        // This algorithm uses (bitsPerSlice - 1) bits for the first slice
+        // and (bitsPerSlice + 1) bits for subsequent slices. This choice
+        // is to keep the algorithm consistent with the bitmasking approach
+        // above.
+        // NOTE: I am using a first slice with (bitsPerSlice - 1) bits. This
+        // is not mentioned in sabb26, but it seems necessary to do this to
+        // ensure that the first (signed) slice does not overflow if the full
+        // bitwidth of splitint_t is used and the second slice is negative in
+        // two's complement.
+        const uint_t smallBitmask = (static_cast<uint_t>(1) << (bitsPerSlice - 1)) - 1;
+        const uint_t largeBitmask = (static_cast<uint_t>(1) << (bitsPerSlice + 1)) - 1;
 
-                auto matrixIndex = operandIndex(outer, inner);
+        for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
 
-                // NOTE: I could have a special path for 0.
-                int16_t shiftCounter;
-                int currentExponent = getStoredFloatingPointExponent(this->operand(outer, inner));
-                int16_t exponentDifference = scalingExponents[outer] - currentExponent;
+            auto matrixIndex = operand.operandIndex(outer, inner);
 
-                splitint_t value = 0;
-                uint_t remainder = 0;
+            // NOTE: I could have a special path for 0.
+            int16_t shiftCounter;
+            int currentExponent = getStoredFloatingPointExponent(operand.operand(outer, inner));
+            int16_t exponentDifference = operand.scalingExponents[outer] - currentExponent;
 
-                // Slice 0.
-                if (exponentDifference > (signed)(bitsPerSlice - 1)) {
-                    // Value is too small to contribute explicit bits to slice 0.
-                    value = sign[inner] ? -1 : 0;
-                    remainder = sign[inner] ?
-                        ((static_cast<uint_t>(1) << (sizeof(uint_t) * 8 - 1)) - fraction[inner]) |
-                            (static_cast<uint_t>(1) << (sizeof(uint_t) * 8 - 1)) :
-                        fraction[inner];
-                    exponentDifference -= (bitsPerSlice - 1);
-                    shiftCounter = numSignificandBits - (bitsPerSlice + 1);
-                } else {
-                    // Truncation.
-                    shiftCounter = numSignificandBits - (bitsPerSlice - 1) + exponentDifference;
-                    exponentDifference = 0;
-                    uint_t bitmask = (shiftCounter > 0)
-                        ? (smallBitmask << shiftCounter)
-                        : (smallBitmask >> -shiftCounter);
-                    uint_t currentSlice = fraction[inner] & bitmask;
-                    uint_t currentSplit = (shiftCounter > 0)
-                        ? (currentSlice >> shiftCounter)
-                        : (currentSlice << -shiftCounter);
+            splitint_t value = 0;
+            uint_t remainder = 0;
 
-                    value = (sign[inner] ? -1 : 1) * static_cast<splitint_t>(currentSplit);
+            // Slice 0.
+            if (exponentDifference > (signed)(bitsPerSlice - 1)) {
+                // Value is too small to contribute explicit bits to slice 0.
+                value = sign[inner] ? -1 : 0;
+                remainder = sign[inner] ?
+                    ((static_cast<uint_t>(1) << (sizeof(uint_t) * 8 - 1)) - fraction[inner]) |
+                        (static_cast<uint_t>(1) << (sizeof(uint_t) * 8 - 1)) :
+                    fraction[inner];
+                exponentDifference -= (bitsPerSlice - 1);
+                shiftCounter = numSignificandBits - (bitsPerSlice + 1);
+            } else {
+                // Truncation.
+                shiftCounter = numSignificandBits - (bitsPerSlice - 1) + exponentDifference;
+                exponentDifference = 0;
+                uint_t bitmask = (shiftCounter > 0)
+                    ? (smallBitmask << shiftCounter)
+                    : (smallBitmask >> -shiftCounter);
+                uint_t currentSlice = fraction[inner] & bitmask;
+                uint_t currentSplit = (shiftCounter > 0)
+                    ? (currentSlice >> shiftCounter)
+                    : (currentSlice << -shiftCounter);
 
-                    // Rounding.
-                    uint_t lowMask = (static_cast<uint_t>(1) << shiftCounter) - 1;
-                    uint_t lowBits = fraction[inner] & lowMask;
+                value = (sign[inner] ? -1 : 1) * static_cast<splitint_t>(currentSplit);
 
-                    if (lowBits != 0) {
-                        value += (sign[inner] ? -1 : 0);
-                    }
-                    remainder = sign[inner] ? (static_cast<uint_t>(1) << shiftCounter) - lowBits : lowBits;
-                    shiftCounter -= (bitsPerSlice + 1);
+                // Rounding.
+                uint_t lowMask = (static_cast<uint_t>(1) << shiftCounter) - 1;
+                uint_t lowBits = fraction[inner] & lowMask;
+
+                if (lowBits != 0) {
+                    value += (sign[inner] ? -1 : 0);
                 }
-                this->memory[matrixIndex] = value;
+                remainder = sign[inner] ? (static_cast<uint_t>(1) << shiftCounter) - lowBits : lowBits;
+                shiftCounter -= (bitsPerSlice + 1);
+            }
+            operand.memory[matrixIndex] = value;
 
-                // Remaining slices.
-                const auto width  = bitsPerSlice + 1;
-                const auto cutoff = static_cast<wideint_t>(static_cast<uint_t>(1) << bitsPerSlice); // 2^b
-                const auto base   = static_cast<wideint_t>(static_cast<uint_t>(1) << width);        // 2^(b+1)
-                const auto digitMax = cutoff - 1;   //  2^b - 1
-                const auto digitMin = -cutoff;      // -2^b
-                for (size_t slice = 1; slice < numSplits; slice++) {
-                    if (exponentDifference > (signed)(bitsPerSlice + 1)) {
-                        exponentDifference -= (bitsPerSlice + 1);
-                        if (sign[inner]) {
-                            this->splitValue(outer, inner, slice - 1) = static_cast<splitint_t>(0);
-                            this->splitValue(outer, inner, slice) = static_cast<splitint_t>(-1);
-                        }
-                    } else {
-                        shiftCounter += exponentDifference;
-                        exponentDifference = 0;
+            // Remaining slices.
+            const auto width  = bitsPerSlice + 1;
+            const auto cutoff = static_cast<wideint_t>(static_cast<uint_t>(1) << bitsPerSlice); // 2^b
+            const auto base   = static_cast<wideint_t>(static_cast<uint_t>(1) << width);        // 2^(b+1)
+            const auto digitMax = cutoff - 1;   //  2^b - 1
+            const auto digitMin = -cutoff;      // -2^b
+            for (size_t slice = 1; slice < operand.prepConfig.numSplits; slice++) {
+                if (exponentDifference > (signed)(bitsPerSlice + 1)) {
+                    exponentDifference -= (bitsPerSlice + 1);
+                    if (sign[inner]) {
+                        operand.splitValue(outer, inner, slice - 1) = static_cast<splitint_t>(0);
+                        operand.splitValue(outer, inner, slice) = static_cast<splitint_t>(-1);
+                    }
+                } else {
+                    shiftCounter += exponentDifference;
+                    exponentDifference = 0;
 
-                        uint_t bitmask = shiftCounter > 0 ?
-                            largeBitmask << shiftCounter :
-                            largeBitmask >> -shiftCounter;
+                    uint_t bitmask = shiftCounter > 0 ?
+                        largeBitmask << shiftCounter :
+                        largeBitmask >> -shiftCounter;
 
-                        uint_t currentSlice = remainder & bitmask;
-                        uint_t currentSplit = shiftCounter > 0 ?
-                            currentSlice >> shiftCounter :
-                            currentSlice << -shiftCounter;
+                    uint_t currentSlice = remainder & bitmask;
+                    uint_t currentSplit = shiftCounter > 0 ?
+                        currentSlice >> shiftCounter :
+                        currentSlice << -shiftCounter;
 
-                        if (sign[inner] && (shiftCounter + static_cast<int>(bitsPerSlice) + 1) > static_cast<int>(sizeof(uint_t)) * 8) {
-                            int bitsUsed = sizeof(uint_t) * 8 - shiftCounter;
-                            int bitsLost = (bitsPerSlice + 1) - bitsUsed;
-                            uint_t maskToAdd = ((static_cast<uint_t>(1) << bitsLost) - 1) << bitsUsed;
-                            currentSplit |= maskToAdd;
-                        }
+                    if (sign[inner] && (shiftCounter + static_cast<int>(bitsPerSlice) + 1) > static_cast<int>(sizeof(uint_t)) * 8) {
+                        int bitsUsed = sizeof(uint_t) * 8 - shiftCounter;
+                        int bitsLost = (bitsPerSlice + 1) - bitsUsed;
+                        uint_t maskToAdd = ((static_cast<uint_t>(1) << bitsLost) - 1) << bitsUsed;
+                        currentSplit |= maskToAdd;
+                    }
 
-                        // Update previous slices if currentSplit is negative in splitint_t.
-                        // Carry must propoagate upward until slice 0 if necessary.
-                        if (currentSplit > static_cast<uint_t>(digitMax)) {
-                            int prevSliceIndex = static_cast<int>(slice) - 1;
-                            while (true) {
-                                auto newValue = static_cast<wideint_t>(this->splitValue(outer, inner, prevSliceIndex)) + 1;
-                                if (newValue <= digitMax) {
-                                    this->splitValue(outer, inner, prevSliceIndex) = static_cast<splitint_t>(newValue);
-                                    break;
-                                } else {
-                                    this->splitValue(outer, inner, prevSliceIndex) = static_cast<splitint_t>(digitMin);
-                                    prevSliceIndex--;
-                                }
+                    // Update previous slices if currentSplit is negative in splitint_t.
+                    // Carry must propoagate upward until slice 0 if necessary.
+                    if (currentSplit > static_cast<uint_t>(digitMax)) {
+                        int prevSliceIndex = static_cast<int>(slice) - 1;
+                        while (true) {
+                            auto newValue = static_cast<wideint_t>(operand.splitValue(outer, inner, prevSliceIndex)) + 1;
+                            if (newValue <= digitMax) {
+                                operand.splitValue(outer, inner, prevSliceIndex) = static_cast<splitint_t>(newValue);
+                                break;
+                            } else {
+                                operand.splitValue(outer, inner, prevSliceIndex) = static_cast<splitint_t>(digitMin);
+                                prevSliceIndex--;
                             }
                         }
-
-                        // Store the slice as a signed (b+1)-bit value:
-                        // [0, 2^b-1]      -> unchanged
-                        // [2^b, 2^(b+1)-1] -> subtract 2^(b+1), yielding [-2^b, -1]
-                        wideint_t signedDigit = static_cast<wideint_t>(currentSplit);
-                        if (signedDigit >= cutoff) {
-                            signedDigit -= base;
-                        }
-
-                        this->splitValue(outer, inner, slice) = static_cast<splitint_t>(signedDigit);
-                        shiftCounter -= (bitsPerSlice + 1);
                     }
+
+                    // Store the slice as a signed (b+1)-bit value:
+                    // [0, 2^b-1]      -> unchanged
+                    // [2^b, 2^(b+1)-1] -> subtract 2^(b+1), yielding [-2^b, -1]
+                    wideint_t signedDigit = static_cast<wideint_t>(currentSplit);
+                    if (signedDigit >= cutoff) {
+                        signedDigit -= base;
+                    }
+
+                    operand.splitValue(outer, inner, slice) = static_cast<splitint_t>(signedDigit);
+                    shiftCounter -= (bitsPerSlice + 1);
                 }
             }
         }
     }
+}
 
-    /**
-     * @brief Split the matrix using round-to-nearest.
-     *
-     * This is an implementation of Algorithm 8 in:
-     *
-     *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
-     *    scheme on integer matrix multiplication unit. Int. J. High Performance
-     *    Comput. App. 2025;39(3):462–476. DOI: 10.1177/10943420241313064
-     */
-    void computeSplitsWithRoundToNearest() {
-        this->splitType = splittingStrategy::roundToNearest;
-        auto bitsPerSlice = this->bitsPerSlice;
-        auto localMatrix = std::vector<fp_t>(this->matrix.data, this->matrix.data + this->matrix.size());
-        for (size_t slice = 0; slice < numSplits; slice++) {
-            for (size_t outer = 0; outer < this->outerDimension(); outer++) {
-                fp_t sigma = ldexp(0.75,
-                                   FloatingPointTraits<fp_t>::numSignificandBits - bitsPerSlice * slice + 1 - bitsPerSlice) *
-                             powersVector[outer];
-                for (size_t inner = 0; inner < this->innerDimension(); inner++) {
-                    auto matrixIndex = operandIndex(outer, inner);
-                    auto value = (localMatrix[matrixIndex] + sigma);
-                    value -= sigma;
-                    localMatrix[matrixIndex] -= value;
-                    value = value / powersVector[outer] * ldexp(1.0, bitsPerSlice * slice + bitsPerSlice - 1);
-                    this->splitValue(outer, inner, slice) = value;
-                }
+/**
+ * @brief Split the matrix using round-to-nearest.
+ *
+ * This is an implementation of Algorithm 8 in:
+ *
+ *    Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki
+ *    scheme on integer matrix multiplication unit. Int. J. High Performance
+ *    Comput. App. 2025;39(3):462–476. DOI: 10.1177/10943420241313064
+ *
+ * @tparam splitint_t Type used to store the integer slices.
+ * @tparam fp_t Floating-point type of the matrix elements.
+ * @param operand The operand to split.
+ */
+template <typename splitint_t, typename fp_t>
+void computeSplitsWithRoundToNearest(preparedOperand<splitint_t, fp_t>& operand) {
+    auto bitsPerSlice = operand.prepConfig.bitsPerSlice;
+    auto localMatrix = std::vector<fp_t>(operand.matrix.data, operand.matrix.data + operand.matrix.size());
+    for (size_t slice = 0; slice < operand.prepConfig.numSplits; slice++) {
+        for (size_t outer = 0; outer < operand.outerDimension(); outer++) {
+            fp_t sigma = ldexp(0.75,
+                                FloatingPointTraits<fp_t>::numSignificandBits - bitsPerSlice * slice + 1 - bitsPerSlice) *
+                            operand.powersVector[outer];
+            for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
+                auto matrixIndex = operand.operandIndex(outer, inner);
+                auto value = (localMatrix[matrixIndex] + sigma);
+                value -= sigma;
+                localMatrix[matrixIndex] -= value;
+                value = value / operand.powersVector[outer] * ldexp(1.0, bitsPerSlice * slice + bitsPerSlice - 1);
+                operand.splitValue(outer, inner, slice) = value;
             }
         }
     }
+}
 
-    void prepare() {
-        this->computeNormalisationVectors();
-        switch (this->splitType) {
-            case splittingStrategy::truncation:
-                this->computeSplitsWithTruncation();
-                break;
-            case splittingStrategy::unsignedEncoding:
-                this->computeSplitsWithUnsignedEncoding();
-                break;
-            case splittingStrategy::roundToNearest:
-                this->computeSplitsWithRoundToNearest();
-                break;
-        }
+/**
+ * @brief Prepare the operand for the multiterm emulation scheme.
+ * @tparam splitint_t Integer type used for splits.
+ * @tparam fp_t Floating-point type of the matrix elements.
+ */
+template <typename splitint_t, typename fp_t>
+preparedOperand<splitint_t, fp_t> prepareOperand(MatrixView<const fp_t> matrix,
+                    const OperandPreparationConfig& prepConfig) {
+    preparedOperand<splitint_t, fp_t> operand;
+    operand.matrix = matrix;
+    operand.prepConfig = prepConfig;
+    operand.memory.resize(operand.matrix.size() * operand.prepConfig.numSplits * prepConfig.numSplits);
+    operand.powersVector.resize(operand.prepConfig.dimension == normalisationDimension::byRows ?
+                           operand.rows() : operand.cols());
+    operand.scalingExponents.resize(operand.powersVector.size());
+
+    computeNormalisationVectors(operand);
+
+    switch (prepConfig.splitType) {
+        case splittingStrategy::truncation:
+            computeSplitsWithTruncation(operand);
+            break;
+        case splittingStrategy::unsignedEncoding:
+            computeSplitsWithUnsignedEncoding(operand);
+            break;
+        case splittingStrategy::roundToNearest:
+            computeSplitsWithRoundToNearest(operand);
+            break;
     }
-};
+
+    return operand;
+}
 
 /*************************************
  * Perform the matrix multiplication *
@@ -858,7 +889,10 @@ struct Decomposition {
     size_t numSplitsB;           // number of slices for B
 
     std::vector<bool> mask;
-    bool operator()(size_t i, size_t j) const {
+    inline std::vector<bool>::reference operator()(size_t i, size_t j) {
+        return mask[i * numSplitsB + j];
+    }
+    inline bool operator()(size_t i, size_t j) const {
         return mask[i * numSplitsB + j];
     }
 };
@@ -872,10 +906,10 @@ struct Decomposition {
  * @throws std::invalid_argument if the multiplication specification is invalid.
  */
 inline multiplicationSchedule makeSchedule(const config& config) {
-    multiplicationSchedule sched;
-    sched.numSplitsA = config.numSplitsA;
-    sched.numSplitsB = config.numSplitsB;
-    sched.mask.resize(config.numSplitsA * config.numSplitsB, false);
+    multiplicationSchedule schedule;
+    schedule.numSplitsA = config.numSplitsA;
+    schedule.numSplitsB = config.numSplitsB;
+    schedule.mask.resize(config.numSplitsA * config.numSplitsB, false);
 
     std::visit([&](auto&& spec) {
         using T = std::decay_t<decltype(spec)>;
@@ -884,7 +918,7 @@ inline multiplicationSchedule makeSchedule(const config& config) {
         if constexpr (std::is_same_v<T, multiplicationStrategy>) {
 
             if (spec == multiplicationStrategy::full) {
-                std::fill(sched.mask.begin(), sched.mask.end(), true);
+                std::fill(schedule.mask.begin(), schedule.mask.end(), true);
             }
             else {  // reduced (anti‑diagonal rule)
                 size_t limit = std::max(config.numSplitsA, config.numSplitsB) - 1;
@@ -892,7 +926,7 @@ inline multiplicationSchedule makeSchedule(const config& config) {
                 for (size_t i = 0; i < config.numSplitsA; ++i)
                     for (size_t j = 0; j < config.numSplitsB; ++j)
                         if (i + j <= limit)
-                            sched.mask[i * config.numSplitsB + j] = true;
+                            schedule(i, j) = true;
             }
         }
 
@@ -904,12 +938,12 @@ inline multiplicationSchedule makeSchedule(const config& config) {
             if (mask.size() != config.numSplitsA * config.numSplitsB)
                 throw std::invalid_argument("Mask size mismatch.");
 
-            sched.mask = mask; // row‑major copy
+            schedule.mask = mask; // row‑major copy
         }
 
     }, config.multSpecification);
 
-    return sched;
+    return schedule;
 }
 /**
  * @brief Compute the exact integer GEMM (General Matrix-Matrix Multiplication).
@@ -923,8 +957,8 @@ inline multiplicationSchedule makeSchedule(const config& config) {
  * @param jBlock Block index for matrix B.
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
-void computeExactIntegerGEMM(const Decomposition<splitint_t, fp_t> &A,
-                             const Decomposition<splitint_t, fp_t> &B,
+void computeExactIntegerGEMM(const preparedOperand<splitint_t, fp_t> &A,
+                             const preparedOperand<splitint_t, fp_t> &B,
                              std::vector<accumulator_t> &C,
                              const matrixLayout layoutC,
                              size_t iBlock, size_t jBlock) {
@@ -954,23 +988,25 @@ void computeExactIntegerGEMM(const Decomposition<splitint_t, fp_t> &A,
  * @param A Slices of matrix A.
  * @param B Slices of matrix B.
  * @param bitsPerSlice Number of bits per slice.
- * @param sched Multiplication schedule specifying which slice products to compute.
+ * @param schedule Multiplication schedule specifying which slice products to compute.
  * @param layoutC Layout of the output matrix C.
  * @return Resulting matrix C.
  *
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
-std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const Decomposition<splitint_t, fp_t> &A,
-                                                               const Decomposition<splitint_t, fp_t> &B,
-                                                               const multiplicationSchedule &sched,
+std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const preparedOperand<splitint_t, fp_t> &A,
+                                                               const preparedOperand<splitint_t, fp_t> &B,
+                                                               const multiplicationSchedule &schedule,
                                                                const matrixLayout layoutC) {
+    auto numSplitsA = A.prepConfig.numSplits;
+    auto numSplitsB = B.prepConfig.numSplits;
     std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
-    for (size_t diagonal = 0; diagonal <= A.numSplits + B.numSplits - 1; diagonal++) {
-        int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
-        size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
-        while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
+    for (size_t diagonal = 0; diagonal <= numSplitsA + numSplitsB - 1; diagonal++) {
+        int Aindex = diagonal < numSplitsA - 1 ? diagonal : numSplitsA - 1;
+        size_t Bindex = diagonal > numSplitsA - 1 ? diagonal - numSplitsA + 1 : 0;
+        while (Aindex >= 0 && Bindex <= std::min(diagonal, numSplitsB - 1)) {
             std::vector<accumulator_t> accumulator (A.rows() * B.cols(), 0.0);
-            if (sched(Aindex, Bindex)) {
+            if (schedule(Aindex, Bindex)) {
                 computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
                 for (size_t row = 0; row < A.rows(); row++) {
                     for (size_t col = 0; col < B.cols(); col++) {
@@ -1007,27 +1043,29 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const Decompositi
  * @param A Slices of matrix A.
  * @param B Slices of matrix B.
  * @param bitsPerSlice Number of bits per slice.
- * @param sched Multiplication schedule specifying which slice products to compute.
+ * @param schedule Multiplication schedule specifying which slice products to compute.
  * @param layoutC Layout of the output matrix C.
  * @return Resulting matrix C.
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
-std::vector<fp_t> computeProductsWithIntegerAccumulation(const Decomposition<splitint_t, fp_t> &A,
-                                                         const Decomposition<splitint_t, fp_t> &B,
-                                                         const multiplicationSchedule &sched,
+std::vector<fp_t> computeProductsWithIntegerAccumulation(const preparedOperand<splitint_t, fp_t> &A,
+                                                         const preparedOperand<splitint_t, fp_t> &B,
+                                                         const multiplicationSchedule &schedule,
                                                          const matrixLayout layoutC) {
+    auto numSplitsA = A.prepConfig.numSplits;
+    auto numSplitsB = B.prepConfig.numSplits;
     
     std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
-    for (size_t diagonal = 0; diagonal <= A.numSplits + B.numSplits - 1; diagonal++) {
-        int Aindex = diagonal < A.numSplits ? static_cast<int>(diagonal) : static_cast<int>(A.numSplits - 1);
-        size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
+    for (size_t diagonal = 0; diagonal <= numSplitsA + numSplitsB - 1; diagonal++) {
+        int Aindex = diagonal < numSplitsA ? static_cast<int>(diagonal) : static_cast<int>(numSplitsA - 1);
+        size_t Bindex = diagonal > numSplitsA - 1 ? diagonal - numSplitsA + 1 : 0;
 
         const int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
 
         // Compute and accumulate all products along this anti-diagonal in integer arithmetic.
         std::vector<accumulator_t> accumulator(A.rows() * B.cols(), 0);
-        while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
-            if (sched(Aindex, Bindex))
+        while (Aindex >= 0 && Bindex <= std::min(diagonal, numSplitsB - 1)) {
+            if (schedule(Aindex, Bindex))
                 computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
             Aindex--;
             Bindex++;
@@ -1086,11 +1124,10 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
     auto viewA = makeMatrixView(A, m, k, layoutA);
     auto viewB = makeMatrixView(B, k, n, layoutB);
 
-    auto splitA = multiterm::Decomposition<splitint_t, fp_t>(viewA, config.splitType, config.numSplitsA, bitsPerSlice, normalisationDimension::byRows);
-    auto splitB = multiterm::Decomposition<splitint_t, fp_t>(viewB, config.splitType, config.numSplitsB, bitsPerSlice, normalisationDimension::byCols);
-
-    splitA.prepare();
-    splitB.prepare();
+    auto splitA = multiterm::prepareOperand<splitint_t, fp_t>(viewA,
+        multiterm::OperandPreparationConfig(config.splitType, config.numSplitsA, bitsPerSlice, normalisationDimension::byRows));
+    auto splitB = multiterm::prepareOperand<splitint_t, fp_t>(viewB,
+        multiterm::OperandPreparationConfig(config.splitType, config.numSplitsB, bitsPerSlice, normalisationDimension::byCols));
 
     // Build multiplication schedule.
     auto multiplicationSchedule = multiterm::makeSchedule(config);
@@ -1111,6 +1148,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
                          const std::vector<fp_t> &B, const matrixLayout layoutB,
                          const size_t m, const size_t k, const size_t n, const size_t numSplits) {
     return gemmi <fp_t, splitint_t, accumulator_t> (A, layoutA, B, layoutB, m, k, n,
+    matrixLayout::columnMajor,
         multiterm::config{numSplits, numSplits,
                           multiterm::splittingStrategy::roundToNearest,
                           multiterm::multiplicationStrategy::reduced,

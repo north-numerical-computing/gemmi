@@ -176,13 +176,13 @@ std::vector<fp_t> makeRandomMatrix(size_t rows, size_t cols,
  ************************/
 
 template <typename splitint_t, typename fp_t>
-std::vector<fp_t> reconstructFromMultitermDecomposition(const multiterm::Decomposition<splitint_t, fp_t> &split) {
+std::vector<fp_t> reconstructFromMultitermDecomposition(const multiterm::preparedOperand<splitint_t, fp_t> &split) {
 	std::vector<fp_t> reconstructed(split.matrix.size(), fp_t{0});
 	for (size_t i = 0; i < split.outerDimension(); ++i) {
 		for (size_t j = 0; j < split.innerDimension(); ++j) {
 		const size_t index = split.operandIndex(i, j);
 		fp_t value = 0.0;
-		for (size_t slice = 0; slice < split.numSplits; ++slice) {
+		for (size_t slice = 0; slice < split.prepConfig.numSplits; ++slice) {
 			const auto digit =
 				static_cast<fp_t>(split.memory[index + slice * split.matrix.size()]);
 			value += std::ldexp(digit, -split.computeSliceBitOffset(slice));
@@ -228,13 +228,10 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
 						<< ", strategy=" << toString(strategy)
 						<< ", dim=" << (dim == normalisationDimension::byRows ? "rows" : "cols")
 						<< ", shape=" << m << "x" << n) {
-						multiterm::Decomposition<int8_t, fp_t> split(
+						auto config = multiterm::OperandPreparationConfig(strategy, numSplits, bitsPerSlice, dim);
+						auto split = multiterm::prepareOperand<int8_t>(
 							makeMatrixView(testValues, m, n, layout),
-							strategy,
-							numSplits,
-							bitsPerSlice,
-							dim);
-						split.prepare();
+							config);
 
 						const auto recon = reconstructFromMultitermDecomposition(split);
 						requireBitwiseIdenticalVectors(recon, testValues);

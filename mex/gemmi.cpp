@@ -19,7 +19,7 @@ public:
             options = std::make_unique<algorithmOptions>();
             options->splitType = multiterm::splittingStrategy::roundToNearest;
             options->accType = multiterm::reductionStrategy::integer;
-            options->multSpecification = multiterm::multiplicationStrategy::reduced;
+            options->multType = multiterm::multiplicationStrategy::reduced;
         }
 
         // Validate input.
@@ -77,10 +77,12 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<double, int8_t, int32_t>(A, matrixLayout::columnMajor, B, matrixLayout::columnMajor,
-                                                A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
+        auto C = gemmi<double, int8_t, int32_t>(A, matrixLayout::columnMajor,
+                                                B, matrixLayout::columnMajor,
+                                                A_size[0], A_size[1], B_size[1],
                                                 matrixLayout::columnMajor,
-                                                options->splitType, options->accType, options->multType);
+                                                multiterm::config{numSplitsA, numSplitsB,
+                                                                  options->splitType, options->multType, options->accType});
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
@@ -95,9 +97,10 @@ private:
         auto B_size = Bmatlab.getDimensions();
 
         auto C = gemmi<float, int8_t, int32_t>(A, matrixLayout::columnMajor, B, matrixLayout::columnMajor,
-                                               A_size[0], A_size[1], B_size[1], numSplitsA, numSplitsB,
+                                               A_size[0], A_size[1], B_size[1],
                                                matrixLayout::columnMajor,
-                                               options->splitType, options->accType, options->multType);
+                                               multiterm::config{numSplitsA, numSplitsB,
+                                                   options->splitType, options->multType, options->accType});
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
