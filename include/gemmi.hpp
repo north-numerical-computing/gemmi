@@ -6,6 +6,8 @@
 #include <cmath>
 #include <cstdint>
 #include <limits>
+#include <stdexcept>
+#include <string>
 #include <type_traits>
 #include <variant>
 #include <vector>
@@ -336,15 +338,15 @@ using multiplicationSpecification = std::variant<multiplicationStrategy, std::ve
  * and floating-point accumulation, one can use:
  *
  * \code
- * multiterm::config cfg;
- * cfg.numSplitsA        = 8;
- * cfg.numSplitsB        = 8;
- * cfg.splitType         = multiterm::splitStrategy::roundToNearest;
- * cfg.redType           = multiterm::reductionStrategy::floatingPoint;
- * cfg.multSpecification = multiterm::multiplicationStrategy::reduced;
+ * multiterm::config config;
+ * config.numSplitsA        = 8;
+ * config.numSplitsB        = 8;
+ * config.splitType         = multiterm::splitStrategy::roundToNearest;
+ * config.redType           = multiterm::reductionStrategy::floatingPoint;
+ * config.multSpecification = multiterm::multiplicationStrategy::reduced;
  *
  * auto C = gemmi<double, std::int8_t, std::int32_t>(
- *     A, layoutA, B, layoutB, m, k, n, layoutC, cfg
+ *     A, layoutA, B, layoutB, m, k, n, layoutC, config
  * );
  * \endcode
  *
@@ -353,7 +355,7 @@ using multiplicationSpecification = std::variant<multiplicationStrategy, std::ve
  * custom mask:
  *
  * \code
- * cfg.multSpecification = std::vector<bool>{
+ * config.multSpecification = std::vector<bool>{
  *     1,1,1,1,
  *     1,1,1,1,
  *     1,1,0,0,
@@ -373,12 +375,16 @@ struct config {
     reductionStrategy redType;                     ///< Reduction strategy.
 };
 
+struct DerivedParameters {
+    size_t bitsPerSlice; ///< Number of bits assigned to each split slice.
+};
+
 
 /**
  * @brief Validate a config object.
  * This function checks that the config is self-consistent and
  * throws an exception if not.
- * @param cfg The config object to validate.
+ * @param config The config object to validate.
  * @throws std::invalid_argument if the config is invalid.
  */
 inline void validateConfig(const config& config) {
@@ -395,6 +401,103 @@ inline void validateConfig(const config& config) {
             throw std::invalid_argument("Mask size does not match numSplitsA * numSplitsB");
         }
     }
+}
+
+/**
+ * @brief Validate inputs and derive execution parameters for multiterm scheme.
+ *
+ * Check that the two matrix views and the algorithm configuration are mutually
+ * consistent and that the template types satisfy the precision requirements of
+ * the accumulation scheme. The function performs both compile-time
+ * (static_assert) and runtime checks:
+ *  - `fp_t` is a floating-point type (compile-time);
+ *  - `splitint_t` is a signed integer type (compile-time);
+ *  - `accumulator_t` is a signed integer type (compile-time);
+ *  - neither matrix view has a null data pointer;
+ *  - neither matrix view is empty;
+ *  - the matrices are conformable for multiplication(`A.cols() == B.rows()`);
+ *  - `numSplitsA` and `numSplitsB` are both strictly positive;
+ *  - the custom mask size (if used) equals `numSplitsA * numSplitsB`;
+ *  - `splitint_t` is not too wide for `accumulator_t`; and
+ *  - the computed bitsPerSlice is strictly positive.
+ *
+ * @tparam fp_t          Floating-point element type.
+ * @tparam splitint_t    Signed integer type used to store matrix slices.
+ * @tparam accumulator_t Signed integer accumulator type.
+ * @param  A   View of the left-hand matrix (m x k).
+ * @param  B   View of the right-hand matrix (k x n).
+ * @param  config Algorithm configuration.
+ * @return DerivedParameters Derived execution parameters for the multiplication.
+ * @throws std::invalid_argument if any runtime constraint is violated.
+ */
+template <typename fp_t, typename splitint_t, typename accumulator_t>
+DerivedParameters deriveParameters(MatrixView<const fp_t> A,
+                                   MatrixView<const fp_t> B,
+                                   const config& config) {
+
+    validateConfig(config);
+
+    // Compile-time type checks.
+    static_assert(std::is_floating_point_v<fp_t>,
+                  "fp_t must be a floating-point type");
+    static_assert(std::is_integral_v<splitint_t> && std::is_signed_v<splitint_t>,
+                  "splitint_t must be a signed integer type");
+    static_assert(std::is_integral_v<accumulator_t> && std::is_signed_v<accumulator_t>,
+                  "accumulator_t must be a signed integer type");
+
+    // Matrix checks.
+    if (A.data == nullptr)
+        throw std::invalid_argument("Matrix A has a null data pointer");
+    if (B.data == nullptr)
+        throw std::invalid_argument("Matrix B has a null data pointer");
+    if (A.empty())
+        throw std::invalid_argument("Matrix A is empty (rows or cols is 0)");
+    if (B.empty())
+        throw std::invalid_argument("Matrix B is empty (rows or cols is 0)");
+
+    if (A.cols != B.rows)
+        throw std::invalid_argument(
+            "Dimension mismatch: A.cols (" + std::to_string(A.cols) +
+            ") != B.rows (" + std::to_string(B.rows) + ")");
+
+    // Split counts.
+    if (config.numSplitsA == 0)
+        throw std::invalid_argument("numSplitsA must be >= 1");
+    if (config.numSplitsB == 0)
+        throw std::invalid_argument("numSplitsB must be >= 1");
+
+    // Custom mask size.
+    if (std::holds_alternative<std::vector<bool>>(config.multSpecification)) {
+        const auto& mask = std::get<std::vector<bool>>(config.multSpecification);
+        const size_t expected = config.numSplitsA * config.numSplitsB;
+        if (mask.size() != expected)
+            throw std::invalid_argument(
+                "Custom mask size (" + std::to_string(mask.size()) +
+                ") does not match numSplitsA * numSplitsB (" +
+                std::to_string(expected) + ")");
+    }
+
+    // Type width constraints.
+    constexpr size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
+    constexpr size_t bitsPerInteger    = std::numeric_limits<splitint_t>::digits;
+    if (bitsPerInteger > bitsInAccumulator / 2)
+        throw std::invalid_argument(
+            "splitint_t (" + std::to_string(bitsPerInteger) + " bits) is too wide "
+            "for accumulator_t (" + std::to_string(bitsInAccumulator) + " bits): "
+            "require bitsPerInteger <= bitsInAccumulator / 2");
+
+    const size_t k = A.cols;
+    const double log2k = (k > 1) ? std::log2(static_cast<double>(k)) : 0.0;
+    const auto alpha = static_cast<size_t>(
+        std::max(0.0, std::floor((static_cast<double>(bitsInAccumulator) - log2k) / 2.0)));
+    const size_t bitsPerSlice = std::min(bitsPerInteger, alpha);
+    if (bitsPerSlice == 0)
+        throw std::invalid_argument(
+            "Computed bitsPerSlice is 0: inner dimension k=" + std::to_string(k) +
+            " is too large for accumulator_t (" +
+            std::to_string(bitsInAccumulator) + " bits)");
+
+    return DerivedParameters{bitsPerSlice};
 }
 
 /***********************
@@ -1107,23 +1210,15 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
                          const matrixLayout layoutC,
                          const multiterm::config &config) {
 
-
-    // Validate configuration parameters.
-    multiterm::validateConfig(config);
-
-    // Derive bitsPerSlice.
-    const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
-    const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
-    if (bitsPerInteger > bitsInAccumulator / 2) {
-        throw std::invalid_argument("Split integer type is too wide for the chosen accumulator type");
-    }
-    const size_t alpha = std::floor((bitsInAccumulator - log2(k)) / 2);
-    const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
-
-    // Slice operands.
+    // Build matrix views.
     auto viewA = makeMatrixView(A, m, k, layoutA);
     auto viewB = makeMatrixView(B, k, n, layoutB);
 
+    // Validate inputs and derive execution parameters.
+    auto derivedParameters = multiterm::deriveParameters<fp_t, splitint_t, accumulator_t>(viewA, viewB, config);
+    const size_t bitsPerSlice = derivedParameters.bitsPerSlice;
+
+    // Slice operands.
     auto splitA = multiterm::prepareOperand<splitint_t, fp_t>(viewA,
         multiterm::OperandPreparationConfig(config.splitType, config.numSplitsA, bitsPerSlice, normalisationDimension::byRows));
     auto splitB = multiterm::prepareOperand<splitint_t, fp_t>(viewB,
