@@ -1044,8 +1044,8 @@ void computeExactIntegerGEMM(const preparedOperand<splitint_t, fp_t> &A,
                              size_t iBlock, size_t jBlock) {
     for (size_t row = 0; row < A.rows(); row++) {
         for (size_t col = 0; col < B.cols(); col++) {
+            auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
             for (size_t ell = 0; ell < A.innerDimension(); ell++) {
-                auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
                 C[index] += A.splitValue(row, ell, iBlock) * B.splitValue(col, ell, jBlock);
             }
         }
@@ -1084,8 +1084,8 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const preparedOpe
         int Aindex = diagonal < numSplitsA ? static_cast<int>(diagonal) : static_cast<int>(numSplitsA - 1);
         size_t Bindex = diagonal > numSplitsA - 1 ? diagonal - numSplitsA + 1 : 0;
         while (Aindex >= 0 && Bindex <= std::min(diagonal, numSplitsB - 1)) {
-            std::vector<accumulator_t> accumulator (A.rows() * B.cols(), 0.0);
             if (schedule(Aindex, Bindex)) {
+                std::vector<accumulator_t> accumulator (A.rows() * B.cols(), 0.0);
                 int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
                 computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
                 for (size_t row = 0; row < A.rows(); row++) {
