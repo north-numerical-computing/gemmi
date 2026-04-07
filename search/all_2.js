@@ -1,17 +1,17 @@
 var searchData=
 [
   ['catch2_20tests_0',['Catch2 tests',['../index.html#autotoc_md5',1,'']]],
-  ['cols_1',['cols',['../da/dd9/structMatrixView.html#a6092a039eb5a4bc3d846b3b0a1c28a51',1,'MatrixView::cols'],['../d7/d90/structmultiterm_1_1Decomposition.html#ab37540505319e2074bd5c50e10e4115a',1,'multiterm::Decomposition::cols()']]],
+  ['cols_1',['cols',['../da/dd9/structMatrixView.html#a6092a039eb5a4bc3d846b3b0a1c28a51',1,'MatrixView::cols'],['../d7/dcf/structmultiterm_1_1preparedOperand.html#ae1bb6461a6d260202b3262170bcc539e',1,'multiterm::preparedOperand::cols()']]],
   ['columnmajor_2',['columnMajor',['../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a5bccb53123b3512007f3f32b68077d7c',1,'gemmi.hpp']]],
-  ['computeexactintegergemm_3',['computeExactIntegerGEMM',['../dc/de8/gemmi_8hpp.html#a1f1d257c8642df1a8094b6a4064a57b0',1,'multiterm']]],
-  ['computefixedpointrepresentationvector_4',['computeFixedPointRepresentationVector',['../d7/d90/structmultiterm_1_1Decomposition.html#a62a48c9091267afe2a7f43ec018c118e',1,'multiterm::Decomposition']]],
-  ['computenormalisationvectors_5',['computeNormalisationVectors',['../d7/d90/structmultiterm_1_1Decomposition.html#ac956da85105d612d3d48c022d3435fae',1,'multiterm::Decomposition']]],
-  ['computeproductswithfloatingpointaccumulation_6',['computeProductsWithFloatingPointAccumulation',['../dc/de8/gemmi_8hpp.html#a43d80d0e67796fed7e132f7f06ea77bc',1,'multiterm']]],
-  ['computeproductswithintegeraccumulation_7',['computeProductsWithIntegerAccumulation',['../dc/de8/gemmi_8hpp.html#af44cfa03ec698764e28c473e5af5bac8',1,'multiterm']]],
-  ['computeslicebitoffset_8',['computeSliceBitOffset',['../d7/d90/structmultiterm_1_1Decomposition.html#aca7a565fdad92b64a0600bb9ef2e26a7',1,'multiterm::Decomposition']]],
-  ['computesplitswithroundtonearest_9',['computeSplitsWithRoundToNearest',['../d7/d90/structmultiterm_1_1Decomposition.html#af0036988936cdbf3eb51e1dd8cf8725d',1,'multiterm::Decomposition']]],
-  ['computesplitswithtruncation_10',['computeSplitsWithTruncation',['../d7/d90/structmultiterm_1_1Decomposition.html#a1b30d83f3fc32fba24bacb1e473e310d',1,'multiterm::Decomposition']]],
-  ['computesplitswithunsignedencoding_11',['computeSplitsWithUnsignedEncoding',['../d7/d90/structmultiterm_1_1Decomposition.html#a64b8875373483185510c28af597e7a4f',1,'multiterm::Decomposition']]],
+  ['computeexactintegergemm_3',['computeExactIntegerGEMM',['../dc/de8/gemmi_8hpp.html#a8859f5f5c08d444fa6bb81bdb7f7d49d',1,'multiterm']]],
+  ['computefixedpointrepresentationvector_4',['computeFixedPointRepresentationVector',['../dc/de8/gemmi_8hpp.html#ab9928dd586a1a5fb7c63b1b64f39b5a0',1,'multiterm']]],
+  ['computenormalisationvectors_5',['computeNormalisationVectors',['../dc/de8/gemmi_8hpp.html#ae245d16dbc07f7142a94643fe0e174b0',1,'multiterm']]],
+  ['computeproductswithfloatingpointaccumulation_6',['computeProductsWithFloatingPointAccumulation',['../dc/de8/gemmi_8hpp.html#a1c17f745f7ad98b82bac00b396196667',1,'multiterm']]],
+  ['computeproductswithintegeraccumulation_7',['computeProductsWithIntegerAccumulation',['../dc/de8/gemmi_8hpp.html#a33f2d0a40b2893641e8e96baae370726',1,'multiterm']]],
+  ['computeslicebitoffset_8',['computeSliceBitOffset',['../d7/dcf/structmultiterm_1_1preparedOperand.html#a6ffeabc5e1e3bd2e8ba21252bb03f74a',1,'multiterm::preparedOperand']]],
+  ['computesplitswithroundtonearest_9',['computeSplitsWithRoundToNearest',['../dc/de8/gemmi_8hpp.html#ade105a1653a3fb704eb3588edabc540a',1,'multiterm']]],
+  ['computesplitswithtruncation_10',['computeSplitsWithTruncation',['../dc/de8/gemmi_8hpp.html#aa60c99bd93303ddff9632f91c799572f',1,'multiterm']]],
+  ['computesplitswithunsignedencoding_11',['computeSplitsWithUnsignedEncoding',['../dc/de8/gemmi_8hpp.html#a0b81484e21993b04a2911303e4bdb36f',1,'multiterm']]],
   ['config_12',['config',['../d1/da4/structmultiterm_1_1config.html',1,'multiterm']]],
   ['configuration_13',['Configuration',['../index.html#autotoc_md6',1,'']]]
 ];

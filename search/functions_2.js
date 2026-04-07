@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['decomposition_0',['Decomposition',['../d7/d90/structmultiterm_1_1Decomposition.html#a3ab8d61d0888588f0cab1f000cfffc5a',1,'multiterm::Decomposition']]]
+  ['empty_0',['empty',['../da/dd9/structMatrixView.html#a63e6e56c46da576c8e1fdf78baa1c801',1,'MatrixView']]]
 ];

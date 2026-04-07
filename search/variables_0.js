@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bitsperslice_0',['bitsPerSlice',['../d7/d90/structmultiterm_1_1Decomposition.html#a6892793b767d8148e83c969176204ef3',1,'multiterm::Decomposition']]]
+  ['bitsperslice_0',['bitsPerSlice',['../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html#a5c871de40d79826d92428fd045fcf1f5',1,'multiterm::OperandPreparationConfig']]]
 ];

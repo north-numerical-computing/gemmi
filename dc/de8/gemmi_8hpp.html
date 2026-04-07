@@ -149,8 +149,11 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration object for the multiterm emulation scheme.  <a href="../../d1/da4/structmultiterm_1_1config.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">multiterm::Decomposition&lt; splitint_t, fp_t &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to store the matrix slices for the Ozaki scheme.  <a href="../../d7/d90/structmultiterm_1_1Decomposition.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html">multiterm::OperandPreparationConfig</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for operand preparation.  <a href="../../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">multiterm::preparedOperand&lt; splitint_t, fp_t &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to store the matrix slices for the Ozaki scheme.  <a href="../../d7/dcf/structmultiterm_1_1preparedOperand.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html">multiterm::multiplicationSchedule</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to store the multiplication schedule for the Ozaki scheme. The multiplication schedule specifies which products of slices of A and B should be computed. It can be constructed from a config object.  <a href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html#details">More...</a><br /></td></tr>
@@ -219,21 +222,45 @@ Functions</h2></td></tr>
 <tr class="memitem:adf52659408789f1bc1364bcf7a2b91b3" id="r_adf52659408789f1bc1364bcf7a2b91b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#adf52659408789f1bc1364bcf7a2b91b3">multiterm::validateConfig</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;<a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a>)</td></tr>
 <tr class="memdesc:adf52659408789f1bc1364bcf7a2b91b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate a config object. This function checks that the config is self-consistent and throws an exception if not.  <br /></td></tr>
 <tr class="separator:adf52659408789f1bc1364bcf7a2b91b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae245d16dbc07f7142a94643fe0e174b0" id="r_ae245d16dbc07f7142a94643fe0e174b0"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:ae245d16dbc07f7142a94643fe0e174b0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ae245d16dbc07f7142a94643fe0e174b0">multiterm::computeNormalisationVectors</a> (<a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;operand)</td></tr>
+<tr class="memdesc:ae245d16dbc07f7142a94643fe0e174b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute normalization vectors for the matrix.  <br /></td></tr>
+<tr class="separator:ae245d16dbc07f7142a94643fe0e174b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9928dd586a1a5fb7c63b1b64f39b5a0" id="r_ab9928dd586a1a5fb7c63b1b64f39b5a0"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:ab9928dd586a1a5fb7c63b1b64f39b5a0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ab9928dd586a1a5fb7c63b1b64f39b5a0">multiterm::computeFixedPointRepresentationVector</a> (std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../d8/d3f/structFloatingPointTraits.html">FloatingPointTraits</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::StorageType &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">fraction</a>, std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">bool</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">sign</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">outer</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;operand)</td></tr>
+<tr class="memdesc:ab9928dd586a1a5fb7c63b1b64f39b5a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the block fixed-point representation of a row/column of the matrix. This function computes the fixed-point representation of a row/column of the matrix, which is used in the splitting algorithms. It extracts the significand and sign of each element in the row/column, and stores them in the provided vectors.  <br /></td></tr>
+<tr class="separator:ab9928dd586a1a5fb7c63b1b64f39b5a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa60c99bd93303ddff9632f91c799572f" id="r_aa60c99bd93303ddff9632f91c799572f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:aa60c99bd93303ddff9632f91c799572f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aa60c99bd93303ddff9632f91c799572f">multiterm::computeSplitsWithTruncation</a> (<a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;operand)</td></tr>
+<tr class="memdesc:aa60c99bd93303ddff9632f91c799572f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using truncation.  <br /></td></tr>
+<tr class="separator:aa60c99bd93303ddff9632f91c799572f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b81484e21993b04a2911303e4bdb36f" id="r_a0b81484e21993b04a2911303e4bdb36f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:a0b81484e21993b04a2911303e4bdb36f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a0b81484e21993b04a2911303e4bdb36f">multiterm::computeSplitsWithUnsignedEncoding</a> (<a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;operand)</td></tr>
+<tr class="memdesc:a0b81484e21993b04a2911303e4bdb36f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using unsigned slice encoding.  <br /></td></tr>
+<tr class="separator:a0b81484e21993b04a2911303e4bdb36f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade105a1653a3fb704eb3588edabc540a" id="r_ade105a1653a3fb704eb3588edabc540a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:ade105a1653a3fb704eb3588edabc540a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ade105a1653a3fb704eb3588edabc540a">multiterm::computeSplitsWithRoundToNearest</a> (<a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;operand)</td></tr>
+<tr class="memdesc:ade105a1653a3fb704eb3588edabc540a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the matrix using round-to-nearest.  <br /></td></tr>
+<tr class="separator:ade105a1653a3fb704eb3588edabc540a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2c3a5a02c40acd67cba81ab0503497f" id="r_ae2c3a5a02c40acd67cba81ab0503497f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:ae2c3a5a02c40acd67cba81ab0503497f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ae2c3a5a02c40acd67cba81ab0503497f">multiterm::prepareOperand</a> (<a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; matrix, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html">OperandPreparationConfig</a> &amp;prepConfig)</td></tr>
+<tr class="memdesc:ae2c3a5a02c40acd67cba81ab0503497f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare the operand for the multiterm emulation scheme.  <br /></td></tr>
+<tr class="separator:ae2c3a5a02c40acd67cba81ab0503497f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45c7ea63a14a97b41e04c3f35abf8565" id="r_a45c7ea63a14a97b41e04c3f35abf8565"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html">multiplicationSchedule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a45c7ea63a14a97b41e04c3f35abf8565">multiterm::makeSchedule</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;<a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a>)</td></tr>
 <tr class="memdesc:a45c7ea63a14a97b41e04c3f35abf8565"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a multiplication schedule from a config object. This function creates a multiplication schedule based on the multiplication specification in the config object.  <br /></td></tr>
 <tr class="separator:a45c7ea63a14a97b41e04c3f35abf8565"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f1d257c8642df1a8094b6a4064a57b0" id="r_a1f1d257c8642df1a8094b6a4064a57b0"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
-<tr class="memitem:a1f1d257c8642df1a8094b6a4064a57b0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a1f1d257c8642df1a8094b6a4064a57b0">multiterm::computeExactIntegerGEMM</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">A</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">B</a>, std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">C</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutC</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">iBlock</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">jBlock</a>)</td></tr>
-<tr class="memdesc:a1f1d257c8642df1a8094b6a4064a57b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the exact integer GEMM (General Matrix-Matrix Multiplication).  <br /></td></tr>
-<tr class="separator:a1f1d257c8642df1a8094b6a4064a57b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43d80d0e67796fed7e132f7f06ea77bc" id="r_a43d80d0e67796fed7e132f7f06ea77bc"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
-<tr class="memitem:a43d80d0e67796fed7e132f7f06ea77bc"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a43d80d0e67796fed7e132f7f06ea77bc">multiterm::computeProductsWithFloatingPointAccumulation</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">A</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">B</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html">multiplicationSchedule</a> &amp;<a class="el" href="../../da/dd9/structMatrixView.html">sched</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutC</a>)</td></tr>
-<tr class="memdesc:a43d80d0e67796fed7e132f7f06ea77bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in floating-point arithmetic.  <br /></td></tr>
-<tr class="separator:a43d80d0e67796fed7e132f7f06ea77bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44cfa03ec698764e28c473e5af5bac8" id="r_af44cfa03ec698764e28c473e5af5bac8"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
-<tr class="memitem:af44cfa03ec698764e28c473e5af5bac8"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#af44cfa03ec698764e28c473e5af5bac8">multiterm::computeProductsWithIntegerAccumulation</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">A</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">B</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html">multiplicationSchedule</a> &amp;<a class="el" href="../../da/dd9/structMatrixView.html">sched</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutC</a>)</td></tr>
-<tr class="memdesc:af44cfa03ec698764e28c473e5af5bac8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in integer arithmetic.  <br /></td></tr>
-<tr class="separator:af44cfa03ec698764e28c473e5af5bac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8859f5f5c08d444fa6bb81bdb7f7d49d" id="r_a8859f5f5c08d444fa6bb81bdb7f7d49d"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:a8859f5f5c08d444fa6bb81bdb7f7d49d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a8859f5f5c08d444fa6bb81bdb7f7d49d">multiterm::computeExactIntegerGEMM</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">A</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">B</a>, std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">C</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutC</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">iBlock</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">jBlock</a>)</td></tr>
+<tr class="memdesc:a8859f5f5c08d444fa6bb81bdb7f7d49d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the exact integer GEMM (General Matrix-Matrix Multiplication).  <br /></td></tr>
+<tr class="separator:a8859f5f5c08d444fa6bb81bdb7f7d49d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c17f745f7ad98b82bac00b396196667" id="r_a1c17f745f7ad98b82bac00b396196667"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:a1c17f745f7ad98b82bac00b396196667"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a1c17f745f7ad98b82bac00b396196667">multiterm::computeProductsWithFloatingPointAccumulation</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">A</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">B</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html">multiplicationSchedule</a> &amp;<a class="el" href="../../da/dd9/structMatrixView.html">schedule</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutC</a>)</td></tr>
+<tr class="memdesc:a1c17f745f7ad98b82bac00b396196667"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in floating-point arithmetic.  <br /></td></tr>
+<tr class="separator:a1c17f745f7ad98b82bac00b396196667"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33f2d0a40b2893641e8e96baae370726" id="r_a33f2d0a40b2893641e8e96baae370726"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
+<tr class="memitem:a33f2d0a40b2893641e8e96baae370726"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a33f2d0a40b2893641e8e96baae370726">multiterm::computeProductsWithIntegerAccumulation</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">A</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">B</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html">multiplicationSchedule</a> &amp;<a class="el" href="../../da/dd9/structMatrixView.html">schedule</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutC</a>)</td></tr>
+<tr class="memdesc:a33f2d0a40b2893641e8e96baae370726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate products in integer arithmetic.  <br /></td></tr>
+<tr class="separator:a33f2d0a40b2893641e8e96baae370726"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37279d325c33d1806890984baf671028" id="r_a37279d325c33d1806890984baf671028"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> &gt; </td></tr>
 <tr class="memitem:a37279d325c33d1806890984baf671028"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a37279d325c33d1806890984baf671028">gemmi</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">A</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutA</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;<a class="el" href="../../da/dd9/structMatrixView.html">B</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutB</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">m</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">k</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">n</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68">matrixLayout</a> <a class="el" href="../../da/dd9/structMatrixView.html">layoutC</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a> &amp;config)</td></tr>
 <tr class="memdesc:a37279d325c33d1806890984baf671028"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix product C = C + A * B.  <br /></td></tr>
@@ -427,8 +454,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a1f1d257c8642df1a8094b6a4064a57b0" name="a1f1d257c8642df1a8094b6a4064a57b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f1d257c8642df1a8094b6a4064a57b0">&#9670;&#160;</a></span>computeExactIntegerGEMM()</h2>
+<a id="a8859f5f5c08d444fa6bb81bdb7f7d49d" name="a8859f5f5c08d444fa6bb81bdb7f7d49d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8859f5f5c08d444fa6bb81bdb7f7d49d">&#9670;&#160;</a></span>computeExactIntegerGEMM()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -438,13 +465,13 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
         <tr>
           <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> multiterm::computeExactIntegerGEMM </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>A</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em>, </td>
         </tr>
         <tr>
@@ -499,12 +526,97 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00926">926</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00957">957</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a43d80d0e67796fed7e132f7f06ea77bc" name="a43d80d0e67796fed7e132f7f06ea77bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43d80d0e67796fed7e132f7f06ea77bc">&#9670;&#160;</a></span>computeProductsWithFloatingPointAccumulation()</h2>
+<a id="ab9928dd586a1a5fb7c63b1b64f39b5a0" name="ab9928dd586a1a5fb7c63b1b64f39b5a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9928dd586a1a5fb7c63b1b64f39b5a0">&#9670;&#160;</a></span>computeFixedPointRepresentationVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> multiterm::computeFixedPointRepresentationVector </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../d8/d3f/structFloatingPointTraits.html">FloatingPointTraits</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;::StorageType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>fraction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">bool</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sign</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
+          <td class="paramname"><em>outer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>operand</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the block fixed-point representation of a row/column of the matrix. This function computes the fixed-point representation of a row/column of the matrix, which is used in the splitting algorithms. It extracts the significand and sign of each element in the row/column, and stores them in the provided vectors. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">splitint_t</td><td>Type used to store the integer slices. </td></tr>
+    <tr><td class="paramname">fp_t</td><td>Floating-point type of the matrix elements. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fraction</td><td>Vector to store the fixed-point representation of the elements. </td></tr>
+    <tr><td class="paramname">sign</td><td>Vector to store the signs of the elements. </td></tr>
+    <tr><td class="paramname">i</td><td>The index of the row/column for which to compute the fixed-point representation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00581">581</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ae245d16dbc07f7142a94643fe0e174b0" name="ae245d16dbc07f7142a94643fe0e174b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae245d16dbc07f7142a94643fe0e174b0">&#9670;&#160;</a></span>computeNormalisationVectors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> multiterm::computeNormalisationVectors </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>operand</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute normalization vectors for the matrix. </p>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00551">551</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1c17f745f7ad98b82bac00b396196667" name="a1c17f745f7ad98b82bac00b396196667"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c17f745f7ad98b82bac00b396196667">&#9670;&#160;</a></span>computeProductsWithFloatingPointAccumulation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -514,20 +626,20 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
         <tr>
           <td class="memname">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; multiterm::computeProductsWithFloatingPointAccumulation </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>A</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html">multiplicationSchedule</a> &amp;&#160;</td>
-          <td class="paramname"><em>sched</em>, </td>
+          <td class="paramname"><em>schedule</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -559,19 +671,19 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
     <tr><td class="paramname">A</td><td>Slices of matrix A. </td></tr>
     <tr><td class="paramname">B</td><td>Slices of matrix B. </td></tr>
     <tr><td class="paramname">bitsPerSlice</td><td>Number of bits per slice. </td></tr>
-    <tr><td class="paramname">sched</td><td>Multiplication schedule specifying which slice products to compute. </td></tr>
+    <tr><td class="paramname">schedule</td><td>Multiplication schedule specifying which slice products to compute. </td></tr>
     <tr><td class="paramname">layoutC</td><td>Layout of the output matrix C. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00963">963</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00994">994</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
-<a id="af44cfa03ec698764e28c473e5af5bac8" name="af44cfa03ec698764e28c473e5af5bac8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af44cfa03ec698764e28c473e5af5bac8">&#9670;&#160;</a></span>computeProductsWithIntegerAccumulation()</h2>
+<a id="a33f2d0a40b2893641e8e96baae370726" name="a33f2d0a40b2893641e8e96baae370726"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33f2d0a40b2893641e8e96baae370726">&#9670;&#160;</a></span>computeProductsWithIntegerAccumulation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -581,20 +693,20 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
         <tr>
           <td class="memname">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; multiterm::computeProductsWithIntegerAccumulation </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>A</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/d90/structmultiterm_1_1Decomposition.html">Decomposition</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html">multiplicationSchedule</a> &amp;&#160;</td>
-          <td class="paramname"><em>sched</em>, </td>
+          <td class="paramname"><em>schedule</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -626,14 +738,131 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
     <tr><td class="paramname">A</td><td>Slices of matrix A. </td></tr>
     <tr><td class="paramname">B</td><td>Slices of matrix B. </td></tr>
     <tr><td class="paramname">bitsPerSlice</td><td>Number of bits per slice. </td></tr>
-    <tr><td class="paramname">sched</td><td>Multiplication schedule specifying which slice products to compute. </td></tr>
+    <tr><td class="paramname">schedule</td><td>Multiplication schedule specifying which slice products to compute. </td></tr>
     <tr><td class="paramname">layoutC</td><td>Layout of the output matrix C. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01015">1015</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01048">1048</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ade105a1653a3fb704eb3588edabc540a" name="ade105a1653a3fb704eb3588edabc540a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade105a1653a3fb704eb3588edabc540a">&#9670;&#160;</a></span>computeSplitsWithRoundToNearest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> multiterm::computeSplitsWithRoundToNearest </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>operand</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Split the matrix using round-to-nearest. </p>
+<p>This is an implementation of Algorithm 8 in:</p>
+<p>Uchino Y., Ozaki K., Imamura T. Performance enanchcement of the Ozaki scheme on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2025;39(3):462–476. DOI: <a class="el" href="../../da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">10.1177</a>/10943420241313064</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">splitint_t</td><td>Type used to store the integer slices. </td></tr>
+    <tr><td class="paramname">fp_t</td><td>Floating-point type of the matrix elements. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">operand</td><td>The operand to split. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00825">825</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aa60c99bd93303ddff9632f91c799572f" name="aa60c99bd93303ddff9632f91c799572f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa60c99bd93303ddff9632f91c799572f">&#9670;&#160;</a></span>computeSplitsWithTruncation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> multiterm::computeSplitsWithTruncation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>operand</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Split the matrix using truncation. </p>
+<p>This is an implementation of Algorithm 4 in:</p>
+<p>Ootomo H., Ozaki K., Yokota R. DGEMM on integer matrix multiplication unit. Int. J. High Performance Comput. App. 2024;38(4):297-313. DOI: <a class="el" href="../../da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">10.1177</a>/10943420241239588</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">splitint_t</td><td>Type used to store the integer slices. </td></tr>
+    <tr><td class="paramname">fp_t</td><td>Floating-point type of the matrix elements. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">operand</td><td>The operand to split. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00613">613</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0b81484e21993b04a2911303e4bdb36f" name="a0b81484e21993b04a2911303e4bdb36f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b81484e21993b04a2911303e4bdb36f">&#9670;&#160;</a></span>computeSplitsWithUnsignedEncoding()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">void</a> multiterm::computeSplitsWithUnsignedEncoding </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>operand</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Split the matrix using unsigned slice encoding. </p>
+<p>This is an implementation of the algorithm in section 3 of:</p>
+<p>Schwarz A., Anders A., Brower C., Bayraktar H., Gunnels J., Clark K., Xu R. G., Rodriguez S., Cayrols S., Tabaszewski P., Podlozhnyuk V. Guaranteed DGEMM accuracy while using reduced precision tensor cores throguh extensions of the Ozaki scheme. SCA/HPCAsia 2026. DOI: <a class="el" href="../../da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">10.1145</a>/3773656.3773670</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">splitint_t</td><td>Type used to store the integer slices. </td></tr>
+    <tr><td class="paramname">fp_t</td><td>Floating-point type of the matrix elements. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">operand</td><td>The operand to split. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00672">672</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -729,7 +958,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01066">1066</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01101">1101</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -797,7 +1026,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01110">1110</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01144">1144</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1163,7 +1392,48 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00874">874</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00905">905</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ae2c3a5a02c40acd67cba81ab0503497f" name="ae2c3a5a02c40acd67cba81ab0503497f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2c3a5a02c40acd67cba81ab0503497f">&#9670;&#160;</a></span>prepareOperand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">preparedOperand&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; multiterm::prepareOperand </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td>
+          <td class="paramname"><em>matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html">OperandPreparationConfig</a> &amp;&#160;</td>
+          <td class="paramname"><em>prepConfig</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Prepare the operand for the multiterm emulation scheme. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">splitint_t</td><td>Integer type used for splits. </td></tr>
+    <tr><td class="paramname">fp_t</td><td>Floating-point type of the matrix elements. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00851">851</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
