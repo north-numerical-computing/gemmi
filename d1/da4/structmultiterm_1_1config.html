@@ -123,9 +123,9 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Configuration object for the multiterm emulation scheme. </p>
 <p>The <code>config</code> struct specifies <em>all user‑selectable settings</em> for the multiterm algorithm.</p>
 <p>The user may specify the multiplication schedule as either:</p>
-<p>**(1) a predefined strategy **, using a <code>mutliplicationStrategy</code> value, or</p>
+<p>**(1) a predefined strategy **, using a <code>multiplicationStrategy</code> value, or</p>
 <p>**(2) a custom mask**, using an explicit std::vector&lt;bool&gt; with <code>numSplitsA * numSplitsB</code> elements.</p>
-<p>If the custom maks is used, the vector is interpreted as a matrix stored in row-major order, where each column represents a slice of <code>A</code> and each row represents a slice of <code>B</code>. Prodcuts are computed only for those slice pairs (i,j) where the mask is true.</p>
+<p>If the custom mask is used, the vector is interpreted as a matrix stored in row-major order, where each column represents a slice of <code>A</code> and each row represents a slice of <code>B</code>. Products are computed only for those slice pairs (i,j) where the mask is true.</p>
 <h3><a class="anchor" id="autotoc_md0"></a>
 Examples</h3>
 <p>To use the reduced slice-product rule with round-to-nearest splitting and floating-point accumulation, one can use:</p>
