@@ -1201,15 +1201,15 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
         multiterm::OperandPreparationConfig(config.splitType, config.numSplitsB, bitsPerSlice, normalisationDimension::byCols));
 
     // Build multiplication schedule.
-    auto multiplicationSchedule = multiterm::makeSchedule(config);
+    auto schedule = multiterm::makeSchedule(config);
 
     // Execute multiplication based on reduction type.
     if (config.redType == multiterm::reductionStrategy::floatingPoint) {
         return multiterm::computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(
-            splitA, splitB, multiplicationSchedule, layoutC);
+            splitA, splitB, schedule, layoutC);
     } else {
         return multiterm::computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(
-            splitA, splitB, multiplicationSchedule, layoutC);
+            splitA, splitB, schedule, layoutC);
     }
 
 }
