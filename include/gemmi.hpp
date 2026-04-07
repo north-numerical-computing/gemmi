@@ -7,12 +7,17 @@
 #include <cstdint>
 #include <limits>
 #include <type_traits>
+#include <variant>
 #include <vector>
 
 /**
  * @file gemmi.hpp
  * @brief Floating-point matrix multiplication using integer emulation.
  */
+
+/***************************************
+ * Floating-point traits and functions *
+ ***************************************/
 
 /**
  * @brief Traits describing IEEE-754 layout properties for a floating-point type.
@@ -60,6 +65,10 @@ int getStoredFloatingPointExponent(fp_t value) {
         std::max(std::numeric_limits<fp_t>::min_exponent, std::ilogb(std::abs(value)) + 1);
 }
 
+/******************************
+ * Global configuration enums *
+ ******************************/
+
 /**
  * @brief Enum to specify the dimension used for normalization.
  */
@@ -67,6 +76,10 @@ enum class normalisationDimension {
     byRows, ///< Normalise by rows (matrix on the left of the product).
     byCols  ///< Normalise by columns (matrix on the right of the product).
 };
+
+/***************
+ * Matrix view *
+ ***************/
 
 /**
  * @brief Enum to specify the layout of the matrix in memory.
@@ -264,6 +277,10 @@ MatrixView<const value_t> makeConstMatrixView(MatrixView<value_t> view) {
     return MatrixView<const value_t>(view.data, view.rows, view.cols, view.layout);
 }
 
+/***********************
+ * Multiterm emulation *
+ ***********************/
+
 namespace multiterm {
 
 /**
@@ -291,16 +308,98 @@ enum class reductionStrategy {
     integer        ///< Accumulate products in integer arithmetic.
 };
 
+
+using multiplicationSpecification = std::variant<multiplicationStrategy, std::vector<bool>>;
+
 /**
- * @brief Configuration for the multiterm emulation.
+ * @brief Configuration object for the multiterm emulation scheme.
+ *
+ * The `config` struct specifies *all user‑selectable settings* for the
+ * multiterm algorithm.
+ *
+ * The user may specify the multiplication schedule as either:
+ *
+ *   **(1) a predefined strategy **, using a `mutliplicationStrategy` value, or
+ *
+ *   **(2) a custom mask**, using an explicit std::vector<bool> with
+ *       `numSplitsA * numSplitsB` elements.
+ *
+ * If the custom maks is used, the vector is interpreted as a matrix stored in
+ * row-major order, where each column represents a slice of `A` and each row
+ * represents a slice of `B`. Prodcuts are computed only for those slice pairs
+ * (i,j) where the mask is true.
+ *
+ *
+ * ### Examples
+ *
+ * To use the reduced slice-product rule with round-to-nearest splitting
+ * and floating-point accumulation, one can use:
+ *
+ * \code
+ * multiterm::config cfg;
+ * cfg.numSplitsA        = 8;
+ * cfg.numSplitsB        = 8;
+ * cfg.splitType         = multiterm::splitStrategy::roundToNearest;
+ * cfg.redType           = multiterm::reductionStrategy::floatingPoint;
+ * cfg.multSpecification = multiterm::multiplicationStrategy::reduced;
+ *
+ * auto C = gemmi<double, std::int8_t, std::int32_t>(
+ *     A, layoutA, B, layoutB, m, k, n, layoutC, cfg
+ * );
+ * \endcode
+ *
+ * To use a multiplication where the first two slices of A and
+ * B are multiplied by all slices of the other matrix, one can use the
+ * custom mask:
+ *
+ * \code
+ * cfg.multSpecification = std::vector<bool>{
+ *     1,1,1,1,
+ *     1,1,1,1,
+ *     1,1,0,0,
+ *     1,1,0,0
+ * };
+ * \endcode
+ *
+ * Only products at positions marked `true' are computed.
+ *
  */
+
 struct config {
-    size_t numSplitsA;               ///< Number of slices for matrix A.
-    size_t numSplitsB;               ///< Number of slices for matrix B.
-    splittingStrategy splitType;     ///< Slice computation strategy.
-    multiplicationStrategy multType; ///< Multiplication strategy.
-    reductionStrategy redType;       ///< Reduction strategy.
+    size_t numSplitsA;                             ///< Number of slices for matrix A.
+    size_t numSplitsB;                             ///< Number of slices for matrix B.
+    splittingStrategy splitType;                   ///< Slice computation strategy.
+    multiplicationSpecification multSpecification; ///< Multiplication specification.
+    reductionStrategy redType;                     ///< Reduction strategy.
 };
+
+
+/**
+ * @brief Validate a config object.
+ * This function checks that the config is self-consistent and
+ * throws an exception if not.
+ * @param cfg The config object to validate.
+ * @throws std::invalid_argument if the config is invalid.
+ */
+inline void validateConfig(const config& config) {
+    if (config.numSplitsA == 0 || config.numSplitsB == 0) {
+        throw std::invalid_argument("numSplitsA and numSplitsB must be >= 1");
+    }
+
+    // If the specification is a mask, validate the mask dimensions
+    if (std::holds_alternative<std::vector<bool>>(config.multSpecification)) {
+        const auto& mask = std::get<std::vector<bool>>(config.multSpecification);
+        const size_t expected = config.numSplitsA * config.numSplitsB;
+
+        if (mask.size() != expected) {
+            throw std::invalid_argument("Mask size does not match numSplitsA * numSplitsB");
+        }
+    }
+}
+
+/***********************
+ * Operand preparation *
+ ***********************/
 
 /**
  * @brief Class to store the matrix slices for the Ozaki scheme.
@@ -750,6 +849,69 @@ struct Decomposition {
  *************************************/
 
 /**
+ * @brief Class to store the multiplication schedule for the Ozaki scheme.
+ * The multiplication schedule specifies which products of slices of A and B
+ * should be computed. It can be constructed from a config object.
+ */
+ struct multiplicationSchedule {
+    size_t numSplitsA;           // number of slices for A
+    size_t numSplitsB;           // number of slices for B
+
+    std::vector<bool> mask;
+    bool operator()(size_t i, size_t j) const {
+        return mask[i * numSplitsB + j];
+    }
+};
+
+/**
+ * @brief Create a multiplication schedule from a config object.
+ * This function creates a multiplication schedule based on the multiplication
+ * specification in the config object.
+ * @param config The config object containing the multiplication specification.
+ * @return multiplicationSchedule The resulting multiplication schedule.
+ * @throws std::invalid_argument if the multiplication specification is invalid.
+ */
+inline multiplicationSchedule makeSchedule(const config& config) {
+    multiplicationSchedule sched;
+    sched.numSplitsA = config.numSplitsA;
+    sched.numSplitsB = config.numSplitsB;
+    sched.mask.resize(config.numSplitsA * config.numSplitsB, false);
+
+    std::visit([&](auto&& spec) {
+        using T = std::decay_t<decltype(spec)>;
+
+        // Predefined strategy (full or reduced).
+        if constexpr (std::is_same_v<T, multiplicationStrategy>) {
+
+            if (spec == multiplicationStrategy::full) {
+                std::fill(sched.mask.begin(), sched.mask.end(), true);
+            }
+            else {  // reduced (anti‑diagonal rule)
+                size_t limit = std::max(config.numSplitsA, config.numSplitsB) - 1;
+
+                for (size_t i = 0; i < config.numSplitsA; ++i)
+                    for (size_t j = 0; j < config.numSplitsB; ++j)
+                        if (i + j <= limit)
+                            sched.mask[i * config.numSplitsB + j] = true;
+            }
+        }
+
+        // Custom boolean mask.
+        else if constexpr (std::is_same_v<T, std::vector<bool>>) {
+
+            const auto& mask = spec;
+
+            if (mask.size() != config.numSplitsA * config.numSplitsB)
+                throw std::invalid_argument("Mask size mismatch.");
+
+            sched.mask = mask; // row‑major copy
+        }
+
+    }, config.multSpecification);
+
+    return sched;
+}
+/**
  * @brief Compute the exact integer GEMM (General Matrix-Matrix Multiplication).
  * @tparam splitint_t Integer type used for splits.
  * @tparam accumulator_t Accumulator type.
@@ -792,29 +954,32 @@ void computeExactIntegerGEMM(const Decomposition<splitint_t, fp_t> &A,
  * @param A Slices of matrix A.
  * @param B Slices of matrix B.
  * @param bitsPerSlice Number of bits per slice.
- * @param numDiagonals Number of diagonals to compute.
+ * @param sched Multiplication schedule specifying which slice products to compute.
+ * @param layoutC Layout of the output matrix C.
  * @return Resulting matrix C.
  *
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const Decomposition<splitint_t, fp_t> &A,
                                                                const Decomposition<splitint_t, fp_t> &B,
-                                                               const matrixLayout layoutC,
-                                                               const size_t numDiagonals) {
+                                                               const multiplicationSchedule &sched,
+                                                               const matrixLayout layoutC) {
     std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
-    for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
+    for (size_t diagonal = 0; diagonal <= A.numSplits + B.numSplits - 1; diagonal++) {
         int Aindex = diagonal < A.numSplits - 1 ? diagonal : A.numSplits - 1;
         size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
         while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
             std::vector<accumulator_t> accumulator (A.rows() * B.cols(), 0.0);
-            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
-            for (size_t row = 0; row < A.rows(); row++) {
-                for (size_t col = 0; col < B.cols(); col++) {
-                    int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
-                    auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
-                    fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[index]), -totalShift);
-                    fp_t scalingFactor = A.powersVector[row] * B.powersVector[col];
-                    C[index] += scaledSum * scalingFactor;
+            if (sched(Aindex, Bindex)) {
+                computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
+                for (size_t row = 0; row < A.rows(); row++) {
+                    for (size_t col = 0; col < B.cols(); col++) {
+                        int totalShift = A.computeSliceBitOffset(static_cast<size_t>(Aindex)) + B.computeSliceBitOffset(Bindex);
+                        auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
+                        fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[index]), -totalShift);
+                        fp_t scalingFactor = A.powersVector[row] * B.powersVector[col];
+                        C[index] += scaledSum * scalingFactor;
+                    }
                 }
             }
             Aindex--;
@@ -842,17 +1007,18 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const Decompositi
  * @param A Slices of matrix A.
  * @param B Slices of matrix B.
  * @param bitsPerSlice Number of bits per slice.
- * @param numDiagonals Number of diagonals to compute.
+ * @param sched Multiplication schedule specifying which slice products to compute.
+ * @param layoutC Layout of the output matrix C.
  * @return Resulting matrix C.
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithIntegerAccumulation(const Decomposition<splitint_t, fp_t> &A,
                                                          const Decomposition<splitint_t, fp_t> &B,
-                                                         const matrixLayout layoutC,
-                                                         const size_t numDiagonals) {
+                                                         const multiplicationSchedule &sched,
+                                                         const matrixLayout layoutC) {
     
     std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
-    for (size_t diagonal = 0; diagonal <= numDiagonals; diagonal++) {
+    for (size_t diagonal = 0; diagonal <= A.numSplits + B.numSplits - 1; diagonal++) {
         int Aindex = diagonal < A.numSplits ? static_cast<int>(diagonal) : static_cast<int>(A.numSplits - 1);
         size_t Bindex = diagonal > A.numSplits - 1 ? diagonal - A.numSplits + 1 : 0;
 
@@ -861,7 +1027,8 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const Decomposition<spl
         // Compute and accumulate all products along this anti-diagonal in integer arithmetic.
         std::vector<accumulator_t> accumulator(A.rows() * B.cols(), 0);
         while (Aindex >= 0 && Bindex <= std::min(diagonal, B.numSplits - 1)) {
-            computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
+            if (sched(Aindex, Bindex))
+                computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
             Aindex--;
             Bindex++;
         }
@@ -880,7 +1047,7 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const Decomposition<spl
     return C;
 }
 
-}
+} // namespace multiterm
 
 /**
  * @brief Compute the matrix product C = C + A * B.
@@ -902,6 +1069,11 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
                          const matrixLayout layoutC,
                          const multiterm::config &config) {
 
+
+    // Validate configuration parameters.
+    multiterm::validateConfig(config);
+
+    // Derive bitsPerSlice.
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
     const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
     if (bitsPerInteger > bitsInAccumulator / 2) {
@@ -910,6 +1082,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
     const size_t alpha = std::floor((bitsInAccumulator - log2(k)) / 2);
     const size_t bitsPerSlice = std::min(bitsPerInteger, static_cast<size_t>(alpha));
 
+    // Slice operands.
     auto viewA = makeMatrixView(A, m, k, layoutA);
     auto viewB = makeMatrixView(B, k, n, layoutB);
 
@@ -919,32 +1092,18 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
     splitA.prepare();
     splitB.prepare();
 
-    size_t numDiagonals;
-    switch (config.multType) {
-        case multiterm::multiplicationStrategy::reduced:
-            // Products below the main anti-diagonal are ignored.
-            numDiagonals = std::max(splitA.numSplits, splitB.numSplits) - 1;
-            break;
-        case multiterm::multiplicationStrategy::full:
-            // All products are computed.
-            numDiagonals = splitA.numSplits + splitB.numSplits - 1;
-            break;
-        // LCOV_EXCL_START
-        default:
-            throw std::logic_error("Unhandled multiplicationStrategy");
-        // LCOV_EXCL_STOP
+    // Build multiplication schedule.
+    auto multiplicationSchedule = multiterm::makeSchedule(config);
+
+    // Execute multiplication based on reduction type.
+    if (config.redType == multiterm::reductionStrategy::floatingPoint) {
+        return multiterm::computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(
+            splitA, splitB, multiplicationSchedule, layoutC);
+    } else {
+        return multiterm::computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(
+            splitA, splitB, multiplicationSchedule, layoutC);
     }
 
-    switch (config.redType) {
-        case multiterm::reductionStrategy::floatingPoint:
-            return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, layoutC, numDiagonals);
-        case multiterm::reductionStrategy::integer:
-            return computeProductsWithIntegerAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, layoutC, numDiagonals);
-        // LCOV_EXCL_START
-        default:
-            throw std::logic_error("Unhandled reductionStrategy");
-        // LCOV_EXCL_STOP   
-    }
 }
 
 template <typename fp_t, typename splitint_t, typename accumulator_t>

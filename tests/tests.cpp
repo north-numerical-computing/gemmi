@@ -251,9 +251,12 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
 
 template <typename fp_t>
 void runGemmiAccuracyTests() {
-	for (auto layoutA : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
-		for (auto layoutB : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
-			for (auto layoutC : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
+	for (auto layoutA : {matrixLayout::rowMajor,
+					     matrixLayout::columnMajor}) {
+		for (auto layoutB : {matrixLayout::rowMajor,
+						     matrixLayout::columnMajor}) {
+			for (auto layoutC : {matrixLayout::rowMajor,
+								 matrixLayout::columnMajor}) {
 				for (size_t m : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
 					for (size_t k : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {
 						for (size_t n : {1u, 2u, 3u, 4u, 5u, 10u, 19u, 50u}) {

@@ -19,7 +19,7 @@ public:
             options = std::make_unique<algorithmOptions>();
             options->splitType = multiterm::splittingStrategy::roundToNearest;
             options->accType = multiterm::reductionStrategy::integer;
-            options->multType = multiterm::multiplicationStrategy::reduced;
+            options->multSpecification = multiterm::multiplicationStrategy::reduced;
         }
 
         // Validate input.
