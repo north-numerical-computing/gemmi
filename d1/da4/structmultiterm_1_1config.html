@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('d1/da4/structmultiterm_1_1config.html'
 </div><!--header-->
 <div class="contents">
 
-<p>Configuration for the multiterm emulation.  
+<p>Configuration object for the multiterm emulation scheme.  
  <a href="../../d1/da4/structmultiterm_1_1config.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>&gt;</code></p>
@@ -112,33 +112,61 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:af832ef02dff57473125d1f396d3cb50d" id="r_af832ef02dff57473125d1f396d3cb50d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/de8/gemmi_8hpp.html#af99d2566e5e288f282d8570ce4e6fc79">splittingStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#af832ef02dff57473125d1f396d3cb50d">splitType</a></td></tr>
 <tr class="memdesc:af832ef02dff57473125d1f396d3cb50d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slice computation strategy.  <br /></td></tr>
 <tr class="separator:af832ef02dff57473125d1f396d3cb50d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e5a3a7007808413f7349ef9623a19bc" id="r_a8e5a3a7007808413f7349ef9623a19bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ab58a2088bb52e0012a58f0b39d1698fc">multiplicationStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#a8e5a3a7007808413f7349ef9623a19bc">multType</a></td></tr>
-<tr class="memdesc:a8e5a3a7007808413f7349ef9623a19bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplication strategy.  <br /></td></tr>
-<tr class="separator:a8e5a3a7007808413f7349ef9623a19bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab082d137e33d216b86ec6611ae205068" id="r_ab082d137e33d216b86ec6611ae205068"><td class="memItemLeft" align="right" valign="top">multiplicationSpecification&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#ab082d137e33d216b86ec6611ae205068">multSpecification</a></td></tr>
+<tr class="memdesc:ab082d137e33d216b86ec6611ae205068"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplication specification.  <br /></td></tr>
+<tr class="separator:ab082d137e33d216b86ec6611ae205068"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a065bd81a426a744b3d8d932bbfe81722" id="r_a065bd81a426a744b3d8d932bbfe81722"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a8b41b39270218ae8815f982fb0e6d453">reductionStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#a065bd81a426a744b3d8d932bbfe81722">redType</a></td></tr>
 <tr class="memdesc:a065bd81a426a744b3d8d932bbfe81722"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduction strategy.  <br /></td></tr>
 <tr class="separator:a065bd81a426a744b3d8d932bbfe81722"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Configuration for the multiterm emulation. </p>
+<div class="textblock"><p>Configuration object for the multiterm emulation scheme. </p>
+<p>The <code>config</code> struct specifies <em>all user‑selectable settings</em> for the multiterm algorithm.</p>
+<p>The user may specify the multiplication schedule as either:</p>
+<p>**(1) a predefined strategy **, using a <code>mutliplicationStrategy</code> value, or</p>
+<p>**(2) a custom mask**, using an explicit std::vector&lt;bool&gt; with <code>numSplitsA * numSplitsB</code> elements.</p>
+<p>If the custom maks is used, the vector is interpreted as a matrix stored in row-major order, where each column represents a slice of <code>A</code> and each row represents a slice of <code>B</code>. Prodcuts are computed only for those slice pairs (i,j) where the mask is true.</p>
+<h3><a class="anchor" id="autotoc_md0"></a>
+Examples</h3>
+<p>To use the reduced slice-product rule with round-to-nearest splitting and floating-point accumulation, one can use:</p>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a> <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">cfg</a>;</div>
+<div class="line"><a class="code hl_struct" href="../../da/dd9/structMatrixView.html">cfg</a>.numSplitsA        = 8;</div>
+<div class="line"><a class="code hl_struct" href="../../da/dd9/structMatrixView.html">cfg</a>.numSplitsB        = 8;</div>
+<div class="line"><a class="code hl_struct" href="../../da/dd9/structMatrixView.html">cfg</a>.splitType         = multiterm::splitStrategy::roundToNearest;</div>
+<div class="line"><a class="code hl_struct" href="../../da/dd9/structMatrixView.html">cfg</a>.redType           = multiterm::reductionStrategy::floatingPoint;</div>
+<div class="line"><a class="code hl_struct" href="../../da/dd9/structMatrixView.html">cfg</a>.multSpecification = multiterm::multiplicationStrategy::reduced;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">C</a> = <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">gemmi&lt;double, std::int8_t, std::int32_t&gt;</a>(</div>
+<div class="line">    <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">A</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">layoutA</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">B</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">layoutB</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">m</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">k</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">n</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">layoutC</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">cfg</a></div>
+<div class="line">);</div>
+<div class="ttc" id="astructMatrixView_html"><div class="ttname"><a href="../../da/dd9/structMatrixView.html">MatrixView</a></div><div class="ttdoc">Lightweight view of a dense matrix.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00088">gemmi.hpp:88</a></div></div>
+<div class="ttc" id="astructmultiterm_1_1config_html"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a></div><div class="ttdoc">Configuration object for the multiterm emulation scheme.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00352">gemmi.hpp:352</a></div></div>
+</div><!-- fragment --><p>To use a multiplication where the first two slices of A and B are multiplied by all slices of the other matrix, one can use the custom mask:</p>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="../../da/dd9/structMatrixView.html">cfg</a>.multSpecification = std::vector&lt;bool&gt;{</div>
+<div class="line">    1,1,1,1,</div>
+<div class="line">    1,1,1,1,</div>
+<div class="line">    1,1,0,0,</div>
+<div class="line">    1,1,0,0</div>
+<div class="line">};</div>
+</div><!-- fragment --><p>Only products at positions marked 1 are computed. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00297">297</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00352">352</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8e5a3a7007808413f7349ef9623a19bc" name="a8e5a3a7007808413f7349ef9623a19bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e5a3a7007808413f7349ef9623a19bc">&#9670;&#160;</a></span>multType</h2>
+<a id="ab082d137e33d216b86ec6611ae205068" name="ab082d137e33d216b86ec6611ae205068"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab082d137e33d216b86ec6611ae205068">&#9670;&#160;</a></span>multSpecification</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ab58a2088bb52e0012a58f0b39d1698fc">multiplicationStrategy</a> multiterm::config::multType</td>
+          <td class="memname">multiplicationSpecification multiterm::config::multSpecification</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Multiplication strategy. </p>
+<p>Multiplication specification. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00301">301</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00356">356</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -156,7 +184,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of slices for matrix A. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00298">298</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00353">353</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -174,7 +202,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of slices for matrix B. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00299">299</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00354">354</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -192,7 +220,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reduction strategy. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00302">302</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00357">357</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -210,7 +238,7 @@ Public Attributes</h2></td></tr>
 
 <p>Slice computation strategy. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00300">300</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00355">355</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

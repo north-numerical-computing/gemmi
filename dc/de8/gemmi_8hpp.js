@@ -5,6 +5,7 @@ var gemmi_8hpp =
     [ "MatrixView< value_t >", "da/dd9/structMatrixView.html", "da/dd9/structMatrixView" ],
     [ "multiterm::config", "d1/da4/structmultiterm_1_1config.html", "d1/da4/structmultiterm_1_1config" ],
     [ "multiterm::Decomposition< splitint_t, fp_t >", "d7/d90/structmultiterm_1_1Decomposition.html", "d7/d90/structmultiterm_1_1Decomposition" ],
+    [ "multiterm::multiplicationSchedule", "da/df5/structmultiterm_1_1multiplicationSchedule.html", null ],
     [ "matrixLayout", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68", [
       [ "rowMajor", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a0edcf02e1f8904ff1fc5e0fb89d16232", null ],
       [ "columnMajor", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a5bccb53123b3512007f3f32b68077d7c", null ]
@@ -27,13 +28,14 @@ var gemmi_8hpp =
       [ "roundToNearest", "dc/de8/gemmi_8hpp.html#af99d2566e5e288f282d8570ce4e6fc79a0487e454e553d12df80ec42f42d5aaab", null ]
     ] ],
     [ "computeExactIntegerGEMM", "dc/de8/gemmi_8hpp.html#a1f1d257c8642df1a8094b6a4064a57b0", null ],
-    [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#ae98f59d0951bc194204c8ba5f47336ca", null ],
-    [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#a808bee199a8492ac1d4f2fc6a9cc8ffe", null ],
+    [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#a43d80d0e67796fed7e132f7f06ea77bc", null ],
+    [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#af44cfa03ec698764e28c473e5af5bac8", null ],
     [ "gemmi", "dc/de8/gemmi_8hpp.html#a37279d325c33d1806890984baf671028", null ],
     [ "getStoredFloatingPointExponent", "dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a", null ],
     [ "makeConstMatrixView", "dc/de8/gemmi_8hpp.html#acef238561a934c8794afc05905014618", null ],
     [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a64ea61aee9763059cb6586c9674835e8", null ],
     [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a854fd03554072f0c3276f9b519995442", null ],
     [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#ac477ced2f82ba7f431db0290b06a80bc", null ],
-    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a668618f7ff32f3e366ec0141260067ad", null ]
+    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a668618f7ff32f3e366ec0141260067ad", null ],
+    [ "validateConfig", "dc/de8/gemmi_8hpp.html#adf52659408789f1bc1364bcf7a2b91b3", null ]
 ];

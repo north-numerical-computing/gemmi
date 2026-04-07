@@ -93,25 +93,25 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://github.com/north-numerical-computing/gemmi/tags"><img src="https://img.shields.io/github/v/tag/north-numerical-computing/gemmi?label=version" alt="Version" class="inline"/></a> <a href="https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml"><img src="https://github.com/north-numerical-computing/gemmi/actions/workflows/run_cpp_tests.yml/badge.svg?branch=main" alt="Testing" style="pointer-events: none;" class="inline"/></a> <a href="https://codecov.io/github/north-numerical-computing/gemmi"><img src="https://codecov.io/github/north-numerical-computing/gemmi/graph/badge.svg?token=fhhn9BtZgL" alt="codecov" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/north-numerical-computing/gemmi/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/north-numerical-computing/gemmi" alt="GitHub" class="inline"/></a></p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Dependencies</h1>
 <p>The recommended system to build this project is <code>CMake</code>. Compilation of the C++ tests requires a C++ compiler that supports the C++20 standard. In order to build the MEX interface, MATLAB must be installed and available on the search path.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Build</h1>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md4"></a>
 Mex interface</h2>
 <p>The MEX interface can be compiled with: </p><div class="fragment"><div class="line">cmake -S. -Bbuild</div>
 <div class="line">cmake --build build</div>
 </div><!-- fragment --><p> If the compilation is successful, these commands will produce the the MEX file <code>build/gemmi.$(mexext)</code>, where <code>$(mexext)</code> is <code>mexa64</code> on Linux, <code>mexmaci64</code> or <code>mexmaca64</code> on MacOS , and <code>mexw64</code> on Windows. The file <code><a class="el" href="da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">build/gemmi.m</a></code> contains the documentation for the MATLAB <code>gemmi</code> function.</p>
 <p>Building the interface can be disabled by setting the CMake variable <code>BUILD_MEX</code> to false: </p><div class="fragment"><div class="line">cmake -S. -Bbuild -DBUILD_MEX=False</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
 Catch2 tests</h2>
 <p>The project comes with a suite of <a href="https://github.com/catchorg/Catch2">Catch2</a> C++ tests. By default, the tests are disabled, and can be enabled by setting the CMake variable <code>BUILD_TEST</code> to true: </p><div class="fragment"><div class="line">cmake -S. -Bbuild -DBUILD_TESTS=True</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
 Configuration</h1>
 <p>Additional options can be passed to <code>CMake</code> during the configuration stage. To use a compiler other than the default one, for example, one can use: </p><div class="fragment"><div class="line">cmake -S. -Bbuild -DCMAKE_CXX_COMPILER=&lt;preferred_compiler&gt;</div>
 </div><!-- fragment --><p> Here, <code>&lt;preferred_compiler&gt;</code> must be either an executable on the search path or the path to the chosen compiler.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Notes on the MEX interface</h1>
 <p>Systems without <code>CMake</code> can use the function <code><a class="el" href="da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">mex/compile_mex.m</a></code> to compile the MEX interface. In MATLAB, this can be achieved by using the following commands: </p><div class="fragment"><div class="line">cd mex</div>
 <div class="line">compile_mex</div>
