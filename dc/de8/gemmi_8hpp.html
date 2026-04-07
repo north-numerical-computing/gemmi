@@ -105,6 +105,8 @@ $(document).ready(function(){initNavTree('dc/de8/gemmi_8hpp.html','../../'); ini
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
+<code>#include &lt;stdexcept&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;variant&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
@@ -113,23 +115,27 @@ Include dependency graph for gemmi.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../df/d1c/gemmi_8hpp__incl.png" border="0" usemap="#ainclude_2gemmi_8hpp" alt=""/></div>
 <map name="ainclude_2gemmi_8hpp" id="ainclude_2gemmi_8hpp">
-<area shape="rect" title="Floating&#45;point matrix multiplication using integer emulation." alt="" coords="268,5,415,31"/>
+<area shape="rect" title="Floating&#45;point matrix multiplication using integer emulation." alt="" coords="360,5,507,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,91,104"/>
-<area shape="poly" title=" " alt="" coords="295,33,104,79,103,74,294,28"/>
+<area shape="poly" title=" " alt="" coords="367,33,105,81,104,76,366,28"/>
 <area shape="rect" title=" " alt="" coords="115,79,154,104"/>
-<area shape="poly" title=" " alt="" coords="307,33,168,81,166,76,305,28"/>
+<area shape="poly" title=" " alt="" coords="371,33,279,53,168,81,167,76,277,47,370,28"/>
 <area shape="rect" title=" " alt="" coords="178,79,241,104"/>
-<area shape="poly" title=" " alt="" coords="321,33,244,74,242,70,319,28"/>
+<area shape="poly" title=" " alt="" coords="398,33,255,79,253,73,397,28"/>
 <area shape="rect" title=" " alt="" coords="265,79,332,104"/>
-<area shape="poly" title=" " alt="" coords="337,32,315,68,310,66,332,30"/>
+<area shape="poly" title=" " alt="" coords="413,33,334,74,332,70,410,28"/>
 <area shape="rect" title=" " alt="" coords="356,79,415,104"/>
-<area shape="poly" title=" " alt="" coords="351,30,373,66,369,68,346,32"/>
-<area shape="rect" title=" " alt="" coords="439,79,531,104"/>
-<area shape="poly" title=" " alt="" coords="366,28,451,70,448,75,363,33"/>
-<area shape="rect" title=" " alt="" coords="555,79,623,104"/>
-<area shape="poly" title=" " alt="" coords="382,28,543,74,541,79,380,33"/>
-<area shape="rect" title=" " alt="" coords="647,79,710,104"/>
-<area shape="poly" title=" " alt="" coords="404,28,634,76,633,81,403,33"/>
+<area shape="poly" title=" " alt="" coords="428,33,403,69,398,66,423,30"/>
+<area shape="rect" title=" " alt="" coords="439,79,526,104"/>
+<area shape="poly" title=" " alt="" coords="444,29,469,66,465,69,439,33"/>
+<area shape="rect" title=" " alt="" coords="551,79,609,104"/>
+<area shape="poly" title=" " alt="" coords="458,28,545,70,543,75,456,33"/>
+<area shape="rect" title=" " alt="" coords="634,79,726,104"/>
+<area shape="poly" title=" " alt="" coords="474,28,628,72,626,77,472,33"/>
+<area shape="rect" title=" " alt="" coords="750,79,818,104"/>
+<area shape="poly" title=" " alt="" coords="498,28,737,76,736,81,497,33"/>
+<area shape="rect" title=" " alt="" coords="842,79,905,104"/>
+<area shape="poly" title=" " alt="" coords="507,25,652,45,829,76,828,81,652,50,507,30"/>
 </map>
 </div>
 </div>
@@ -148,6 +154,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration object for the multiterm emulation scheme.  <a href="../../d1/da4/structmultiterm_1_1config.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dfb/structmultiterm_1_1DerivedParameters.html">multiterm::DerivedParameters</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html">multiterm::OperandPreparationConfig</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for operand preparation.  <a href="../../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html#details">More...</a><br /></td></tr>
@@ -222,6 +230,10 @@ Functions</h2></td></tr>
 <tr class="memitem:adf52659408789f1bc1364bcf7a2b91b3" id="r_adf52659408789f1bc1364bcf7a2b91b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#adf52659408789f1bc1364bcf7a2b91b3">multiterm::validateConfig</a> (<a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;<a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a>)</td></tr>
 <tr class="memdesc:adf52659408789f1bc1364bcf7a2b91b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate a config object. This function checks that the config is self-consistent and throws an exception if not.  <br /></td></tr>
 <tr class="separator:adf52659408789f1bc1364bcf7a2b91b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6d8494436abf6fdefff0172f0734abd" id="r_aa6d8494436abf6fdefff0172f0734abd"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> &gt; </td></tr>
+<tr class="memitem:aa6d8494436abf6fdefff0172f0734abd"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d6/dfb/structmultiterm_1_1DerivedParameters.html">DerivedParameters</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#aa6d8494436abf6fdefff0172f0734abd">multiterm::deriveParameters</a> (<a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; <a class="el" href="../../da/dd9/structMatrixView.html">A</a>, <a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; <a class="el" href="../../da/dd9/structMatrixView.html">B</a>, <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;<a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a>)</td></tr>
+<tr class="memdesc:aa6d8494436abf6fdefff0172f0734abd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate inputs and derive execution parameters for multiterm scheme.  <br /></td></tr>
+<tr class="separator:aa6d8494436abf6fdefff0172f0734abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae245d16dbc07f7142a94643fe0e174b0" id="r_ae245d16dbc07f7142a94643fe0e174b0"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; </td></tr>
 <tr class="memitem:ae245d16dbc07f7142a94643fe0e174b0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ae245d16dbc07f7142a94643fe0e174b0">multiterm::computeNormalisationVectors</a> (<a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a>, <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt; &amp;operand)</td></tr>
 <tr class="memdesc:ae245d16dbc07f7142a94643fe0e174b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute normalization vectors for the matrix.  <br /></td></tr>
@@ -286,7 +298,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00312">312</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00314">314</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -319,7 +331,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00087">87</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00089">89</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -351,7 +363,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00298">298</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00300">300</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -383,7 +395,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00075">75</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00077">77</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -415,7 +427,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00306">306</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00308">308</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -449,7 +461,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00289">289</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00291">291</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -526,7 +538,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00960">960</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01063">1063</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -587,7 +599,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00581">581</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00684">684</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -611,7 +623,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 
 <p>Compute normalization vectors for the matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00551">551</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00654">654</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -678,7 +690,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00997">997</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01100">1100</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -745,7 +757,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01051">1051</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01154">1154</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -784,7 +796,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00825">825</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00928">928</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -823,7 +835,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00613">613</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00716">716</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -862,7 +874,82 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00672">672</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00775">775</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aa6d8494436abf6fdefff0172f0734abd" name="aa6d8494436abf6fdefff0172f0734abd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6d8494436abf6fdefff0172f0734abd">&#9670;&#160;</a></span>deriveParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">splitint_t</a> , <a class="el" href="../../da/dd9/structMatrixView.html">typename</a> <a class="el" href="../../da/dd9/structMatrixView.html">accumulator_t</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">DerivedParameters multiterm::deriveParameters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">MatrixView</a>&lt; <a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../da/dd9/structMatrixView.html">fp_t</a> &gt;&#160;</td>
+          <td class="paramname"><em>B</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">const</a> <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;&#160;</td>
+          <td class="paramname"><em>config</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Validate inputs and derive execution parameters for multiterm scheme. </p>
+<p>Check that the two matrix views and the algorithm configuration are mutually consistent and that the template types satisfy the precision requirements of the accumulation scheme. The function performs both compile-time (static_assert) and runtime checks:</p><ul>
+<li><code>fp_t</code> is a floating-point type (compile-time);</li>
+<li><code>splitint_t</code> is a signed integer type (compile-time);</li>
+<li><code>accumulator_t</code> is a signed integer type (compile-time);</li>
+<li>neither matrix view has a null data pointer;</li>
+<li>neither matrix view is empty;</li>
+<li>the matrices are conformable for multiplication(<code><a class="el" href="../../da/dd9/structMatrixView.html#a6092a039eb5a4bc3d846b3b0a1c28a51" title="Number of columns in the matrix.">A.cols()</a> == <a class="el" href="../../da/dd9/structMatrixView.html#a43b3f775c00d784f7a8802f2d2d429f9" title="Number of rows in the matrix.">B.rows()</a></code>);</li>
+<li><code>numSplitsA</code> and <code>numSplitsB</code> are both strictly positive;</li>
+<li>the custom mask size (if used) equals <code>numSplitsA * numSplitsB</code>;</li>
+<li><code>splitint_t</code> is not too wide for <code>accumulator_t</code>; and</li>
+<li>the computed bitsPerSlice is strictly positive.</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">fp_t</td><td>Floating-point element type. </td></tr>
+    <tr><td class="paramname">splitint_t</td><td>Signed integer type used to store matrix slices. </td></tr>
+    <tr><td class="paramname">accumulator_t</td><td>Signed integer accumulator type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>View of the left-hand matrix (m x k). </td></tr>
+    <tr><td class="paramname">B</td><td>View of the right-hand matrix (k x n). </td></tr>
+    <tr><td class="paramname">config</td><td>Algorithm configuration. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>DerivedParameters Derived execution parameters for the multiplication. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>if any runtime constraint is violated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00434">434</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -958,7 +1045,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01104">1104</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01207">1207</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1026,7 +1113,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01147">1147</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01242">1242</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1063,7 +1150,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The value stored in the exponent field of the value, as an integer. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00062">62</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00064">64</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1101,7 +1188,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>MatrixView&lt;const value_t&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00276">276</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00278">278</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1163,7 +1250,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>MatrixView&lt;const value_t&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00258">258</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00260">260</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1225,7 +1312,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>MatrixView&lt;const value_t&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00222">222</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00224">224</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1287,7 +1374,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>MatrixView&lt;value_t&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00240">240</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00242">242</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1349,7 +1436,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>MatrixView&lt;value_t&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00204">204</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00206">206</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1392,7 +1479,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00908">908</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01011">1011</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1433,7 +1520,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00851">851</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00954">954</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1464,7 +1551,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
 <p>Validate a config object. This function checks that the config is self-consistent and throws an exception if not. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">cfg</td><td>The config object to validate. </td></tr>
+    <tr><td class="paramname">config</td><td>The config object to validate. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1475,7 +1562,7 @@ template&lt;<a class="el" href="../../da/dd9/structMatrixView.html">typename</a>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00384">384</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00390">390</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
