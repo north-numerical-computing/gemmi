@@ -29,7 +29,7 @@ var gemmi_8hpp =
     [ "computeExactIntegerGEMM", "dc/de8/gemmi_8hpp.html#a1f1d257c8642df1a8094b6a4064a57b0", null ],
     [ "computeProductsWithFloatingPointAccumulation", "dc/de8/gemmi_8hpp.html#ae98f59d0951bc194204c8ba5f47336ca", null ],
     [ "computeProductsWithIntegerAccumulation", "dc/de8/gemmi_8hpp.html#a808bee199a8492ac1d4f2fc6a9cc8ffe", null ],
-    [ "gemmi", "dc/de8/gemmi_8hpp.html#ae4fa81c04bcee86f7e47afeac25b2d5f", null ],
+    [ "gemmi", "dc/de8/gemmi_8hpp.html#a37279d325c33d1806890984baf671028", null ],
     [ "getStoredFloatingPointExponent", "dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a", null ],
     [ "makeConstMatrixView", "dc/de8/gemmi_8hpp.html#acef238561a934c8794afc05905014618", null ],
     [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a64ea61aee9763059cb6586c9674835e8", null ],
