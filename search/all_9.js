@@ -10,5 +10,6 @@ var searchData=
   ['memory_7',['memory',['../d7/d90/structmultiterm_1_1Decomposition.html#ab4ca34a8cfdbf01c275719473189eb14',1,'multiterm::Decomposition']]],
   ['mex_20interface_8',['mex interface',['../index.html#autotoc_md3',1,'Mex interface'],['../index.html#autotoc_md6',1,'Notes on the MEX interface']]],
   ['multiplicationstrategy_9',['multiplicationStrategy',['../dc/de8/gemmi_8hpp.html#ab58a2088bb52e0012a58f0b39d1698fc',1,'multiterm']]],
-  ['multiply_20using_20integer_20ozaki_20scheme_10',['Matrix–matrix multiply using integer Ozaki scheme',['../index.html',1,'']]]
+  ['multiply_20using_20integer_20ozaki_20scheme_10',['Matrix–matrix multiply using integer Ozaki scheme',['../index.html',1,'']]],
+  ['multtype_11',['multType',['../d1/da4/structmultiterm_1_1config.html#a8e5a3a7007808413f7349ef9623a19bc',1,'multiterm::config']]]
 ];

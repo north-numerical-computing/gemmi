@@ -12,5 +12,6 @@ var searchData=
   ['computesplitswithroundtonearest_9',['computeSplitsWithRoundToNearest',['../d7/d90/structmultiterm_1_1Decomposition.html#af0036988936cdbf3eb51e1dd8cf8725d',1,'multiterm::Decomposition']]],
   ['computesplitswithtruncation_10',['computeSplitsWithTruncation',['../d7/d90/structmultiterm_1_1Decomposition.html#a1b30d83f3fc32fba24bacb1e473e310d',1,'multiterm::Decomposition']]],
   ['computesplitswithunsignedencoding_11',['computeSplitsWithUnsignedEncoding',['../d7/d90/structmultiterm_1_1Decomposition.html#a64b8875373483185510c28af597e7a4f',1,'multiterm::Decomposition']]],
-  ['configuration_12',['Configuration',['../index.html#autotoc_md5',1,'']]]
+  ['config_12',['config',['../d1/da4/structmultiterm_1_1config.html',1,'multiterm']]],
+  ['configuration_13',['Configuration',['../index.html#autotoc_md5',1,'']]]
 ];

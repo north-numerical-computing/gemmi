@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['decomposition_0',['Decomposition',['../d7/d90/structmultiterm_1_1Decomposition.html',1,'multiterm']]]
+  ['config_0',['config',['../d1/da4/structmultiterm_1_1config.html',1,'multiterm']]]
 ];
