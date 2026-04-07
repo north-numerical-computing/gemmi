@@ -976,6 +976,15 @@ preparedOperand<splitint_t, fp_t> prepareOperand(MatrixView<const fp_t> matrix,
     size_t numSplitsB;           // number of slices for B
 
     std::vector<bool> mask;
+
+    /**
+     * @brief Constructor for the multiplication schedule.
+     * @param numSplitsA Number of splits for matrix A.
+     * @param numSplitsB Number of splits for matrix B.
+     */
+    multiplicationSchedule(size_t numSplitsA, size_t numSplitsB) :
+        numSplitsA(numSplitsA), numSplitsB(numSplitsB), mask(numSplitsA * numSplitsB, false) {}
+
     inline std::vector<bool>::reference operator()(size_t i, size_t j) {
         return mask[i * numSplitsB + j];
     }
@@ -995,10 +1004,7 @@ preparedOperand<splitint_t, fp_t> prepareOperand(MatrixView<const fp_t> matrix,
  * @throws std::invalid_argument if the multiplication specification is invalid.
  */
 inline multiplicationSchedule makeSchedule(const config& config) {
-    multiplicationSchedule schedule;
-    schedule.numSplitsA = config.numSplitsA;
-    schedule.numSplitsB = config.numSplitsB;
-    schedule.mask.resize(config.numSplitsA * config.numSplitsB, false);
+    multiplicationSchedule schedule(config.numSplitsA, config.numSplitsB);
 
     std::visit([&](auto&& spec) {
         using T = std::decay_t<decltype(spec)>;
