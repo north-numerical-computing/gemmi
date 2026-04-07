@@ -292,6 +292,17 @@ enum class reductionStrategy {
 };
 
 /**
+ * @brief Configuration for the multiterm emulation.
+ */
+struct config {
+    size_t numSplitsA;               ///< Number of slices for matrix A.
+    size_t numSplitsB;               ///< Number of slices for matrix B.
+    splittingStrategy splitType;     ///< Slice computation strategy.
+    multiplicationStrategy multType; ///< Multiplication strategy.
+    reductionStrategy redType;       ///< Reduction strategy.
+};
+
+/**
  * @brief Class to store the matrix slices for the Ozaki scheme.
  * @tparam splitint_t Type used to store the integer slices.
  * @tparam fp_t Floating-point type (e.g., float, double).
@@ -881,22 +892,15 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const Decomposition<spl
  * @param m Number of rows in A.
  * @param k Number of columns in A and rows in B.
  * @param n Number of columns in B.
- * @param numSplitsA Number of splits for the matrix A.
- * @param numSplitsB Number of splits for the matrix B.
- * @param splitType Splitting strategy.
- * @param multType Multiplication strategy.
- * @param accType Accumulation strategy.
+ * @param config Configuration .
  * @return Resulting matrix product.
  */
 template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
                          const std::vector<fp_t> &B, const matrixLayout layoutB,
                          const size_t m, const size_t k, const size_t n,
-                         const size_t numSplitsA, const size_t numSplitsB,
-                         const matrixLayout layoutC = matrixLayout::columnMajor,
-                         const multiterm::splittingStrategy splitType = multiterm::splittingStrategy::roundToNearest,
-                         const multiterm::reductionStrategy accType = multiterm::reductionStrategy::floatingPoint,
-                         const multiterm::multiplicationStrategy multType = multiterm::multiplicationStrategy::reduced) {
+                         const matrixLayout layoutC,
+                         const multiterm::config &config) {
 
     const size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
     const size_t bitsPerInteger = std::numeric_limits<splitint_t>::digits;
@@ -909,14 +913,14 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
     auto viewA = makeMatrixView(A, m, k, layoutA);
     auto viewB = makeMatrixView(B, k, n, layoutB);
 
-    auto splitA = multiterm::Decomposition<splitint_t, fp_t>(viewA, splitType, numSplitsA, bitsPerSlice, normalisationDimension::byRows);
-    auto splitB = multiterm::Decomposition<splitint_t, fp_t>(viewB, splitType, numSplitsB, bitsPerSlice, normalisationDimension::byCols);
+    auto splitA = multiterm::Decomposition<splitint_t, fp_t>(viewA, config.splitType, config.numSplitsA, bitsPerSlice, normalisationDimension::byRows);
+    auto splitB = multiterm::Decomposition<splitint_t, fp_t>(viewB, config.splitType, config.numSplitsB, bitsPerSlice, normalisationDimension::byCols);
 
     splitA.prepare();
     splitB.prepare();
 
     size_t numDiagonals;
-    switch (multType) {
+    switch (config.multType) {
         case multiterm::multiplicationStrategy::reduced:
             // Products below the main anti-diagonal are ignored.
             numDiagonals = std::max(splitA.numSplits, splitB.numSplits) - 1;
@@ -931,7 +935,7 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
         // LCOV_EXCL_STOP
     }
 
-    switch (accType) {
+    switch (config.redType) {
         case multiterm::reductionStrategy::floatingPoint:
             return computeProductsWithFloatingPointAccumulation<splitint_t, accumulator_t, fp_t>(splitA, splitB, layoutC, numDiagonals);
         case multiterm::reductionStrategy::integer:
@@ -947,7 +951,11 @@ template <typename fp_t, typename splitint_t, typename accumulator_t>
 std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
                          const std::vector<fp_t> &B, const matrixLayout layoutB,
                          const size_t m, const size_t k, const size_t n, const size_t numSplits) {
-    return gemmi <fp_t, splitint_t, accumulator_t> (A, layoutA, B, layoutB, m, k, n, numSplits, numSplits);
+    return gemmi <fp_t, splitint_t, accumulator_t> (A, layoutA, B, layoutB, m, k, n,
+        multiterm::config{numSplits, numSplits,
+                          multiterm::splittingStrategy::roundToNearest,
+                          multiterm::multiplicationStrategy::reduced,
+                          multiterm::reductionStrategy::floatingPoint});
 }
 
 #endif // GEMMI_HPP

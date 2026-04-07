@@ -276,12 +276,13 @@ void runGemmiAccuracyTests() {
 													<< ", numSplitB=" << numSplitB) {
 													const auto A = makeRandomMatrix<fp_t>(m, k, 127);
 													const auto B = makeRandomMatrix<fp_t>(k, n, 255);
+													const auto config = multiterm::config{numSplitA, numSplitB, splitType, multiplicationType, accumulationType};
 
-													const auto C = gemmi<fp_t, int8_t, int32_t>(
-														A, layoutA, B, layoutB, m, k, n, numSplitA, numSplitB, 
-														layoutC,
-														splitType, accumulationType, multiplicationType);
-
+													const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
+																								B, layoutB,
+																								m, k, n,
+																								layoutC,
+																								config);
 													const auto C_ref = referenceGemm<fp_t>(A, layoutA, B, layoutB, m, k, n, layoutC);
 
 													const double relative_error =
