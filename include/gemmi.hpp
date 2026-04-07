@@ -379,30 +379,6 @@ struct DerivedParameters {
     size_t bitsPerSlice; ///< Number of bits assigned to each split slice.
 };
 
-
-/**
- * @brief Validate a config object.
- * This function checks that the config is self-consistent and
- * throws an exception if not.
- * @param config The config object to validate.
- * @throws std::invalid_argument if the config is invalid.
- */
-inline void validateConfig(const config& config) {
-    if (config.numSplitsA == 0 || config.numSplitsB == 0) {
-        throw std::invalid_argument("numSplitsA and numSplitsB must be >= 1");
-    }
-
-    // If the specification is a mask, validate the mask dimensions
-    if (std::holds_alternative<std::vector<bool>>(config.multSpecification)) {
-        const auto& mask = std::get<std::vector<bool>>(config.multSpecification);
-        const size_t expected = config.numSplitsA * config.numSplitsB;
-
-        if (mask.size() != expected) {
-            throw std::invalid_argument("Mask size does not match numSplitsA * numSplitsB");
-        }
-    }
-}
-
 /**
  * @brief Validate inputs and derive execution parameters for multiterm scheme.
  *
@@ -434,8 +410,6 @@ template <typename fp_t, typename splitint_t, typename accumulator_t>
 DerivedParameters deriveParameters(MatrixView<const fp_t> A,
                                    MatrixView<const fp_t> B,
                                    const config& config) {
-
-    validateConfig(config);
 
     // Compile-time type checks.
     static_assert(std::is_floating_point_v<fp_t>,
