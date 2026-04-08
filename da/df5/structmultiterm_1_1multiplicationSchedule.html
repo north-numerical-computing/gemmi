@@ -114,6 +114,9 @@ Collaboration diagram for multiterm::multiplicationSchedule:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ab0f078a9bf185bccec6d8c444fcac83c" id="r_ab0f078a9bf185bccec6d8c444fcac83c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html#ab0f078a9bf185bccec6d8c444fcac83c">multiplicationSchedule</a> (<a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> numSplitsA, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> numSplitsB)</td></tr>
+<tr class="memdesc:ab0f078a9bf185bccec6d8c444fcac83c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the multiplication schedule.  <br /></td></tr>
+<tr class="separator:ab0f078a9bf185bccec6d8c444fcac83c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4d39c1e95d6341ef44c0d8fb0a5502c" id="r_ab4d39c1e95d6341ef44c0d8fb0a5502c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../da/dd9/structMatrixView.html">bool</a> &gt;<a class="el" href="../../da/dd9/structMatrixView.html">::reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html#ab4d39c1e95d6341ef44c0d8fb0a5502c">operator()</a> (<a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">i</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">j</a>)</td></tr>
 <tr class="separator:ab4d39c1e95d6341ef44c0d8fb0a5502c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abaf1407bc78300205c9521d82561bb84" id="r_abaf1407bc78300205c9521d82561bb84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/df5/structmultiterm_1_1multiplicationSchedule.html#abaf1407bc78300205c9521d82561bb84">operator()</a> (<a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">i</a>, <a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> <a class="el" href="../../da/dd9/structMatrixView.html">j</a>) <a class="el" href="../../da/dd9/structMatrixView.html">const</a></td></tr>
@@ -132,8 +135,56 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Class to store the multiplication schedule for the Ozaki scheme. </p>
 <p>The multiplication schedule specifies which products of slices of A and B should be computed. It can be constructed from a config object. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00972">972</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00974">974</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ab0f078a9bf185bccec6d8c444fcac83c" name="ab0f078a9bf185bccec6d8c444fcac83c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0f078a9bf185bccec6d8c444fcac83c">&#9670;&#160;</a></span>multiplicationSchedule()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">multiterm::multiplicationSchedule::multiplicationSchedule </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
+          <td class="paramname"><em>numSplitsA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td>
+          <td class="paramname"><em>numSplitsB</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor for the multiplication schedule. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">numSplitsA</td><td>Number of splits for matrix A. </td></tr>
+    <tr><td class="paramname">numSplitsB</td><td>Number of splits for matrix B. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00985">985</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab4d39c1e95d6341ef44c0d8fb0a5502c" name="ab4d39c1e95d6341ef44c0d8fb0a5502c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab4d39c1e95d6341ef44c0d8fb0a5502c">&#9670;&#160;</a></span>operator()() <span class="overload">[1/2]</span></h2>
 
@@ -168,7 +219,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00977">977</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00988">988</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -206,7 +257,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00980">980</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00991">991</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -223,7 +274,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00976">976</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00978">978</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -239,7 +290,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00973">973</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00975">975</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -255,7 +306,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00974">974</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00976">976</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

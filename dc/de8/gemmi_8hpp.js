@@ -7,7 +7,7 @@ var gemmi_8hpp =
     [ "multiterm::DerivedParameters", "d6/dfb/structmultiterm_1_1DerivedParameters.html", "d6/dfb/structmultiterm_1_1DerivedParameters" ],
     [ "multiterm::OperandPreparationConfig", "d2/dbf/structmultiterm_1_1OperandPreparationConfig.html", "d2/dbf/structmultiterm_1_1OperandPreparationConfig" ],
     [ "multiterm::preparedOperand< splitint_t, fp_t >", "d7/dcf/structmultiterm_1_1preparedOperand.html", "d7/dcf/structmultiterm_1_1preparedOperand" ],
-    [ "multiterm::multiplicationSchedule", "da/df5/structmultiterm_1_1multiplicationSchedule.html", null ],
+    [ "multiterm::multiplicationSchedule", "da/df5/structmultiterm_1_1multiplicationSchedule.html", "da/df5/structmultiterm_1_1multiplicationSchedule" ],
     [ "matrixLayout", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68", [
       [ "rowMajor", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a0edcf02e1f8904ff1fc5e0fb89d16232", null ],
       [ "columnMajor", "dc/de8/gemmi_8hpp.html#a379369b22762eb56c12d193437a41a68a5bccb53123b3512007f3f32b68077d7c", null ]

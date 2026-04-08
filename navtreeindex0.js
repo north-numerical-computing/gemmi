@@ -47,6 +47,7 @@ var NAVTREEINDEX0 =
 "da/dd9/structMatrixView.html#ac1956eeedac843ea631058409f9478ff":[1,0,4,4],
 "da/dd9/structMatrixView.html#ae8db07292bcc4b16eabf3c77d3c58931":[1,0,4,1],
 "da/df5/structmultiterm_1_1multiplicationSchedule.html":[1,0,0,2],
+"da/df5/structmultiterm_1_1multiplicationSchedule.html#ab0f078a9bf185bccec6d8c444fcac83c":[1,0,0,2,0],
 "dc/de8/gemmi_8hpp.html":[2,0,0,0],
 "dc/de8/gemmi_8hpp.html#a0b81484e21993b04a2911303e4bdb36f":[2,0,0,0,20],
 "dc/de8/gemmi_8hpp.html#a15f4760c6e7a9fb20c145b30553d4a3a":[2,0,0,0,23],
