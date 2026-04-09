@@ -25,6 +25,12 @@ Building the interface can be disabled by setting the CMake variable `BUILD_MEX`
 cmake -S. -Bbuild -DBUILD_MEX=False
 ```
 
+The MATLAB tests for the MEX interface are in `mex/test_gemmi.m`. The tests can be run with:
+```bash
+cmake --build build --target matlab_test
+```
+This CMake target copies `mex/test_gemmi.m` and the launch script `mex/run_matlab_tests.m` into `build/` and runs the tests from there. The MEX is first built if not available.
+
 ### Catch2 tests
 
 The project comes with a suite of [Catch2](https://github.com/catchorg/Catch2) C++ tests. By default, the tests are disabled, and can be enabled by setting the CMake variable `BUILD_TEST` to true:
