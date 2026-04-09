@@ -212,6 +212,24 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
  * Tests matrix multiplication *
  *******************************/
 
+struct GemmShape { size_t m, k, n; };
+const std::vector<GemmShape> gemmShapes = {
+    { 1,  1,  1},
+    {50,  1,  1},
+    { 1, 50,  1},
+    { 1,  1, 50},
+    { 2,  2,  2},
+    { 3,  4,  5},
+    { 8, 12,  4},
+};
+
+struct GemmSliceCounts { size_t a, b; };
+const std::vector<GemmSliceCounts> gemmSplitCounts = {
+    {10, 10},
+    {10, 15},
+    {15, 10},
+};
+
 template <typename fp_t>
 void runGemmiAccuracyTests() {
     for (auto layoutA : {matrixLayout::rowMajor,
@@ -220,39 +238,33 @@ void runGemmiAccuracyTests() {
                              matrixLayout::columnMajor}) {
             for (auto layoutC : {matrixLayout::rowMajor,
                                  matrixLayout::columnMajor}) {
-                for (size_t m : {1, 2, 3, 5}) {
-                    for (size_t k : {1, 2, 3, 5, 10, 19, 50}) {
-                        for (size_t n : {1, 2, 3, 5}) {
-                            for (auto splitType : {multiterm::splittingStrategy::truncation,
-                                                   multiterm::splittingStrategy::unsignedEncoding,
-                                                   multiterm::splittingStrategy::roundToNearest}) {
-                                for (auto accumulationType : {multiterm::reductionStrategy::floatingPoint,
-                                                              multiterm::reductionStrategy::integer}) {
-                                    for (auto multiplicationType : {multiterm::multiplicationStrategy::reduced,
-                                                                    multiterm::multiplicationStrategy::full}) {
-                                        for (size_t numSplitA : {10u, 15u}) {
-                                            for (size_t numSplitB : {10u, 15u}) {
-                                                const auto A = makeRandomMatrix<fp_t>(m, k, 127);
-                                                const auto B = makeRandomMatrix<fp_t>(k, n, 255);
-                                                const auto config = multiterm::config{
-                                                    numSplitA, numSplitB,
-                                                    splitType, multiplicationType, accumulationType
-                                                };
+                for (auto splitType : {multiterm::splittingStrategy::truncation,
+                                       multiterm::splittingStrategy::unsignedEncoding,
+                                       multiterm::splittingStrategy::roundToNearest}) {
+                    for (auto accumulationType : {multiterm::reductionStrategy::floatingPoint,
+                                                  multiterm::reductionStrategy::integer}) {
+                        for (auto multiplicationType : {multiterm::multiplicationStrategy::reduced,
+                                                        multiterm::multiplicationStrategy::full}) {
+                            for (auto [m, k, n] : gemmShapes) {
+                                const auto A = makeRandomMatrix<fp_t>(m, k, 127);
+                                const auto B = makeRandomMatrix<fp_t>(k, n, 255);
+                                for (auto [numSplitA, numSplitB] : gemmSplitCounts) {
+                                    const auto config = multiterm::config{
+                                        numSplitA, numSplitB,
+                                        splitType, multiplicationType, accumulationType
+                                    };
 
-                                                const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
-                                                                                            B, layoutB,
-                                                                                            m, k, n,
-                                                                                            layoutC,
-                                                                                            config);
-                                                const auto C_ref = referenceGemm<fp_t>(A, layoutA, B, layoutB, m, k, n, layoutC);
+                                    const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
+                                                                                B, layoutB,
+                                                                                m, k, n,
+                                                                                layoutC,
+                                                                                config);
+                                    const auto C_ref = referenceGemm<fp_t>(A, layoutA, B, layoutB, m, k, n, layoutC);
 
-                                                const double relative_error =
-                                                    frobenius_norm<fp_t, double>(C - C_ref) /
-                                                    frobenius_norm<fp_t, double>(C_ref);
-                                                REQUIRE(relative_error < tolerance<fp_t>());
-                                            }
-                                        }
-                                    }
+                                    const double relative_error =
+                                        frobenius_norm<fp_t, double>(C - C_ref) /
+                                        frobenius_norm<fp_t, double>(C_ref);
+                                    REQUIRE(relative_error < tolerance<fp_t>());
                                 }
                             }
                         }
@@ -265,24 +277,6 @@ void runGemmiAccuracyTests() {
 
 template <typename fp_t>
 void runBitmaskScheduleEquivalenceTests() {
-    struct Shape {
-        size_t m, k, n;
-    };
-    const std::vector<Shape> shapes = {
-        {1, 1, 1},
-        {2, 3, 4},
-        {5, 4, 3},
-    };
-
-    struct SliceCounts {
-        size_t a, b;
-    };
-    const std::vector<SliceCounts> splitCounts = {
-        {10, 10},
-        {10, 15},
-        {15, 10},
-    };
-
     for (auto layoutA : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
         for (auto layoutB : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
             for (auto layoutC : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
@@ -291,11 +285,11 @@ void runBitmaskScheduleEquivalenceTests() {
                                        multiterm::splittingStrategy::roundToNearest}) {
                     for (auto accumulationType : {multiterm::reductionStrategy::floatingPoint,
                                                   multiterm::reductionStrategy::integer}) {
-                        for (auto [m, k, n] : shapes) {
+                        for (auto [m, k, n] : gemmShapes) {
                             const auto A = makeRandomMatrix<fp_t>(m, k, 127);
                             const auto B = makeRandomMatrix<fp_t>(k, n, 255);
 
-                            for (auto [numSplitA, numSplitB] : splitCounts) {
+                            for (auto [numSplitA, numSplitB] : gemmSplitCounts) {
                                 const auto makeConfig = [&](const multiterm::multiplicationSpecification& spec) {
                                     return multiterm::config{numSplitA, numSplitB, splitType,
                                                              spec, accumulationType};
