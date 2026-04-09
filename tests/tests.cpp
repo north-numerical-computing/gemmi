@@ -220,9 +220,9 @@ void runGemmiAccuracyTests() {
                              matrixLayout::columnMajor}) {
             for (auto layoutC : {matrixLayout::rowMajor,
                                  matrixLayout::columnMajor}) {
-                for (size_t m : {1u, 2u, 3u, 5u, 10u}) { //, 4u, 5u, 10u, 19u, 50u}) {
-                    for (size_t k : {1u, 2u, 3u, 5u, 10u, 19u, 50u}) { // , 4u, 5u, 10u, 19u, 50u}) {
-                        for (size_t n : {1u, 2u, 3u, 5u, 10u}) { //, 4u, 5u, 10u, 19u, 50u}) {
+                for (size_t m : {1, 2, 3, 5}) {
+                    for (size_t k : {1, 2, 3, 5, 10, 19, 50}) {
+                        for (size_t n : {1, 2, 3, 5}) {
                             for (auto splitType : {multiterm::splittingStrategy::truncation,
                                                    multiterm::splittingStrategy::unsignedEncoding,
                                                    multiterm::splittingStrategy::roundToNearest}) {
@@ -235,9 +235,9 @@ void runGemmiAccuracyTests() {
                                                 const auto A = makeRandomMatrix<fp_t>(m, k, 127);
                                                 const auto B = makeRandomMatrix<fp_t>(k, n, 255);
                                                 const auto config = multiterm::config{
-													numSplitA, numSplitB,
-													splitType, multiplicationType, accumulationType
-												};
+                                                    numSplitA, numSplitB,
+                                                    splitType, multiplicationType, accumulationType
+                                                };
 
                                                 const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
                                                                                             B, layoutB,
