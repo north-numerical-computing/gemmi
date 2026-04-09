@@ -428,64 +428,71 @@ void runBitmaskScheduleEquivalenceTests() {
             const auto hugeB = makeMatrixView(static_cast<const fp_t*>(&value), hugeK, 1, matrixLayout::rowMajor);
 
             requireInvalidArgumentContains([&] {
-	                (void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(hugeA, hugeB, validConfig);
+                    (void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(hugeA, hugeB, validConfig);
                 },
                 "Computed bitsPerSlice is 0");
         }
 }
 
-TEST_CASE("Bitmask schedule validation", "[schedule][mask]") {
-    const auto config = multiterm::config{3, 2,
-                                          multiterm::splittingStrategy::roundToNearest,
-                                          std::vector<bool>{true},
-                                          multiterm::reductionStrategy::integer};
-    requireInvalidArgumentContains([&] { (void)multiterm::makeSchedule(config); },
-                                   "Mask size mismatch");
+TEST_CASE("Bitmask schedule", "[schedule][mask]") {
+    SECTION("validation") {
+        const auto config = multiterm::config{3, 2,
+                                              multiterm::splittingStrategy::roundToNearest,
+                                              std::vector<bool>{true},
+                                              multiterm::reductionStrategy::integer};
+        requireInvalidArgumentContains([&] {
+                (void)multiterm::makeSchedule(config);
+            },
+            "Mask size mismatch");
+    }
+
+    SECTION("equivalence binary32") {
+        runBitmaskScheduleEquivalenceTests<float>();
+    }
+
+    SECTION("equivalence binary64") {
+        runBitmaskScheduleEquivalenceTests<double>();
+    }
 }
 
-TEST_CASE("Bitmask schedule equivalence binary32", "[schedule][mask][float]") {
-    runBitmaskScheduleEquivalenceTests<float>();
+TEST_CASE("Split round-trip conversion", "[split][roundtrip]") {
+    SECTION("binary32 - subnormals") {
+        runSplitRoundTripTests<float>(6, generateTestSubnormals<float>());
+        runSplitRoundTripTests<float>(7, generateTestSubnormals<float>());
+    }
+
+    SECTION("binary64 - subnormals") {
+        runSplitRoundTripTests<double>(6, generateTestSubnormals<double>());
+        runSplitRoundTripTests<double>(7, generateTestSubnormals<double>());
+    }
+
+    SECTION("binary32 - normals in [1, 2)") {
+        runSplitRoundTripTests<float>(6, generateTestValues<float>(0));
+        runSplitRoundTripTests<float>(7, generateTestValues<float>(0));
+    }
+
+    SECTION("binary64 - normals in [1, 2)") {
+        runSplitRoundTripTests<double>(6, generateTestValues<double>(0));
+        runSplitRoundTripTests<double>(7, generateTestValues<double>(0));
+    }
+
+    SECTION("binary32 - wide range") {
+        runSplitRoundTripTests<float>(6, generateValuesWithSignificand<float>(0xFFFFFF, -10, 10));
+        runSplitRoundTripTests<float>(7, generateValuesWithSignificand<float>(0xFFFFFF, -10, 10));
+    }
+
+    SECTION("binary64 - wide range") {
+        runSplitRoundTripTests<double>(6, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 10));
+        runSplitRoundTripTests<double>(7, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 10));
+    }
 }
 
-TEST_CASE("Bitmask schedule equivalence binary64", "[schedule][mask][double]") {
-    runBitmaskScheduleEquivalenceTests<double>();
-}
+TEST_CASE("GEMMI accuracy", "[gemmi][accuracy]") {
+    SECTION("binary32") {
+        runGemmiAccuracyTests<float>();
+    }
 
-TEST_CASE("Split round-trip binary32 – subnormals", "[split][subnormals][float]") {
-    runSplitRoundTripTests<float>(6, generateTestSubnormals<float>());
-    runSplitRoundTripTests<float>(7, generateTestSubnormals<float>());
-    auto res = generateTestValues<float>(0);
-}
-
-TEST_CASE("Split round-trip binary64 – subnormals", "[split][subnormals][double]") {
-    runSplitRoundTripTests<double>(6, generateTestSubnormals<double>());
-    runSplitRoundTripTests<double>(7, generateTestSubnormals<double>());
-}
-
-TEST_CASE("Split round-trip binary32 – normals in [1, 2)", "[split][roundtrip][float]") {
-    runSplitRoundTripTests<float>(6, generateTestValues<float>(0));
-    runSplitRoundTripTests<float>(7, generateTestValues<float>(0));
-}
-
-TEST_CASE("Split round-trip binary64 – normals in [1, 2)", "[split][roundtrip][double]") {
-    runSplitRoundTripTests<double>(6, generateTestValues<double>(0));
-    runSplitRoundTripTests<double>(7, generateTestValues<double>(0));
-}
-
-TEST_CASE("Split round-trip binary32 – wide range", "[split][roundtrip][float]") {
-    runSplitRoundTripTests<float>(6, generateValuesWithSignificand<float>(0xFFFFFF, -10, 10));
-    runSplitRoundTripTests<float>(7, generateValuesWithSignificand<float>(0xFFFFFF, -10, 10));
-}
-
-TEST_CASE("Split round-trip binary64 – wide range", "[split][roundtrip][double]") {
-    runSplitRoundTripTests<double>(6, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 10));
-    runSplitRoundTripTests<double>(7, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 10));
-}
-
-TEST_CASE("GEMMI accuracy binary32", "[gemmi][float]") {
-    runGemmiAccuracyTests<float>();
-}
-
-TEST_CASE("GEMMI accuracy binary64", "[gemmi][double]") {
-    runGemmiAccuracyTests<double>();
+    SECTION("binary64") {
+        runGemmiAccuracyTests<double>();
+    }
 }
