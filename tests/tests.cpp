@@ -263,6 +263,74 @@ void runGemmiAccuracyTests() {
     }
 }
 
+template <typename fp_t>
+void runBitmaskScheduleEquivalenceTests() {
+    struct Shape {
+        size_t m, k, n;
+    };
+    const std::vector<Shape> shapes = {
+        {1, 1, 1},
+        {2, 3, 4},
+        {5, 4, 3},
+    };
+
+    struct SliceCounts {
+        size_t a, b;
+    };
+    const std::vector<SliceCounts> splitCounts = {
+        {10, 10},
+        {10, 15},
+        {15, 10},
+    };
+
+    for (auto layoutA : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
+        for (auto layoutB : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
+            for (auto layoutC : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
+                for (auto splitType : {multiterm::splittingStrategy::truncation,
+                                       multiterm::splittingStrategy::unsignedEncoding,
+                                       multiterm::splittingStrategy::roundToNearest}) {
+                    for (auto accumulationType : {multiterm::reductionStrategy::floatingPoint,
+                                                  multiterm::reductionStrategy::integer}) {
+                        for (auto [m, k, n] : shapes) {
+                            const auto A = makeRandomMatrix<fp_t>(m, k, 127);
+                            const auto B = makeRandomMatrix<fp_t>(k, n, 255);
+
+                            for (auto [numSplitA, numSplitB] : splitCounts) {
+                                const auto makeConfig = [&](const multiterm::multiplicationSpecification& spec) {
+                                    return multiterm::config{numSplitA, numSplitB, splitType,
+                                                             spec, accumulationType};
+                                };
+
+                                std::vector<bool> fullMask(numSplitA * numSplitB, true);
+                                std::vector<bool> reducedMask(numSplitA * numSplitB, false);
+                                const size_t limit = std::max(numSplitA, numSplitB) - 1;
+                                for (size_t i = 0; i < numSplitA; ++i) {
+                                    for (size_t j = 0; j < numSplitB; ++j) {
+                                        reducedMask[i * numSplitB + j] = (i + j <= limit);
+                                    }
+                                }
+
+                                const auto run = [&](const multiterm::multiplicationSpecification& spec) {
+                                    return gemmi<fp_t, int8_t, int32_t>(A, layoutA,
+                                                                        B, layoutB,
+                                                                        m, k, n,
+                                                                        layoutC,
+                                                                        makeConfig(spec));
+                                };
+
+                                REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::full)).mask == fullMask);
+                                REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::reduced)).mask == reducedMask);
+                                requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::full), run(fullMask));
+                                requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::reduced), run(reducedMask));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 /**************
  * Test cases *
  **************/
@@ -370,6 +438,23 @@ void runGemmiAccuracyTests() {
                 },
                 "Computed bitsPerSlice is 0");
         }
+}
+
+TEST_CASE("Bitmask schedule validation", "[schedule][mask]") {
+    const auto config = multiterm::config{3, 2,
+                                          multiterm::splittingStrategy::roundToNearest,
+                                          std::vector<bool>{true},
+                                          multiterm::reductionStrategy::integer};
+    requireInvalidArgumentContains([&] { (void)multiterm::makeSchedule(config); },
+                                   "Mask size mismatch");
+}
+
+TEST_CASE("Bitmask schedule equivalence binary32", "[schedule][mask][float]") {
+    runBitmaskScheduleEquivalenceTests<float>();
+}
+
+TEST_CASE("Bitmask schedule equivalence binary64", "[schedule][mask][double]") {
+    runBitmaskScheduleEquivalenceTests<double>();
 }
 
 TEST_CASE("Split round-trip binary32 – subnormals", "[split][subnormals][float]") {
