@@ -104,7 +104,9 @@ Mex interface</h2>
 <div class="line">cmake --build build</div>
 </div><!-- fragment --><p> If the compilation is successful, these commands will produce the the MEX file <code>build/gemmi.$(mexext)</code>, where <code>$(mexext)</code> is <code>mexa64</code> on Linux, <code>mexmaci64</code> or <code>mexmaca64</code> on MacOS , and <code>mexw64</code> on Windows. The file <code><a class="el" href="da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">build/gemmi.m</a></code> contains the documentation for the MATLAB <code>gemmi</code> function.</p>
 <p>Building the interface can be disabled by setting the CMake variable <code>BUILD_MEX</code> to false: </p><div class="fragment"><div class="line">cmake -S. -Bbuild -DBUILD_MEX=False</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><p>The MATLAB tests for the MEX interface are in <code><a class="el" href="da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">mex/test_gemmi.m</a></code>. The tests can be run with: </p><div class="fragment"><div class="line">cmake --build build --target matlab_test</div>
+</div><!-- fragment --><p> This CMake target copies <code><a class="el" href="da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">mex/test_gemmi.m</a></code> and the launch script <code><a class="el" href="da/dd9/structMatrixView.html#a2daa7d64dccb021eb212f4b9dcdaa5e5" title="Default constructor.">mex/run_matlab_tests.m</a></code> into <code>build/</code> and runs the tests from there. The MEX is first built if not available.</p>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Catch2 tests</h2>
 <p>The project comes with a suite of <a href="https://github.com/catchorg/Catch2">Catch2</a> C++ tests. By default, the tests are disabled, and can be enabled by setting the CMake variable <code>BUILD_TEST</code> to true: </p><div class="fragment"><div class="line">cmake -S. -Bbuild -DBUILD_TESTS=True</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
