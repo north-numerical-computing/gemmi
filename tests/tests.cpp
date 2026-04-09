@@ -45,9 +45,9 @@ void requireBitwiseIdenticalVectors(const std::vector<fp_t> &actual,
 }
 
 template <typename Fn>
-void requireInvalidArgumentContains(Fn&& fn, std::string_view messageFragment) {
+void requireInvalidArgumentContains(Fn&& testFunction, std::string_view messageFragment) {
         try {
-                fn();
+                testFunction();
                 FAIL("Expected std::invalid_argument to be thrown");
         } catch (const std::invalid_argument& ex) {
                 const std::string message = ex.what();
@@ -230,53 +230,8 @@ const std::vector<GemmSliceCounts> gemmSplitCounts = {
     {15, 10},
 };
 
-template <typename fp_t>
-void runGemmiAccuracyTests() {
-    for (auto layoutA : {matrixLayout::rowMajor,
-                         matrixLayout::columnMajor}) {
-        for (auto layoutB : {matrixLayout::rowMajor,
-                             matrixLayout::columnMajor}) {
-            for (auto layoutC : {matrixLayout::rowMajor,
-                                 matrixLayout::columnMajor}) {
-                for (auto splitType : {multiterm::splittingStrategy::truncation,
-                                       multiterm::splittingStrategy::unsignedEncoding,
-                                       multiterm::splittingStrategy::roundToNearest}) {
-                    for (auto accumulationType : {multiterm::reductionStrategy::floatingPoint,
-                                                  multiterm::reductionStrategy::integer}) {
-                        for (auto multiplicationType : {multiterm::multiplicationStrategy::reduced,
-                                                        multiterm::multiplicationStrategy::full}) {
-                            for (auto [m, k, n] : gemmShapes) {
-                                const auto A = makeRandomMatrix<fp_t>(m, k, 127);
-                                const auto B = makeRandomMatrix<fp_t>(k, n, 255);
-                                for (auto [numSplitA, numSplitB] : gemmSplitCounts) {
-                                    const auto config = multiterm::config{
-                                        numSplitA, numSplitB,
-                                        splitType, multiplicationType, accumulationType
-                                    };
-
-                                    const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
-                                                                                B, layoutB,
-                                                                                m, k, n,
-                                                                                layoutC,
-                                                                                config);
-                                    const auto C_ref = referenceGemm<fp_t>(A, layoutA, B, layoutB, m, k, n, layoutC);
-
-                                    const double relative_error =
-                                        frobenius_norm<fp_t, double>(C - C_ref) /
-                                        frobenius_norm<fp_t, double>(C_ref);
-                                    REQUIRE(relative_error < tolerance<fp_t>());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-template <typename fp_t>
-void runBitmaskScheduleEquivalenceTests() {
+template <typename fp_t, typename Fn>
+void forEachSharedGemmCase(Fn&& testFunction) {
     for (auto layoutA : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
         for (auto layoutB : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
             for (auto layoutC : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
@@ -290,32 +245,11 @@ void runBitmaskScheduleEquivalenceTests() {
                             const auto B = makeRandomMatrix<fp_t>(k, n, 255);
 
                             for (auto [numSplitA, numSplitB] : gemmSplitCounts) {
-                                const auto makeConfig = [&](const multiterm::multiplicationSpecification& spec) {
-                                    return multiterm::config{numSplitA, numSplitB, splitType,
-                                                             spec, accumulationType};
-                                };
-
-                                std::vector<bool> fullMask(numSplitA * numSplitB, true);
-                                std::vector<bool> reducedMask(numSplitA * numSplitB, false);
-                                const size_t limit = std::max(numSplitA, numSplitB) - 1;
-                                for (size_t i = 0; i < numSplitA; ++i) {
-                                    for (size_t j = 0; j < numSplitB; ++j) {
-                                        reducedMask[i * numSplitB + j] = (i + j <= limit);
-                                    }
-                                }
-
-                                const auto run = [&](const multiterm::multiplicationSpecification& spec) {
-                                    return gemmi<fp_t, int8_t, int32_t>(A, layoutA,
-                                                                        B, layoutB,
-                                                                        m, k, n,
-                                                                        layoutC,
-                                                                        makeConfig(spec));
-                                };
-
-                                REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::full)).mask == fullMask);
-                                REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::reduced)).mask == reducedMask);
-                                requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::full), run(fullMask));
-                                requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::reduced), run(reducedMask));
+                                testFunction(layoutA, layoutB, layoutC,
+                                             splitType, accumulationType,
+                                             m, k, n,
+                                             numSplitA, numSplitB,
+                                             A, B);
                             }
                         }
                     }
@@ -323,6 +257,73 @@ void runBitmaskScheduleEquivalenceTests() {
             }
         }
     }
+}
+
+template <typename fp_t>
+void runGemmiAccuracyTests() {
+    forEachSharedGemmCase<fp_t>(
+        [&](const matrixLayout layoutA, const matrixLayout layoutB, const matrixLayout layoutC,
+            const multiterm::splittingStrategy splitType, const multiterm::reductionStrategy accumulationType,
+            const size_t m, const size_t k, const size_t n,
+            const size_t numSplitA, const size_t numSplitB,
+            const std::vector<fp_t>& A, const std::vector<fp_t>& B) {
+            for (auto multiplicationType : {multiterm::multiplicationStrategy::reduced,
+                                            multiterm::multiplicationStrategy::full}) {
+                const auto config = multiterm::config{
+                    numSplitA, numSplitB,
+                    splitType, multiplicationType, accumulationType
+                };
+
+                const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
+                                                            B, layoutB,
+                                                            m, k, n,
+                                                            layoutC,
+                                                            config);
+                const auto C_ref = referenceGemm<fp_t>(A, layoutA, B, layoutB, m, k, n, layoutC);
+
+                const double relative_error =
+                    frobenius_norm<fp_t, double>(C - C_ref) /
+                    frobenius_norm<fp_t, double>(C_ref);
+                REQUIRE(relative_error < tolerance<fp_t>());
+            }
+        });
+}
+
+template <typename fp_t>
+void runBitmaskScheduleEquivalenceTests() {
+    forEachSharedGemmCase<fp_t>(
+        [&](const matrixLayout layoutA, const matrixLayout layoutB, const matrixLayout layoutC,
+            const multiterm::splittingStrategy splitType, const multiterm::reductionStrategy accumulationType,
+            const size_t m, const size_t k, const size_t n,
+            const size_t numSplitA, const size_t numSplitB,
+            const std::vector<fp_t>& A, const std::vector<fp_t>& B) {
+            const auto makeConfig = [&](const multiterm::multiplicationSpecification& spec) {
+                return multiterm::config{numSplitA, numSplitB, splitType,
+                                         spec, accumulationType};
+            };
+
+            std::vector<bool> fullMask(numSplitA * numSplitB, true);
+            std::vector<bool> reducedMask(numSplitA * numSplitB, false);
+            const size_t limit = std::max(numSplitA, numSplitB) - 1;
+            for (size_t i = 0; i < numSplitA; ++i) {
+                for (size_t j = 0; j < numSplitB; ++j) {
+                    reducedMask[i * numSplitB + j] = (i + j <= limit);
+                }
+            }
+
+            const auto run = [&](const multiterm::multiplicationSpecification& spec) {
+                return gemmi<fp_t, int8_t, int32_t>(A, layoutA,
+                                                    B, layoutB,
+                                                    m, k, n,
+                                                    layoutC,
+                                                    makeConfig(spec));
+            };
+
+            REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::full)).mask == fullMask);
+            REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::reduced)).mask == reducedMask);
+            requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::full), run(fullMask));
+            requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::reduced), run(reducedMask));
+        });
 }
 
 /**************
