@@ -208,6 +208,34 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
         }
 }
 
+template <typename fp_t>
+void runUnsignedEncodingEdgeBranchTests() {
+    using split_t = std::conditional_t<std::is_same_v<fp_t, float>, int32_t, int64_t>;
+    constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+
+    const int tinyPower = std::is_same_v<fp_t, float> ? 60 : 120;
+    const std::vector<fp_t> values = {
+        static_cast<fp_t>(1.0),
+        static_cast<fp_t>(-std::ldexp(fp_t(1.0), -tinyPower)),
+    };
+
+    const size_t bitsPerSlice = numSignificandBits + 1;
+    const size_t numSplits = numSlicesForExactRoundTrip<fp_t>();
+
+    const auto config = multiterm::OperandPreparationConfig(
+        multiterm::splittingStrategy::unsignedEncoding,
+        numSplits,
+        bitsPerSlice,
+        normalisationDimension::byRows);
+
+    const auto split = multiterm::prepareOperand<split_t>(
+        makeMatrixView(values, 1, 2, matrixLayout::rowMajor),
+        config);
+
+    const auto recon = reconstructFromMultitermDecomposition(split);
+    requireBitwiseIdenticalVectors(recon, values);
+}
+
 /*******************************
  * Tests matrix multiplication *
  *******************************/
@@ -483,8 +511,16 @@ TEST_CASE("Split round-trip conversion", "[split][roundtrip]") {
     }
 
     SECTION("binary64 - wide range") {
-        runSplitRoundTripTests<double>(6, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 10));
-        runSplitRoundTripTests<double>(7, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -10, 10));
+        runSplitRoundTripTests<double>(6, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -15, 15));
+        runSplitRoundTripTests<double>(7, generateValuesWithSignificand<double>(0xFFFFFFFFFFFFF, -15, 15));
+    }
+
+    SECTION("unsigned encoding edge branches - binary32") {
+        runUnsignedEncodingEdgeBranchTests<float>();
+    }
+
+    SECTION("unsigned encoding edge branches - binary64") {
+        runUnsignedEncodingEdgeBranchTests<double>();
     }
 }
 
