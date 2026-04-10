@@ -288,36 +288,6 @@ void forEachSharedGemmCase(Fn&& testFunction) {
 }
 
 template <typename fp_t>
-void runGemmiAccuracyTests() {
-    forEachSharedGemmCase<fp_t>(
-        [&](const matrixLayout layoutA, const matrixLayout layoutB, const matrixLayout layoutC,
-            const multiterm::splittingStrategy splitType, const multiterm::reductionStrategy accumulationType,
-            const size_t m, const size_t k, const size_t n,
-            const size_t numSplitA, const size_t numSplitB,
-            const std::vector<fp_t>& A, const std::vector<fp_t>& B) {
-            for (auto multiplicationType : {multiterm::multiplicationStrategy::reduced,
-                                            multiterm::multiplicationStrategy::full}) {
-                const auto config = multiterm::config{
-                    numSplitA, numSplitB,
-                    splitType, multiplicationType, accumulationType
-                };
-
-                const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
-                                                            B, layoutB,
-                                                            m, k, n,
-                                                            layoutC,
-                                                            config);
-                const auto C_ref = referenceGemm<fp_t>(A, layoutA, B, layoutB, m, k, n, layoutC);
-
-                const double relative_error =
-                    frobenius_norm<fp_t, double>(C - C_ref) /
-                    frobenius_norm<fp_t, double>(C_ref);
-                REQUIRE(relative_error < tolerance<fp_t>());
-            }
-        });
-}
-
-template <typename fp_t>
 void runBitmaskScheduleEquivalenceTests() {
     forEachSharedGemmCase<fp_t>(
         [&](const matrixLayout layoutA, const matrixLayout layoutB, const matrixLayout layoutC,
@@ -351,6 +321,36 @@ void runBitmaskScheduleEquivalenceTests() {
             REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::reduced)).mask == reducedMask);
             requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::full), run(fullMask));
             requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::reduced), run(reducedMask));
+        });
+}
+
+template <typename fp_t>
+void runGemmiAccuracyTests() {
+    forEachSharedGemmCase<fp_t>(
+        [&](const matrixLayout layoutA, const matrixLayout layoutB, const matrixLayout layoutC,
+            const multiterm::splittingStrategy splitType, const multiterm::reductionStrategy accumulationType,
+            const size_t m, const size_t k, const size_t n,
+            const size_t numSplitA, const size_t numSplitB,
+            const std::vector<fp_t>& A, const std::vector<fp_t>& B) {
+            for (auto multiplicationType : {multiterm::multiplicationStrategy::reduced,
+                                            multiterm::multiplicationStrategy::full}) {
+                const auto config = multiterm::config{
+                    numSplitA, numSplitB,
+                    splitType, multiplicationType, accumulationType
+                };
+
+                const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
+                                                            B, layoutB,
+                                                            m, k, n,
+                                                            layoutC,
+                                                            config);
+                const auto C_ref = referenceGemm<fp_t>(A, layoutA, B, layoutB, m, k, n, layoutC);
+
+                const double relative_error =
+                    frobenius_norm<fp_t, double>(C - C_ref) /
+                    frobenius_norm<fp_t, double>(C_ref);
+                REQUIRE(relative_error < tolerance<fp_t>());
+            }
         });
 }
 
@@ -463,27 +463,6 @@ void runBitmaskScheduleEquivalenceTests() {
         }
 }
 
-TEST_CASE("Bitmask schedule", "[schedule][mask]") {
-    SECTION("validation") {
-        const auto config = multiterm::config{3, 2,
-                                              multiterm::splittingStrategy::roundToNearest,
-                                              std::vector<bool>{true},
-                                              multiterm::reductionStrategy::integer};
-        requireInvalidArgumentContains([&] {
-                (void)multiterm::makeSchedule(config);
-            },
-            "Mask size mismatch");
-    }
-
-    SECTION("equivalence binary32") {
-        runBitmaskScheduleEquivalenceTests<float>();
-    }
-
-    SECTION("equivalence binary64") {
-        runBitmaskScheduleEquivalenceTests<double>();
-    }
-}
-
 TEST_CASE("Split round-trip conversion", "[split][roundtrip]") {
     SECTION("binary32 - subnormals") {
         runSplitRoundTripTests<float>(6, generateTestSubnormals<float>());
@@ -506,8 +485,8 @@ TEST_CASE("Split round-trip conversion", "[split][roundtrip]") {
     }
 
     SECTION("binary32 - wide range") {
-        runSplitRoundTripTests<float>(6, generateValuesWithSignificand<float>(0xFFFFFF, -10, 10));
-        runSplitRoundTripTests<float>(7, generateValuesWithSignificand<float>(0xFFFFFF, -10, 10));
+        runSplitRoundTripTests<float>(6, generateValuesWithSignificand<float>(0xFFFFFF, -15, 15));
+        runSplitRoundTripTests<float>(7, generateValuesWithSignificand<float>(0xFFFFFF, -15, 15));
     }
 
     SECTION("binary64 - wide range") {
@@ -521,6 +500,27 @@ TEST_CASE("Split round-trip conversion", "[split][roundtrip]") {
 
     SECTION("unsigned encoding edge branches - binary64") {
         runUnsignedEncodingEdgeBranchTests<double>();
+    }
+}
+
+TEST_CASE("Bitmask schedule", "[schedule][mask]") {
+    SECTION("validation") {
+        const auto config = multiterm::config{3, 2,
+                                              multiterm::splittingStrategy::roundToNearest,
+                                              std::vector<bool>{true},
+                                              multiterm::reductionStrategy::integer};
+        requireInvalidArgumentContains([&] {
+                (void)multiterm::makeSchedule(config);
+            },
+            "Mask size mismatch");
+    }
+
+    SECTION("equivalence binary32") {
+        runBitmaskScheduleEquivalenceTests<float>();
+    }
+
+    SECTION("equivalence binary64") {
+        runBitmaskScheduleEquivalenceTests<double>();
     }
 }
 
