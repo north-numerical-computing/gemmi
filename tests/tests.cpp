@@ -17,7 +17,7 @@ template <>
 constexpr double tolerance<double>() { return 1e-14; }
 
 template <typename fp_t>
-using storage_t = typename FloatingPointTraits<fp_t>::StorageType;
+using storage_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
 
 template <typename fp_t>
 std::string hexBits(fp_t value) {
@@ -50,8 +50,8 @@ void requireBitwiseIdenticalVectors(const std::vector<fp_t> &actual,
 
 template <typename fp_t>
 inline void pushWithBothSigns(std::vector<fp_t>& out,
-                                typename FloatingPointTraits<fp_t>::StorageType bits) {
-    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
+                                typename fp::FloatingPointTraits<fp_t>::StorageType bits) {
+    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
         const size_t totalBits = sizeof(uint_t) * 8;
         const uint_t signMask  = static_cast<uint_t>(1) << (totalBits - 1);
         out.push_back(std::bit_cast<fp_t>(bits));
@@ -59,12 +59,12 @@ inline void pushWithBothSigns(std::vector<fp_t>& out,
 }
 
 template <typename fp_t>
-std::vector<fp_t> generateValuesWithSignificand(typename FloatingPointTraits<fp_t>::StorageType pattern,
+std::vector<fp_t> generateValuesWithSignificand(typename fp::FloatingPointTraits<fp_t>::StorageType pattern,
                                                 int expMin, int expMax) {
-    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
+    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
 
-    constexpr size_t significandBits = FloatingPointTraits<fp_t>::numSignificandBits;
-    constexpr size_t expBits  = FloatingPointTraits<fp_t>::numExponentBits;
+    constexpr size_t significandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
+    constexpr size_t expBits  = fp::FloatingPointTraits<fp_t>::numExponentBits;
 
         const uint_t fractionMask = (static_cast<uint_t>(1) << significandBits) - 1;
         const uint_t expMask  = (static_cast<uint_t>(1) << expBits) - 1;
@@ -90,9 +90,9 @@ std::vector<fp_t> generateValuesWithSignificand(typename FloatingPointTraits<fp_
 
 template <typename fp_t>
 std::vector<fp_t> generateTestValues(int targetExponent) {
-    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
-    constexpr size_t significandBits = FloatingPointTraits<fp_t>::numSignificandBits;
-    constexpr size_t expBits = FloatingPointTraits<fp_t>::numExponentBits;
+    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
+    constexpr size_t significandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
+    constexpr size_t expBits  = fp::FloatingPointTraits<fp_t>::numExponentBits;
 
     const int bias = (static_cast<int>(1) << (expBits - 1)) - 1;
         const uint_t expField = static_cast<uint_t>(targetExponent + bias) << (significandBits - 1);
@@ -177,8 +177,8 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
         };
 
         for (auto [m, n] : shapes) {
-        for (auto layout : {matrixLayout::rowMajor,
-                            matrixLayout::columnMajor}) {
+        for (auto layout : {matrix::matrixLayout::rowMajor,
+                            matrix::matrixLayout::columnMajor}) {
             for (auto strategy : {multiterm::splittingStrategy::truncation,
                                   multiterm::splittingStrategy::unsignedEncoding,
                                   multiterm::splittingStrategy::roundToNearest}) {
@@ -186,7 +186,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
                                  normalisationDimension::byCols}) {
                     auto config = multiterm::OperandPreparationConfig(strategy, numSplits, bitsPerSlice, dim);
                     auto split = multiterm::prepareOperand<int8_t>(
-                        makeMatrixView(testValues, m, n, layout),
+                        matrix::makeMatrixView(testValues, m, n, layout),
                         config);
 
                     const auto recon = reconstructFromMultitermDecomposition(split);
@@ -200,7 +200,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
 template <typename fp_t>
 void runUnsignedEncodingEdgeBranchTests() {
     using split_t = std::conditional_t<std::is_same_v<fp_t, float>, int32_t, int64_t>;
-    constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+    constexpr size_t numSignificandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
 
     const int tinyPower = std::is_same_v<fp_t, float> ? 60 : 120;
     const std::vector<fp_t> values = {
@@ -218,7 +218,7 @@ void runUnsignedEncodingEdgeBranchTests() {
         normalisationDimension::byRows);
 
     const auto split = multiterm::prepareOperand<split_t>(
-        makeMatrixView(values, 1, 2, matrixLayout::rowMajor),
+        matrix::makeMatrixView(values, 1, 2, matrix::matrixLayout::rowMajor),
         config);
 
     const auto recon = reconstructFromMultitermDecomposition(split);
@@ -249,9 +249,9 @@ const std::vector<GemmSliceCounts> gemmSplitCounts = {
 
 template <typename fp_t, typename Fn>
 void forEachSharedGemmCase(Fn&& testFunction) {
-    for (auto layoutA : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
-        for (auto layoutB : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
-            for (auto layoutC : {matrixLayout::rowMajor, matrixLayout::columnMajor}) {
+    for (auto layoutA : {matrix::matrixLayout::rowMajor, matrix::matrixLayout::columnMajor}) {
+        for (auto layoutB : {matrix::matrixLayout::rowMajor, matrix::matrixLayout::columnMajor}) {
+            for (auto layoutC : {matrix::matrixLayout::rowMajor, matrix::matrixLayout::columnMajor}) {
                 for (auto splitType : {multiterm::splittingStrategy::truncation,
                                        multiterm::splittingStrategy::unsignedEncoding,
                                        multiterm::splittingStrategy::roundToNearest}) {
@@ -279,7 +279,7 @@ void forEachSharedGemmCase(Fn&& testFunction) {
 template <typename fp_t>
 void runBitmaskScheduleEquivalenceTests() {
     forEachSharedGemmCase<fp_t>(
-        [&](const matrixLayout layoutA, const matrixLayout layoutB, const matrixLayout layoutC,
+        [&](const matrix::matrixLayout layoutA, const matrix::matrixLayout layoutB, const matrix::matrixLayout layoutC,
             const multiterm::splittingStrategy splitType, const multiterm::reductionStrategy accumulationType,
             const size_t m, const size_t k, const size_t n,
             const size_t numSplitA, const size_t numSplitB,
@@ -316,7 +316,7 @@ void runBitmaskScheduleEquivalenceTests() {
 template <typename fp_t>
 void runGemmiAccuracyTests() {
     forEachSharedGemmCase<fp_t>(
-        [&](const matrixLayout layoutA, const matrixLayout layoutB, const matrixLayout layoutC,
+        [&](const matrix::matrixLayout layoutA, const matrix::matrixLayout layoutB, const matrix::matrixLayout layoutC,
             const multiterm::splittingStrategy splitType, const multiterm::reductionStrategy accumulationType,
             const size_t m, const size_t k, const size_t n,
             const size_t numSplitA, const size_t numSplitB,
@@ -353,8 +353,8 @@ void runGemmiAccuracyTests() {
         std::vector<fp_t> Adata(2 * 3, 1.0);
         std::vector<fp_t> Bdata(3 * 2, 1.0);
 
-        const auto A = makeConstMatrixView(makeMatrixView(Adata, 2, 3, matrixLayout::rowMajor));
-        const auto B = makeConstMatrixView(makeMatrixView(Bdata, 3, 2, matrixLayout::rowMajor));
+        const auto A = matrix::makeConstMatrixView(matrix::makeMatrixView(Adata, 2, 3, matrix::matrixLayout::rowMajor));
+        const auto B = matrix::makeConstMatrixView(matrix::makeMatrixView(Bdata, 3, 2, matrix::matrixLayout::rowMajor));
 
         const auto validConfig = multiterm::config{
             2,
@@ -365,28 +365,28 @@ void runGemmiAccuracyTests() {
         };
 
         SECTION("null A pointer") {
-            const auto nullA = makeMatrixView(static_cast<const fp_t*>(nullptr), 2, 3, matrixLayout::rowMajor);
+            const auto nullA = matrix::makeMatrixView(static_cast<const fp_t*>(nullptr), 2, 3, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(nullA, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix A has a null data pointer"));
         }
 
         SECTION("null B pointer") {
-            const auto nullB = makeMatrixView(static_cast<const fp_t*>(nullptr), 3, 2, matrixLayout::rowMajor);
+            const auto nullB = matrix::makeMatrixView(static_cast<const fp_t*>(nullptr), 3, 2, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, nullB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix B has a null data pointer"));
         }
 
         SECTION("empty A") {
-            const auto emptyA = makeMatrixView(static_cast<const fp_t*>(Adata.data()), 0, 3, matrixLayout::rowMajor);
+            const auto emptyA = matrix::makeMatrixView(static_cast<const fp_t*>(Adata.data()), 0, 3, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(emptyA, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix A is empty"));
         }
 
         SECTION("empty B") {
-            const auto emptyB = makeMatrixView(static_cast<const fp_t*>(Bdata.data()), 3, 0, matrixLayout::rowMajor);
+            const auto emptyB = matrix::makeMatrixView(static_cast<const fp_t*>(Bdata.data()), 3, 0, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, emptyB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix B is empty"));
@@ -394,7 +394,7 @@ void runGemmiAccuracyTests() {
 
         SECTION("dimension mismatch") {
             std::vector<fp_t> badBData(4 * 2, 1.0);
-            const auto badB = makeConstMatrixView(makeMatrixView(badBData, 4, 2, matrixLayout::rowMajor));
+            const auto badB = matrix::makeConstMatrixView(matrix::makeMatrixView(badBData, 4, 2, matrix::matrixLayout::rowMajor));
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, badB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Dimension mismatch"));
@@ -433,8 +433,8 @@ void runGemmiAccuracyTests() {
         SECTION("bitsPerSlice evaluates to zero") {
             fp_t value = 1.0;
             constexpr size_t hugeK = (size_t{1} << 31);
-            const auto hugeA = makeMatrixView(static_cast<const fp_t*>(&value), 1, hugeK, matrixLayout::rowMajor);
-            const auto hugeB = makeMatrixView(static_cast<const fp_t*>(&value), hugeK, 1, matrixLayout::rowMajor);
+            const auto hugeA = matrix::makeMatrixView(static_cast<const fp_t*>(&value), 1, hugeK, matrix::matrixLayout::rowMajor);
+            const auto hugeB = matrix::makeMatrixView(static_cast<const fp_t*>(&value), hugeK, 1, matrix::matrixLayout::rowMajor);
 
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(hugeA, hugeB, validConfig)),

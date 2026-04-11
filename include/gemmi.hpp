@@ -21,6 +21,8 @@
  * Floating-point traits and functions *
  ***************************************/
 
+namespace fp {
+
 /**
  * @brief Traits describing IEEE-754 layout properties for a floating-point type.
  *
@@ -67,6 +69,8 @@ int getStoredFloatingPointExponent(fp_t value) {
         std::max(std::numeric_limits<fp_t>::min_exponent, std::ilogb(std::abs(value)) + 1);
 }
 
+} // namespace fp
+
 /******************************
  * Global configuration enums *
  ******************************/
@@ -82,6 +86,8 @@ enum class normalisationDimension {
 /***************
  * Matrix view *
  ***************/
+
+namespace matrix {
 
 /**
  * @brief Enum to specify the layout of the matrix in memory.
@@ -284,6 +290,8 @@ MatrixView<const value_t> makeConstMatrixView(MatrixView<value_t> view) {
     return MatrixView<const value_t>(view.data, view.rows, view.cols, view.layout);
 }
 
+} // namespace matrix
+
 /***********************
  * Multiterm emulation *
  ***********************/
@@ -412,8 +420,8 @@ struct DerivedParameters {
  * @throws std::invalid_argument if any runtime constraint is violated.
  */
 template <typename fp_t, typename splitint_t, typename accumulator_t>
-DerivedParameters deriveParameters(MatrixView<const fp_t> A,
-                                   MatrixView<const fp_t> B,
+DerivedParameters deriveParameters(matrix::MatrixView<const fp_t> A,
+                                   matrix::MatrixView<const fp_t> B,
                                    const config& config) {
 
     // Compile-time type checks.
@@ -501,7 +509,7 @@ struct OperandPreparationConfig {
  */
 template <typename splitint_t, typename fp_t>
 struct preparedOperand {
-    MatrixView<const fp_t> matrix;       ///< View of original matrix.
+    matrix::MatrixView<const fp_t> matrix;       ///< View of original matrix.
     OperandPreparationConfig prepConfig; ///< Configuration for operand preparation.
 
     std::vector<splitint_t> memory;      ///< Memory to store the split slices.
@@ -644,7 +652,7 @@ void computeNormalisationVectors(preparedOperand<splitint_t, fp_t>& operand) {
         // NOTE 1: This is not the technique used in uoi24.
         // NOTE 2: I use exponents instead of powers of 2, as I need the former
         //         to shift correctly.
-        operand.scalingExponents[outer] = getStoredFloatingPointExponent(operand.powersVector[outer]);
+        operand.scalingExponents[outer] = fp::getStoredFloatingPointExponent(operand.powersVector[outer]);
         operand.powersVector[outer] = std::ldexp(1.0, operand.scalingExponents[outer]);
     }
 }
@@ -656,6 +664,9 @@ void computeNormalisationVectors(preparedOperand<splitint_t, fp_t>& operand) {
  * matrix, which is used in the splitting algorithms. It extracts the significand
  * and sign of each element in the row/column, and stores them in the provided vectors.
  * 
+ * The `fraction` and `sign` vectors must be pre-sized to `operand.innerDimension()`
+ * before calling this function.
+ *
  * @tparam splitint_t Type used to store the integer slices.
  * @tparam fp_t Floating-point type of the matrix elements.
  * @param fraction Vector to store the fixed-point representation of the elements.
@@ -663,11 +674,11 @@ void computeNormalisationVectors(preparedOperand<splitint_t, fp_t>& operand) {
  * @param i The index of the row/column for which to compute the fixed-point representation.
  */
 template <typename splitint_t, typename fp_t>
-void computeFixedPointRepresentationVector(std::vector<typename FloatingPointTraits<fp_t>::StorageType> &fraction,
+void computeFixedPointRepresentationVector(std::vector<typename fp::FloatingPointTraits<fp_t>::StorageType> &fraction,
                                            std::vector<bool> &sign, size_t outer,
                                            const preparedOperand<splitint_t, fp_t>& operand) {
-    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
-    constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
+    constexpr size_t numSignificandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
     for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
         fp_t value = operand.operand(outer, inner);
         fraction[inner] = std::bit_cast<uint_t>(value);
@@ -696,10 +707,10 @@ void computeFixedPointRepresentationVector(std::vector<typename FloatingPointTra
  */
 template <typename splitint_t, typename fp_t>
 void computeSplitsWithTruncation(preparedOperand<splitint_t, fp_t>& operand) {
-    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
+    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
 
     // Compute splits one row/column at a time.
-    constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+    constexpr size_t numSignificandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
     auto bitsPerSlice = operand.prepConfig.bitsPerSlice;
     std::vector<uint_t> fraction (operand.innerDimension());
     std::vector<bool> sign (operand.innerDimension());
@@ -714,7 +725,7 @@ void computeSplitsWithTruncation(preparedOperand<splitint_t, fp_t>& operand) {
         for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
             // NOTE: I could have a special path for 0.
             int16_t shiftCounter = numSignificandBits - bitsPerSlice;
-            int currentExponent = getStoredFloatingPointExponent(operand.operand(outer, inner));
+            int currentExponent = fp::getStoredFloatingPointExponent(operand.operand(outer, inner));
             int16_t exponentDifference = operand.scalingExponents[outer] - currentExponent;
             for (size_t slice = 0; slice < operand.prepConfig.numSplits; slice++) {
                 if (exponentDifference > (signed)bitsPerSlice) {
@@ -755,11 +766,11 @@ void computeSplitsWithTruncation(preparedOperand<splitint_t, fp_t>& operand) {
  */
 template <typename splitint_t, typename fp_t>
 void computeSplitsWithUnsignedEncoding(preparedOperand<splitint_t, fp_t>& operand) {
-    using uint_t = typename FloatingPointTraits<fp_t>::StorageType;
+    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
     using wideint_t = std::conditional_t<(sizeof(splitint_t) < sizeof(int)), int, std::intmax_t>;
 
     // Compute splits one row/column at a time.
-    constexpr size_t numSignificandBits = FloatingPointTraits<fp_t>::numSignificandBits;
+    constexpr size_t numSignificandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
     auto bitsPerSlice = operand.prepConfig.bitsPerSlice;
     std::vector<uint_t> fraction (operand.innerDimension());
     std::vector<bool> sign (operand.innerDimension());
@@ -786,7 +797,7 @@ void computeSplitsWithUnsignedEncoding(preparedOperand<splitint_t, fp_t>& operan
 
             // NOTE: I could have a special path for 0.
             int16_t shiftCounter;
-            int currentExponent = getStoredFloatingPointExponent(operand.operand(outer, inner));
+            int currentExponent = fp::getStoredFloatingPointExponent(operand.operand(outer, inner));
             int16_t exponentDifference = operand.scalingExponents[outer] - currentExponent;
 
             splitint_t value = 0;
@@ -914,7 +925,7 @@ void computeSplitsWithRoundToNearest(preparedOperand<splitint_t, fp_t>& operand)
         for (size_t outer = 0; outer < operand.outerDimension(); outer++) {
             // Compute exponent in signed arithmetic to avoid wraparound when
             // bitsPerSlice * (slice + 1) approaches numSignificandBits.
-            int exponent = static_cast<int>(FloatingPointTraits<fp_t>::numSignificandBits) - static_cast<int>(bitsPerSlice * (slice + 1)) + 1;
+            int exponent = static_cast<int>(fp::FloatingPointTraits<fp_t>::numSignificandBits) - static_cast<int>(bitsPerSlice * (slice + 1)) + 1;
             fp_t sigma = std::ldexp(0.75, exponent) * operand.powersVector[outer];
             for (size_t inner = 0; inner < operand.innerDimension(); inner++) {
                 auto matrixIndex = operand.operandIndex(outer, inner);
@@ -934,7 +945,7 @@ void computeSplitsWithRoundToNearest(preparedOperand<splitint_t, fp_t>& operand)
  * @tparam fp_t Floating-point type of the matrix elements.
  */
 template <typename splitint_t, typename fp_t>
-preparedOperand<splitint_t, fp_t> prepareOperand(MatrixView<const fp_t> matrix,
+preparedOperand<splitint_t, fp_t> prepareOperand(matrix::MatrixView<const fp_t> matrix,
                     const OperandPreparationConfig& prepConfig) {
     preparedOperand<splitint_t, fp_t> operand;
     operand.matrix = matrix;
@@ -1032,6 +1043,7 @@ inline multiplicationSchedule makeSchedule(const config& config) {
 
     return schedule;
 }
+
 /**
  * @brief Compute the exact integer GEMM (General Matrix-Matrix Multiplication).
  * 
@@ -1048,11 +1060,11 @@ template <typename splitint_t, typename accumulator_t, typename fp_t>
 void computeExactIntegerGEMM(const preparedOperand<splitint_t, fp_t> &A,
                              const preparedOperand<splitint_t, fp_t> &B,
                              std::vector<accumulator_t> &C,
-                             const matrixLayout layoutC,
+                             const matrix::matrixLayout layoutC,
                              size_t iBlock, size_t jBlock) {
     for (size_t row = 0; row < A.rows(); row++) {
         for (size_t col = 0; col < B.cols(); col++) {
-            auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
+            auto index = (layoutC == matrix::matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
             for (size_t ell = 0; ell < A.innerDimension(); ell++) {
                 C[index] += A.splitValue(row, ell, iBlock) * B.splitValue(col, ell, jBlock);
             }
@@ -1084,7 +1096,7 @@ template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const preparedOperand<splitint_t, fp_t> &A,
                                                                const preparedOperand<splitint_t, fp_t> &B,
                                                                const multiplicationSchedule &schedule,
-                                                               const matrixLayout layoutC) {
+                                                               const matrix::matrixLayout layoutC) {
     auto numSplitsA = A.prepConfig.numSplits;
     auto numSplitsB = B.prepConfig.numSplits;
     std::vector<fp_t> C (A.rows() * B.cols(), 0.0);
@@ -1098,7 +1110,7 @@ std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const preparedOpe
                 computeExactIntegerGEMM<splitint_t, accumulator_t, fp_t>(A, B, accumulator, layoutC, Aindex, Bindex);
                 for (size_t row = 0; row < A.rows(); row++) {
                     for (size_t col = 0; col < B.cols(); col++) {
-                        auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
+                        auto index = (layoutC == matrix::matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
                         fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[index]), -totalShift);
                         fp_t scalingFactor = A.powersVector[row] * B.powersVector[col];
                         C[index] += scaledSum * scalingFactor;
@@ -1137,7 +1149,7 @@ template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithIntegerAccumulation(const preparedOperand<splitint_t, fp_t> &A,
                                                          const preparedOperand<splitint_t, fp_t> &B,
                                                          const multiplicationSchedule &schedule,
-                                                         const matrixLayout layoutC) {
+                                                         const matrix::matrixLayout layoutC) {
     auto numSplitsA = A.prepConfig.numSplits;
     auto numSplitsB = B.prepConfig.numSplits;
     
@@ -1160,7 +1172,7 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const preparedOperand<s
         // Scale the accumulated products and accumulate in floating-point arithmetic across diagonals.
         for (size_t row = 0; row < A.rows(); row++) {
             for (size_t col = 0; col < B.cols(); col++) {
-                auto index = (layoutC == matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
+                auto index = (layoutC == matrix::matrixLayout::columnMajor) ? (row + col * A.rows()) : (col + row * B.cols());
                 fp_t scaledSum = std::ldexp(static_cast<fp_t>(accumulator[index]), -totalShift);
                 fp_t scalingFactor = A.powersVector[row] * B.powersVector[col];
                 C[index] += scaledSum * scalingFactor;
@@ -1191,15 +1203,15 @@ std::vector<fp_t> computeProductsWithIntegerAccumulation(const preparedOperand<s
  * @return Resulting matrix product.
  */
 template <typename fp_t, typename splitint_t, typename accumulator_t>
-std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
-                         const std::vector<fp_t> &B, const matrixLayout layoutB,
+std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrix::matrixLayout layoutA,
+                         const std::vector<fp_t> &B, const matrix::matrixLayout layoutB,
                          const size_t m, const size_t k, const size_t n,
-                         const matrixLayout layoutC,
+                         const matrix::matrixLayout layoutC,
                          const multiterm::config &config) {
 
     // Build matrix views.
-    auto viewA = makeMatrixView(A, m, k, layoutA);
-    auto viewB = makeMatrixView(B, k, n, layoutB);
+    auto viewA = matrix::makeMatrixView(A, m, k, layoutA);
+    auto viewB = matrix::makeMatrixView(B, k, n, layoutB);
 
     // Validate inputs and derive execution parameters.
     auto derivedParameters = multiterm::deriveParameters<fp_t, splitint_t, accumulator_t>(viewA, viewB, config);
@@ -1226,11 +1238,11 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
 }
 
 template <typename fp_t, typename splitint_t, typename accumulator_t>
-std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrixLayout layoutA,
-                         const std::vector<fp_t> &B, const matrixLayout layoutB,
+std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrix::matrixLayout layoutA,
+                         const std::vector<fp_t> &B, const matrix::matrixLayout layoutB,
                          const size_t m, const size_t k, const size_t n, const size_t numSplits) {
     return gemmi <fp_t, splitint_t, accumulator_t> (A, layoutA, B, layoutB, m, k, n,
-    matrixLayout::columnMajor,
+    matrix::matrixLayout::columnMajor,
         multiterm::config{numSplits, numSplits,
                           multiterm::splittingStrategy::roundToNearest,
                           multiterm::multiplicationStrategy::reduced,

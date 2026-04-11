@@ -9,18 +9,18 @@
 template <typename fp_t>
 size_t matrixIndex(size_t i, size_t j,
                    size_t rows, size_t cols,
-                   matrixLayout layout) {
-    return (layout == matrixLayout::rowMajor)
+                   matrix::matrixLayout layout) {
+    return (layout == matrix::matrixLayout::rowMajor)
         ? (i * cols + j)
         : (j * rows + i);
 }
 
 template <typename fp_t>
 std::vector<fp_t> referenceGemm(
-    const std::vector<fp_t>& A, matrixLayout layoutA,
-    const std::vector<fp_t>& B, matrixLayout layoutB,
+    const std::vector<fp_t>& A, matrix::matrixLayout layoutA,
+    const std::vector<fp_t>& B, matrix::matrixLayout layoutB,
     size_t m, size_t k, size_t n,
-    matrixLayout layoutC)
+    matrix::matrixLayout layoutC)
 {
     std::vector<fp_t> C(m * n, fp_t{0});
 
