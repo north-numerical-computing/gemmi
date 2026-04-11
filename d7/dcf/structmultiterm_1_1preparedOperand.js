@@ -10,7 +10,7 @@ var structmultiterm_1_1preparedOperand =
     [ "splitIndex", "d7/dcf/structmultiterm_1_1preparedOperand.html#adfd7385d76b0995a1d870cb325a9e198", null ],
     [ "splitValue", "d7/dcf/structmultiterm_1_1preparedOperand.html#a9914516e9d1a00079abed9d9dd6c9883", null ],
     [ "splitValue", "d7/dcf/structmultiterm_1_1preparedOperand.html#a8f56fcd6df43e9373b9be395f014a3bc", null ],
-    [ "matrix", "d7/dcf/structmultiterm_1_1preparedOperand.html#a23a5603d6d9cb2f5054adee3e80f1482", null ],
+    [ "matrix", "d7/dcf/structmultiterm_1_1preparedOperand.html#a2bdf58bd308066b8221f3fe4ad081bda", null ],
     [ "memory", "d7/dcf/structmultiterm_1_1preparedOperand.html#aa631bcdea64202f07757bacf21ea86da", null ],
     [ "powersVector", "d7/dcf/structmultiterm_1_1preparedOperand.html#a7e3f33a92286eaec0bb4aff7285255f8", null ],
     [ "prepConfig", "d7/dcf/structmultiterm_1_1preparedOperand.html#ab4245a7176032901b0a3112c48fad9eb", null ],

@@ -103,10 +103,10 @@ $(document).ready(function(){initNavTree('d1/da4/structmultiterm_1_1config.html'
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a1e73764b59a0674860182bd7ff4ce53f" id="r_a1e73764b59a0674860182bd7ff4ce53f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#a1e73764b59a0674860182bd7ff4ce53f">numSplitsA</a></td></tr>
+<tr class="memitem:a1e73764b59a0674860182bd7ff4ce53f" id="r_a1e73764b59a0674860182bd7ff4ce53f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#a1e73764b59a0674860182bd7ff4ce53f">numSplitsA</a></td></tr>
 <tr class="memdesc:a1e73764b59a0674860182bd7ff4ce53f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of slices for matrix A.  <br /></td></tr>
 <tr class="separator:a1e73764b59a0674860182bd7ff4ce53f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5d8f5cbf28a6b02999f42cbb55a059d" id="r_ac5d8f5cbf28a6b02999f42cbb55a059d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#ac5d8f5cbf28a6b02999f42cbb55a059d">numSplitsB</a></td></tr>
+<tr class="memitem:ac5d8f5cbf28a6b02999f42cbb55a059d" id="r_ac5d8f5cbf28a6b02999f42cbb55a059d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#ac5d8f5cbf28a6b02999f42cbb55a059d">numSplitsB</a></td></tr>
 <tr class="memdesc:ac5d8f5cbf28a6b02999f42cbb55a059d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of slices for matrix B.  <br /></td></tr>
 <tr class="separator:ac5d8f5cbf28a6b02999f42cbb55a059d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af832ef02dff57473125d1f396d3cb50d" id="r_af832ef02dff57473125d1f396d3cb50d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/de8/gemmi_8hpp.html#af99d2566e5e288f282d8570ce4e6fc79">splittingStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html#af832ef02dff57473125d1f396d3cb50d">splitType</a></td></tr>
@@ -136,16 +136,15 @@ Examples</h3>
 <div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#a065bd81a426a744b3d8d932bbfe81722">redType</a>           = multiterm::reductionStrategy::floatingPoint;</div>
 <div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#ab082d137e33d216b86ec6611ae205068">multSpecification</a> = multiterm::multiplicationStrategy::reduced;</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">C</a> = <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">gemmi&lt;double, std::int8_t, std::int32_t&gt;</a>(</div>
-<div class="line">    <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">A</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">layoutA</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">B</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">layoutB</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">m</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">k</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">n</a>, <a class="code hl_struct" href="../../da/dd9/structMatrixView.html">layoutC</a>, <a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a></div>
+<div class="line"><span class="keyword">auto</span> C = gemmi&lt;double, std::int8_t, std::int32_t&gt;(</div>
+<div class="line">    A, layoutA, B, layoutB, m, k, n, layoutC, <a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a></div>
 <div class="line">);</div>
-<div class="ttc" id="astructMatrixView_html"><div class="ttname"><a href="../../da/dd9/structMatrixView.html">MatrixView</a></div><div class="ttdoc">Lightweight view of a dense matrix.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00102">gemmi.hpp:102</a></div></div>
-<div class="ttc" id="astructmultiterm_1_1config_html"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a></div><div class="ttdoc">Configuration object for the multiterm emulation scheme.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00375">gemmi.hpp:375</a></div></div>
-<div class="ttc" id="astructmultiterm_1_1config_html_a065bd81a426a744b3d8d932bbfe81722"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#a065bd81a426a744b3d8d932bbfe81722">multiterm::config::redType</a></div><div class="ttdeci">reductionStrategy redType</div><div class="ttdoc">Reduction strategy.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00380">gemmi.hpp:380</a></div></div>
-<div class="ttc" id="astructmultiterm_1_1config_html_a1e73764b59a0674860182bd7ff4ce53f"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#a1e73764b59a0674860182bd7ff4ce53f">multiterm::config::numSplitsA</a></div><div class="ttdeci">size_t numSplitsA</div><div class="ttdoc">Number of slices for matrix A.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00376">gemmi.hpp:376</a></div></div>
-<div class="ttc" id="astructmultiterm_1_1config_html_ab082d137e33d216b86ec6611ae205068"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#ab082d137e33d216b86ec6611ae205068">multiterm::config::multSpecification</a></div><div class="ttdeci">multiplicationSpecification multSpecification</div><div class="ttdoc">Multiplication specification.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00379">gemmi.hpp:379</a></div></div>
-<div class="ttc" id="astructmultiterm_1_1config_html_ac5d8f5cbf28a6b02999f42cbb55a059d"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#ac5d8f5cbf28a6b02999f42cbb55a059d">multiterm::config::numSplitsB</a></div><div class="ttdeci">size_t numSplitsB</div><div class="ttdoc">Number of slices for matrix B.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00377">gemmi.hpp:377</a></div></div>
-<div class="ttc" id="astructmultiterm_1_1config_html_af832ef02dff57473125d1f396d3cb50d"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#af832ef02dff57473125d1f396d3cb50d">multiterm::config::splitType</a></div><div class="ttdeci">splittingStrategy splitType</div><div class="ttdoc">Slice computation strategy.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00378">gemmi.hpp:378</a></div></div>
+<div class="ttc" id="astructmultiterm_1_1config_html"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a></div><div class="ttdoc">Configuration object for the multiterm emulation scheme.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00383">gemmi.hpp:383</a></div></div>
+<div class="ttc" id="astructmultiterm_1_1config_html_a065bd81a426a744b3d8d932bbfe81722"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#a065bd81a426a744b3d8d932bbfe81722">multiterm::config::redType</a></div><div class="ttdeci">reductionStrategy redType</div><div class="ttdoc">Reduction strategy.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00388">gemmi.hpp:388</a></div></div>
+<div class="ttc" id="astructmultiterm_1_1config_html_a1e73764b59a0674860182bd7ff4ce53f"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#a1e73764b59a0674860182bd7ff4ce53f">multiterm::config::numSplitsA</a></div><div class="ttdeci">size_t numSplitsA</div><div class="ttdoc">Number of slices for matrix A.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00384">gemmi.hpp:384</a></div></div>
+<div class="ttc" id="astructmultiterm_1_1config_html_ab082d137e33d216b86ec6611ae205068"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#ab082d137e33d216b86ec6611ae205068">multiterm::config::multSpecification</a></div><div class="ttdeci">multiplicationSpecification multSpecification</div><div class="ttdoc">Multiplication specification.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00387">gemmi.hpp:387</a></div></div>
+<div class="ttc" id="astructmultiterm_1_1config_html_ac5d8f5cbf28a6b02999f42cbb55a059d"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#ac5d8f5cbf28a6b02999f42cbb55a059d">multiterm::config::numSplitsB</a></div><div class="ttdeci">size_t numSplitsB</div><div class="ttdoc">Number of slices for matrix B.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00385">gemmi.hpp:385</a></div></div>
+<div class="ttc" id="astructmultiterm_1_1config_html_af832ef02dff57473125d1f396d3cb50d"><div class="ttname"><a href="../../d1/da4/structmultiterm_1_1config.html#af832ef02dff57473125d1f396d3cb50d">multiterm::config::splitType</a></div><div class="ttdeci">splittingStrategy splitType</div><div class="ttdoc">Slice computation strategy.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/de8/gemmi_8hpp_source.html#l00386">gemmi.hpp:386</a></div></div>
 </div><!-- fragment --><p>To use a multiplication where the first two slices of A and B are multiplied by all slices of the other matrix, one can use the custom mask:</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#ab082d137e33d216b86ec6611ae205068">multSpecification</a> = std::vector&lt;bool&gt;{</div>
 <div class="line">    1,1,1,1,</div>
@@ -155,7 +154,7 @@ Examples</h3>
 <div class="line">};</div>
 </div><!-- fragment --><p>Only products at positions marked &lsquo;true&rsquo; are computed. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00375">375</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00383">383</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="ab082d137e33d216b86ec6611ae205068" name="ab082d137e33d216b86ec6611ae205068"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab082d137e33d216b86ec6611ae205068">&#9670;&#160;</a></span>multSpecification</h2>
@@ -171,7 +170,7 @@ Examples</h3>
 
 <p>Multiplication specification. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00379">379</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00387">387</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -182,14 +181,14 @@ Examples</h3>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> multiterm::config::numSplitsA</td>
+          <td class="memname">size_t multiterm::config::numSplitsA</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Number of slices for matrix A. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00376">376</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00384">384</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -200,14 +199,14 @@ Examples</h3>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../da/dd9/structMatrixView.html">size_t</a> multiterm::config::numSplitsB</td>
+          <td class="memname">size_t multiterm::config::numSplitsB</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Number of slices for matrix B. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00377">377</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00385">385</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -225,7 +224,7 @@ Examples</h3>
 
 <p>Reduction strategy. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00380">380</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00388">388</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -243,7 +242,7 @@ Examples</h3>
 
 <p>Slice computation strategy. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00378">378</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00386">386</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

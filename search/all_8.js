@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['layout_0',['layout',['../da/dd9/structMatrixView.html#a4538ce10a1b2bcca85e9fcbb49939c1f',1,'MatrixView']]],
-  ['linear_1',['linear',['../da/dd9/structMatrixView.html#a9dc264b3be3103a77a866e965ac317fe',1,'MatrixView']]]
+  ['layout_0',['layout',['../d7/d80/structmatrix_1_1MatrixView.html#a1fe9c518b83a8d7b0ee43e8598812780',1,'matrix::MatrixView']]],
+  ['linear_1',['linear',['../d7/d80/structmatrix_1_1MatrixView.html#a98546645d641dcf59cf0c837506468ff',1,'matrix::MatrixView']]]
 ];

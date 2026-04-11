@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['empty_0',['empty',['../da/dd9/structMatrixView.html#a63e6e56c46da576c8e1fdf78baa1c801',1,'MatrixView']]]
+  ['empty_0',['empty',['../d7/d80/structmatrix_1_1MatrixView.html#a52f282527a605744e3c3b7bad919a07f',1,'matrix::MatrixView']]]
 ];
