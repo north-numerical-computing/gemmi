@@ -148,6 +148,31 @@ classdef test_gemmi < matlab.unittest.TestCase
                 tc.verifyLessThan(tc.relFrobErr(C, A * B), tc.TolDouble, ...
                     sprintf('Accuracy failed for variant: %s', label));
             end
+
+            % Test custom multiplication schedules passed as logical masks.
+            rng(7);
+            A = randn(7, 5);
+            B = randn(5, 4);
+            numSplitsA = 8;
+            numSplitsB = 7;
+
+            fullMask = true(numSplitsA, numSplitsB);
+            CfullMask = gemmi(A, B, numSplitsA, numSplitsB, struct('mult', fullMask));
+            CfullChar = gemmi(A, B, numSplitsA, numSplitsB, struct('mult', 'f'));
+            tc.verifyEqual(CfullMask, CfullChar, ...
+                'All-true logical mask should match full multiplication strategy.');
+
+            [Aidx, Bidx] = ndgrid(0:numSplitsA-1, 0:numSplitsB-1);
+            reducedMask = (Aidx + Bidx) <= (max(numSplitsA, numSplitsB) - 1);
+            CreducedMask = gemmi(A, B, numSplitsA, numSplitsB, struct('mult', reducedMask));
+            CreducedChar = gemmi(A, B, numSplitsA, numSplitsB, struct('mult', 'r'));
+            tc.verifyEqual(CreducedMask, CreducedChar, ...
+                'Reduced logical mask should match reduced multiplication strategy.');
+
+            allFalseMask = false(numSplitsA, numSplitsB);
+            CzeroMask = gemmi(A, B, numSplitsA, numSplitsB, struct('mult', allFalseMask));
+            tc.verifyEqual(CzeroMask, zeros(size(A, 1), size(B, 2)), ...
+                'All-false logical mask should produce the zero matrix.');
         end
 
         function testAlgout(tc)
@@ -184,6 +209,23 @@ classdef test_gemmi < matlab.unittest.TestCase
                     sprintf('ALGOUT mismatch for %s=%s', field, value));
             end
 
+            % Test ALGOUT with a logical multiplication schedule.
+            numSplitsA = 5;
+            numSplitsB = 4;
+            logicalMask = logical([
+                1 1 1 1;
+                1 1 1 0;
+                1 1 0 0;
+                1 0 0 0;
+                0 0 0 0]);
+            [~, algout] = gemmi(A, B, numSplitsA, numSplitsB, struct('mult', logicalMask));
+            tc.verifyTrue(islogical(algout.mult), 'ALGOUT mult should be logical for custom mask.');
+            tc.verifyEqual(algout.mult, logicalMask, 'ALGOUT mult logical matrix should match input mask.');
+
+            % Reset persisted mult option so subsequent calls with different
+            % split counts remain valid.
+            gemmi(A, B, 10, 10, struct('mult', 'r'));
+
             % Test persistence of options across calls.
             gemmi(A, B, 10, 10, struct('split', 't'));
             [~, algout] = gemmi(A, B, 10);
@@ -212,6 +254,8 @@ classdef test_gemmi < matlab.unittest.TestCase
                 @() gemmi(ones(3,3), ones(3,3), 10, 10, struct('split', 'nn')), 'single character';
                 @() gemmi(ones(3,3), ones(3,3), 10, 10, struct('split','x')), "split' is invalid";
                 @() gemmi(ones(3,3), ones(3,3), 10, 10, struct('mult','x')), "mult' is invalid";
+                @() gemmi(ones(3,3), ones(3,3), 4, 3, struct('mult', true(3, 4))), 'logical matrix must have size [numSplitsA, numSplitsB]';
+                @() gemmi(ones(3,3), ones(3,3), 4, 3, struct('mult', ones(3,4))), "'mult' field must be either a single character or a logical matrix";
                 @() gemmi(ones(3,3), ones(3,3), 10, 10, struct('acc','x')), "acc' is invalid";
             });
 

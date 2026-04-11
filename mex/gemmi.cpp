@@ -2,11 +2,9 @@
 #include "mexAdapter.hpp"
 #include "../include/gemmi.hpp"
 
-/*
-*/
 typedef struct {
     multiterm::splittingStrategy splitType;
-    multiterm::multiplicationStrategy multType;
+    multiterm::multiplicationSpecification multSpec;
     multiterm::reductionStrategy accType;
 } algorithmOptions;
 static std::unique_ptr<algorithmOptions> options = nullptr;
@@ -19,7 +17,7 @@ public:
             options = std::make_unique<algorithmOptions>();
             options->splitType = multiterm::splittingStrategy::roundToNearest;
             options->accType = multiterm::reductionStrategy::integer;
-            options->multType = multiterm::multiplicationStrategy::reduced;
+            options->multSpec = multiterm::multiplicationStrategy::reduced;
         }
 
         // Validate input.
@@ -63,7 +61,19 @@ public:
                     break;
             }
             S[0]["acc"] = factory.createCharArray(options->accType == multiterm::reductionStrategy::floatingPoint ? "f" : "i");
-            S[0]["mult"] = factory.createCharArray(options->multType == multiterm::multiplicationStrategy::full ? "f" : "r");
+            if (std::holds_alternative<multiterm::multiplicationStrategy>(options->multSpec)) {
+                const auto multType = std::get<multiterm::multiplicationStrategy>(options->multSpec);
+                S[0]["mult"] = factory.createCharArray(multType == multiterm::multiplicationStrategy::full ? "f" : "r");
+            } else {
+                matlab::data::TypedArray<bool> multMask = factory.createArray<bool>({numSplitsA, numSplitsB});
+                const auto& mask = std::get<std::vector<bool>>(options->multSpec);
+                for (size_t row = 0; row < numSplitsA; ++row) {
+                    for (size_t col = 0; col < numSplitsB; ++col) {
+                        multMask[row][col] = mask[row * numSplitsB + col];
+                    }
+                }
+                S[0]["mult"] = multMask;
+            }
             outputs[1] = std::move(S);
         }
     }
@@ -77,12 +87,14 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<double, int8_t, int32_t>(A, matrixLayout::columnMajor,
-                                                B, matrixLayout::columnMajor,
+        auto C = gemmi<double, int8_t, int32_t>(A, matrix::matrixLayout::columnMajor,
+                                                B, matrix::matrixLayout::columnMajor,
                                                 A_size[0], A_size[1], B_size[1],
-                                                matrixLayout::columnMajor,
+                                                matrix::matrixLayout::columnMajor,
                                                 multiterm::config{numSplitsA, numSplitsB,
-                                                                  options->splitType, options->multType, options->accType});
+                                                                  options->splitType,
+                                                                  options->multSpec,
+                                                                  options->accType});
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
@@ -96,11 +108,13 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<float, int8_t, int32_t>(A, matrixLayout::columnMajor, B, matrixLayout::columnMajor,
+        auto C = gemmi<float, int8_t, int32_t>(A, matrix::matrixLayout::columnMajor, B, matrix::matrixLayout::columnMajor,
                                                A_size[0], A_size[1], B_size[1],
-                                               matrixLayout::columnMajor,
+                                               matrix::matrixLayout::columnMajor,
                                                multiterm::config{numSplitsA, numSplitsB,
-                                                   options->splitType, options->multType, options->accType});
+                                                                 options->splitType,
+                                                                 options->multSpec,
+                                                                 options->accType});
 
         matlab::data::ArrayFactory factory;
         return factory.createArray({A_size[0], B_size[1]}, C.begin(), C.end());;
@@ -169,6 +183,10 @@ private:
                 matlabPtr->feval(u"error",
                     0, std::vector<matlab::data::Array>({ factory.createScalar("The fifth input must be a struct.") }));
             }
+
+            const size_t numSplitsA = static_cast<size_t>((double)inputs[2][0][0]);
+            const size_t numSplitsB = numArgs == 3 ? numSplitsA : static_cast<size_t>((double)inputs[3][0][0]);
+
             matlab::data::StructArray inStruct(inputs[4]);
             if (inStruct.getNumberOfFields() > 3) {
                 matlabPtr->feval(u"error",
@@ -181,12 +199,12 @@ private:
                     matlabPtr->feval(u"error",
                         0, std::vector<matlab::data::Array>({ factory.createScalar("The fifth input's fields can only be named 'split', 'mult', or 'acc'.") }));
                 } else {
-                    if (inStruct[0][field].getNumberOfElements() != 1 || inStruct[0][field].getType() != matlab::data::ArrayType::CHAR) {
-                        matlabPtr->feval(u"error",
-                            0, std::vector<matlab::data::Array>({ factory.createScalar("Each field of the struct should be a single character.") }));
-                    }
-                    const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                     if (std::string(field) == "split") {
+                        if (inStruct[0][field].getNumberOfElements() != 1 || inStruct[0][field].getType() != matlab::data::ArrayType::CHAR) {
+                            matlabPtr->feval(u"error",
+                                0, std::vector<matlab::data::Array>({ factory.createScalar("Each field of the struct should be a single character.") }));
+                        }
+                        const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                         switch ((char)data[0]) {
                             case 't':
                                 options->splitType = multiterm::splittingStrategy::truncation;
@@ -203,6 +221,11 @@ private:
                                 break;
                         }
                     } else if (std::string(field) == "acc") {
+                        if (inStruct[0][field].getNumberOfElements() != 1 || inStruct[0][field].getType() != matlab::data::ArrayType::CHAR) {
+                            matlabPtr->feval(u"error",
+                                0, std::vector<matlab::data::Array>({ factory.createScalar("Each field of the struct should be a single character.") }));
+                        }
+                        const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                         switch ((char)data[0]) {
                             case 'f':
                                 options->accType = multiterm::reductionStrategy::floatingPoint;
@@ -216,17 +239,45 @@ private:
                                 break;
                         }
                     } else if (std::string(field) == "mult") {
-                        switch ((char)(data[0])) {
-                            case 'f':
-                                options->multType = multiterm::multiplicationStrategy::full;
-                                break;
-                            case 'r':
-                                options->multType = multiterm::multiplicationStrategy::reduced;
-                                break;
-                            default:
+                        if (inStruct[0][field].getType() == matlab::data::ArrayType::CHAR) {
+                            if (inStruct[0][field].getNumberOfElements() != 1) {
                                 matlabPtr->feval(u"error",
-                                    0, std::vector<matlab::data::Array>({ factory.createScalar("Specified 'mult' is invalid.") }));
-                                break;
+                                    0, std::vector<matlab::data::Array>({ factory.createScalar("Each field of the struct should be a single character.") }));
+                            }
+                            const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
+                            switch ((char)(data[0])) {
+                                case 'f':
+                                    options->multSpec = multiterm::multiplicationStrategy::full;
+                                    break;
+                                case 'r':
+                                    options->multSpec = multiterm::multiplicationStrategy::reduced;
+                                    break;
+                                default:
+                                    matlabPtr->feval(u"error",
+                                        0, std::vector<matlab::data::Array>({ factory.createScalar("Specified 'mult' is invalid.") }));
+                                    break;
+                            }
+                        } else if (inStruct[0][field].getType() == matlab::data::ArrayType::LOGICAL) {
+                            matlab::data::TypedArray<bool> inMask = inStruct[0][field];
+                            const auto mask_dims = inMask.getDimensions();
+                            if (mask_dims.size() != 2 || mask_dims[0] != numSplitsA || mask_dims[1] != numSplitsB) {
+                                matlabPtr->feval(u"error",
+                                    0, std::vector<matlab::data::Array>({ factory.createScalar("The 'mult' logical matrix must have size [numSplitsA, numSplitsB].") }));
+                            }
+
+                            std::vector<bool> mask;
+                            mask.reserve(numSplitsA * numSplitsB);
+                            // Convert from column-major (MATLAB) to row-major (C order)
+                            // mask order expected by multiterm::config.
+                            for (size_t row = 0; row < numSplitsA; ++row) {
+                                for (size_t col = 0; col < numSplitsB; ++col) {
+                                    mask.push_back(inMask[row][col]);
+                                }
+                            }
+                            options->multSpec = mask;
+                        } else {
+                            matlabPtr->feval(u"error",
+                                0, std::vector<matlab::data::Array>({ factory.createScalar("The 'mult' field must be either a single character or a logical matrix.") }));
                         }
                     }
                 }

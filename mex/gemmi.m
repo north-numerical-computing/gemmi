@@ -8,8 +8,10 @@
 %             unsigned encoding, and 'n' for round-to-nearest (default).
 %   'mult'  - selects how many integer multiplications the algorithm
 %             will perform in order to compute the result. Possible
-%             values are 'a' for all ASPLIT * BSPLIT products and 'r'
-%             for a reduced number (default).
+%             values are 'f' for all ASPLITS * BSPLITS products and 'r'
+%             for a reduced number (default). It can also be a logical
+%             ASPLITS-by-BSPLITS matrix specifying which slice products
+%             to compute.
 %   'acc'   - selects how the exact integer matrix products are
 %             accumulated. Possible values are 'f' for floating-point
 %             arithmetic and 'i' for integer accumulation (default).
