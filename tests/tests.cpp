@@ -353,8 +353,8 @@ void runGemmiAccuracyTests() {
         std::vector<fp_t> Adata(2 * 3, 1.0);
         std::vector<fp_t> Bdata(3 * 2, 1.0);
 
-        const auto A = matrix::makeConstMatrixView(matrix::makeMatrixView(Adata, 2, 3, matrix::matrixLayout::rowMajor));
-        const auto B = matrix::makeConstMatrixView(matrix::makeMatrixView(Bdata, 3, 2, matrix::matrixLayout::rowMajor));
+        auto A = matrix::makeMatrixView(Adata, 2, 3, matrix::matrixLayout::rowMajor);
+        auto B = matrix::makeMatrixView(Bdata, 3, 2, matrix::matrixLayout::rowMajor);
 
         const auto validConfig = multiterm::config{
             2,
@@ -394,7 +394,7 @@ void runGemmiAccuracyTests() {
 
         SECTION("dimension mismatch") {
             std::vector<fp_t> badBData(4 * 2, 1.0);
-            const auto badB = matrix::makeConstMatrixView(matrix::makeMatrixView(badBData, 4, 2, matrix::matrixLayout::rowMajor));
+            auto badB = matrix::makeMatrixView(badBData, 4, 2, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, badB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Dimension mismatch"));

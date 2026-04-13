@@ -128,6 +128,13 @@ struct MatrixView {
     MatrixView(value_t* data, size_t rows, size_t cols, matrixLayout layout) :
         data(data), rows(rows), cols(cols), layout(layout) {}
 
+    template <typename other_t,
+              typename = std::enable_if_t<
+                  std::is_const_v<value_t> &&
+                  std::is_same_v<std::remove_const_t<value_t>, other_t>>>
+    MatrixView(const MatrixView<other_t>& other) :
+        data(other.data), rows(other.rows), cols(other.cols), layout(other.layout) {}
+
     /**
      * @brief Return the number of stored elements.
      *
@@ -273,21 +280,6 @@ MatrixView<const value_t> makeMatrixView(const std::vector<value_t>& matrix,
                                          size_t cols,
                                          matrixLayout layout) {
     return MatrixView<const value_t>(matrix.data(), rows, cols, layout);
-}
-
-/**
- * @brief Create a read-only matrix view from a mutable MatrixView.
- *
- * This is useful to pass a mutable view into code that expects a read-only
- * view without rebuilding it manually.
- *
- * @tparam value_t Element type.
- * @param view Mutable matrix view.
- * @return MatrixView<const value_t>
- */
-template <typename value_t>
-MatrixView<const value_t> makeConstMatrixView(MatrixView<value_t> view) {
-    return MatrixView<const value_t>(view.data, view.rows, view.cols, view.layout);
 }
 
 } // namespace matrix
@@ -1242,11 +1234,11 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrix::matrixLayout 
                          const std::vector<fp_t> &B, const matrix::matrixLayout layoutB,
                          const size_t m, const size_t k, const size_t n, const size_t numSplits) {
     return gemmi <fp_t, splitint_t, accumulator_t> (A, layoutA, B, layoutB, m, k, n,
-    matrix::matrixLayout::columnMajor,
-        multiterm::config{numSplits, numSplits,
-                          multiterm::splittingStrategy::roundToNearest,
-                          multiterm::multiplicationStrategy::reduced,
-                          multiterm::reductionStrategy::floatingPoint});
+                                                    matrix::matrixLayout::columnMajor,
+                                                    multiterm::config{numSplits, numSplits,
+                                                    multiterm::splittingStrategy::roundToNearest,
+                                                    multiterm::multiplicationStrategy::reduced,
+                                                    multiterm::reductionStrategy::floatingPoint});
 }
 
 #endif // GEMMI_HPP
