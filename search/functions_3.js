@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['gemmi_0',['gemmi',['../dc/de8/gemmi_8hpp.html#a47651f8e07b814de3ad4772947137a62',1,'gemmi.hpp']]],
-  ['getstoredfloatingpointexponent_1',['getStoredFloatingPointExponent',['../dc/de8/gemmi_8hpp.html#a6546a5e19345d62bf00368b9523edc85',1,'fp']]]
+  ['empty_0',['empty',['../d7/d80/structmatrix_1_1MatrixView.html#a52f282527a605744e3c3b7bad919a07f',1,'matrix::MatrixView']]]
 ];
