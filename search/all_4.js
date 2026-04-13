@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['empty_0',['empty',['../d7/d80/structmatrix_1_1MatrixView.html#a52f282527a605744e3c3b7bad919a07f',1,'matrix::MatrixView']]],
-  ['examples_1',['Examples',['../d1/da4/structmultiterm_1_1config.html#autotoc_md0',1,'']]]
+  ['matrix–matrix_20multiply_20using_20integer_20ozaki_20scheme_0',['Matrix–matrix multiply using integer Ozaki scheme',['../index.html',1,'']]],
+  ['mex_20interface_1',['mex interface',['../index.html#autotoc_md3',1,'Mex interface'],['../index.html#autotoc_md6',1,'Notes on the MEX interface']]],
+  ['multiply_20using_20integer_20ozaki_20scheme_2',['Matrix–matrix multiply using integer Ozaki scheme',['../index.html',1,'']]]
 ];

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['gemmi_0',['gemmi',['../dc/de8/gemmi_8hpp.html#a47651f8e07b814de3ad4772947137a62',1,'gemmi.hpp']]],
-  ['gemmi_2ehpp_1',['gemmi.hpp',['../dc/de8/gemmi_8hpp.html',1,'']]],
-  ['getstoredfloatingpointexponent_2',['getStoredFloatingPointExponent',['../dc/de8/gemmi_8hpp.html#a6546a5e19345d62bf00368b9523edc85',1,'fp']]]
+  ['on_20the_20mex_20interface_0',['Notes on the MEX interface',['../index.html#autotoc_md6',1,'']]],
+  ['ozaki_20scheme_1',['Matrix–matrix multiply using integer Ozaki scheme',['../index.html',1,'']]]
 ];

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['data_0',['data',['../d7/d80/structmatrix_1_1MatrixView.html#ae1e9bd862e00b73e5efa816758a708d6',1,'matrix::MatrixView']]],
-  ['dependencies_1',['Dependencies',['../index.html#autotoc_md2',1,'']]],
-  ['dimension_2',['dimension',['../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html#a13a83b7eb5c836737e0422e6550d4f8d',1,'multiterm::OperandPreparationConfig']]]
+  ['integer_20ozaki_20scheme_0',['Matrix–matrix multiply using integer Ozaki scheme',['../index.html',1,'']]],
+  ['interface_1',['interface',['../index.html#autotoc_md3',1,'Mex interface'],['../index.html#autotoc_md6',1,'Notes on the MEX interface']]]
 ];
