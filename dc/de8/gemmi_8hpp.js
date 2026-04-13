@@ -4,7 +4,6 @@ var gemmi_8hpp =
     [ "fp::FloatingPointTraits< double >", "da/d24/structfp_1_1FloatingPointTraits_3_01double_01_4.html", null ],
     [ "matrix::MatrixView< value_t >", "d7/d80/structmatrix_1_1MatrixView.html", "d7/d80/structmatrix_1_1MatrixView" ],
     [ "multiterm::config", "d1/da4/structmultiterm_1_1config.html", "d1/da4/structmultiterm_1_1config" ],
-    [ "multiterm::DerivedParameters", "d6/dfb/structmultiterm_1_1DerivedParameters.html", "d6/dfb/structmultiterm_1_1DerivedParameters" ],
     [ "multiterm::OperandPreparationConfig", "d2/dbf/structmultiterm_1_1OperandPreparationConfig.html", "d2/dbf/structmultiterm_1_1OperandPreparationConfig" ],
     [ "multiterm::preparedOperand< splitint_t, fp_t >", "d7/dcf/structmultiterm_1_1preparedOperand.html", "d7/dcf/structmultiterm_1_1preparedOperand" ],
     [ "multiterm::multiplicationSchedule", "da/df5/structmultiterm_1_1multiplicationSchedule.html", "da/df5/structmultiterm_1_1multiplicationSchedule" ],
@@ -29,6 +28,7 @@ var gemmi_8hpp =
       [ "unsignedEncoding", "dc/de8/gemmi_8hpp.html#af99d2566e5e288f282d8570ce4e6fc79af4ad70253d0174851f373fab0a220066", null ],
       [ "roundToNearest", "dc/de8/gemmi_8hpp.html#af99d2566e5e288f282d8570ce4e6fc79a0487e454e553d12df80ec42f42d5aaab", null ]
     ] ],
+    [ "computeBitsPerSlice", "dc/de8/gemmi_8hpp.html#adf0afb148cee1faea5d3b24a0e6d0e68", null ],
     [ "computeExactIntegerGEMM", "dc/de8/gemmi_8hpp.html#a664ef207e193a2a4bb83d74c0495caa3", null ],
     [ "computeFixedPointRepresentationVector", "dc/de8/gemmi_8hpp.html#a608e8a5ca2b82451e8a7ae8d2f388a94", null ],
     [ "computeNormalisationVectors", "dc/de8/gemmi_8hpp.html#ae245d16dbc07f7142a94643fe0e174b0", null ],
@@ -37,9 +37,9 @@ var gemmi_8hpp =
     [ "computeSplitsWithRoundToNearest", "dc/de8/gemmi_8hpp.html#ade105a1653a3fb704eb3588edabc540a", null ],
     [ "computeSplitsWithTruncation", "dc/de8/gemmi_8hpp.html#aa60c99bd93303ddff9632f91c799572f", null ],
     [ "computeSplitsWithUnsignedEncoding", "dc/de8/gemmi_8hpp.html#a0b81484e21993b04a2911303e4bdb36f", null ],
-    [ "deriveParameters", "dc/de8/gemmi_8hpp.html#abc47b522f9c92f8eaee60270bdec87da", null ],
     [ "gemmi", "dc/de8/gemmi_8hpp.html#a47651f8e07b814de3ad4772947137a62", null ],
     [ "getStoredFloatingPointExponent", "dc/de8/gemmi_8hpp.html#a6546a5e19345d62bf00368b9523edc85", null ],
     [ "makeSchedule", "dc/de8/gemmi_8hpp.html#a45c7ea63a14a97b41e04c3f35abf8565", null ],
-    [ "prepareOperand", "dc/de8/gemmi_8hpp.html#a6acd3c926bc30df3bb8af453eb6fc758", null ]
+    [ "prepareOperand", "dc/de8/gemmi_8hpp.html#a6acd3c926bc30df3bb8af453eb6fc758", null ],
+    [ "validateParameters", "dc/de8/gemmi_8hpp.html#acc8441983b4aaa5f2e3bda581fd22fdc", null ]
 ];

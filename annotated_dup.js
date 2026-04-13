@@ -10,7 +10,6 @@ var annotated_dup =
     ] ],
     [ "multiterm", null, [
       [ "config", "d1/da4/structmultiterm_1_1config.html", "d1/da4/structmultiterm_1_1config" ],
-      [ "DerivedParameters", "d6/dfb/structmultiterm_1_1DerivedParameters.html", "d6/dfb/structmultiterm_1_1DerivedParameters" ],
       [ "multiplicationSchedule", "da/df5/structmultiterm_1_1multiplicationSchedule.html", "da/df5/structmultiterm_1_1multiplicationSchedule" ],
       [ "OperandPreparationConfig", "d2/dbf/structmultiterm_1_1OperandPreparationConfig.html", "d2/dbf/structmultiterm_1_1OperandPreparationConfig" ],
       [ "preparedOperand", "d7/dcf/structmultiterm_1_1preparedOperand.html", "d7/dcf/structmultiterm_1_1preparedOperand" ]

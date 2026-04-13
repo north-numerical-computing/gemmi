@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['floatingpointtraits_0',['FloatingPointTraits',['../d8/d66/structfp_1_1FloatingPointTraits.html',1,'fp']]],
-  ['floatingpointtraits_3c_20double_20_3e_1',['FloatingPointTraits&lt; double &gt;',['../da/d24/structfp_1_1FloatingPointTraits_3_01double_01_4.html',1,'fp']]],
-  ['floatingpointtraits_3c_20float_20_3e_2',['FloatingPointTraits&lt; float &gt;',['../d0/dec/structfp_1_1FloatingPointTraits_3_01float_01_4.html',1,'fp']]]
+  ['matrixview_0',['MatrixView',['../d7/d80/structmatrix_1_1MatrixView.html',1,'matrix']]],
+  ['matrixview_3c_20const_20fp_5ft_20_3e_1',['MatrixView&lt; const fp_t &gt;',['../d7/d80/structmatrix_1_1MatrixView.html',1,'matrix']]],
+  ['multiplicationschedule_2',['multiplicationSchedule',['../da/df5/structmultiterm_1_1multiplicationSchedule.html',1,'multiterm']]]
 ];
