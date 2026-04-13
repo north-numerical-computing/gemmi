@@ -128,6 +128,31 @@ struct MatrixView {
     MatrixView(value_t* data, size_t rows, size_t cols, matrixLayout layout) :
         data(data), rows(rows), cols(cols), layout(layout) {}
 
+    /**
+     * @brief Construct a mutable matrix view from a vector.
+     *
+     * @param vec Vector containing the matrix data.
+     * @param rows Number of rows.
+     * @param cols Number of columns.
+     * @param layout Memory layout.
+     */
+    MatrixView(std::vector<value_t>& vec, size_t rows, size_t cols, matrixLayout layout) :
+        data(vec.data()), rows(rows), cols(cols), layout(layout) {}
+
+    /**
+     * @brief Construct a read-only matrix view from a const vector.
+     *
+     * Only participates in overload resolution when @c value_t is const-qualified.
+     *
+     * @param vec Const vector containing the matrix data.
+     * @param rows Number of rows.
+     * @param cols Number of columns.
+     * @param layout Memory layout.
+     */
+    template <typename = std::enable_if_t<std::is_const_v<value_t>>>
+    MatrixView(const std::vector<std::remove_const_t<value_t>>& vec, size_t rows, size_t cols, matrixLayout layout) :
+        data(vec.data()), rows(rows), cols(cols), layout(layout) {}
+
     template <typename other_t,
               typename = std::enable_if_t<
                   std::is_const_v<value_t> &&
@@ -209,78 +234,6 @@ struct MatrixView {
         return data[idx];
     }
 };
-
-/**
- * @brief Create a mutable matrix view from raw pointer.
- *
- * @tparam value_t Element type.
- * @param data Pointer to the first matrix element.
- * @param rows Number of rows.
- * @param cols Number of columns.
- * @param layout Memory layout.
- * @return `MatrixView<value_t>`
- */
-template <typename value_t>
-MatrixView<value_t> makeMatrixView(value_t* data,
-                                   size_t rows,
-                                   size_t cols,
-                                   matrixLayout layout) {
-    return MatrixView<value_t>(data, rows, cols, layout);
-}
-
-/**
- * @brief Create a read-only matrix view from raw pointer.
- *
- * @tparam value_t Element type.
- * @param data Pointer to the first matrix element.
- * @param rows Number of rows.
- * @param cols Number of columns.
- * @param layout Memory layout.
- * @return `MatrixView<const value_t>`
- */
-template <typename value_t>
-MatrixView<const value_t> makeMatrixView(const value_t* data,
-                                         size_t rows,
-                                         size_t cols,
-                                         matrixLayout layout) {
-    return MatrixView<const value_t>(data, rows, cols, layout);
-}
-
-/**
- * @brief Create a mutable matrix view from a std::vector.
- *
- * @tparam value_t Element type.
- * @param matrix Matrix storage.
- * @param rows Number of rows.
- * @param cols Number of columns.
- * @param layout Memory layout.
- * @return `MatrixView<value_t>`
- */
-template <typename value_t>
-MatrixView<value_t> makeMatrixView(std::vector<value_t>& matrix,
-                                   size_t rows,
-                                   size_t cols,
-                                   matrixLayout layout) {
-    return MatrixView<value_t>(matrix.data(), rows, cols, layout);
-}
-
-/**
- * @brief Create a read-only matrix view from a const std::vector.
- *
- * @tparam value_t Element type.
- * @param matrix Matrix storage.
- * @param rows Number of rows.
- * @param cols Number of columns.
- * @param layout Memory layout.
- * @return `MatrixView<const value_t>`
- */
-template <typename value_t>
-MatrixView<const value_t> makeMatrixView(const std::vector<value_t>& matrix,
-                                         size_t rows,
-                                         size_t cols,
-                                         matrixLayout layout) {
-    return MatrixView<const value_t>(matrix.data(), rows, cols, layout);
-}
 
 } // namespace matrix
 
@@ -1202,8 +1155,8 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrix::matrixLayout 
                          const multiterm::config &config) {
 
     // Build matrix views.
-    auto viewA = matrix::makeMatrixView(A, m, k, layoutA);
-    auto viewB = matrix::makeMatrixView(B, k, n, layoutB);
+    auto viewA = matrix::MatrixView<const fp_t>(A, m, k, layoutA);
+    auto viewB = matrix::MatrixView<const fp_t>(B, k, n, layoutB);
 
     // Validate inputs and derive execution parameters.
     auto derivedParameters = multiterm::deriveParameters<fp_t, splitint_t, accumulator_t>(viewA, viewB, config);

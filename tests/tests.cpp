@@ -186,7 +186,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
                                  normalisationDimension::byCols}) {
                     auto config = multiterm::OperandPreparationConfig(strategy, numSplits, bitsPerSlice, dim);
                     auto split = multiterm::prepareOperand<int8_t>(
-                        matrix::makeMatrixView(testValues, m, n, layout),
+                        matrix::MatrixView<const fp_t>(testValues, m, n, layout),
                         config);
 
                     const auto recon = reconstructFromMultitermDecomposition(split);
@@ -218,7 +218,7 @@ void runUnsignedEncodingEdgeBranchTests() {
         normalisationDimension::byRows);
 
     const auto split = multiterm::prepareOperand<split_t>(
-        matrix::makeMatrixView(values, 1, 2, matrix::matrixLayout::rowMajor),
+        matrix::MatrixView<const fp_t>(values, 1, 2, matrix::matrixLayout::rowMajor),
         config);
 
     const auto recon = reconstructFromMultitermDecomposition(split);
@@ -353,8 +353,8 @@ void runGemmiAccuracyTests() {
         std::vector<fp_t> Adata(2 * 3, 1.0);
         std::vector<fp_t> Bdata(3 * 2, 1.0);
 
-        auto A = matrix::makeMatrixView(Adata, 2, 3, matrix::matrixLayout::rowMajor);
-        auto B = matrix::makeMatrixView(Bdata, 3, 2, matrix::matrixLayout::rowMajor);
+        auto A = matrix::MatrixView<const fp_t>(Adata, 2, 3, matrix::matrixLayout::rowMajor);
+        auto B = matrix::MatrixView<const fp_t>(Bdata, 3, 2, matrix::matrixLayout::rowMajor);
 
         const auto validConfig = multiterm::config{
             2,
@@ -365,28 +365,28 @@ void runGemmiAccuracyTests() {
         };
 
         SECTION("null A pointer") {
-            const auto nullA = matrix::makeMatrixView(static_cast<const fp_t*>(nullptr), 2, 3, matrix::matrixLayout::rowMajor);
+            const auto nullA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(nullptr), 2, 3, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(nullA, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix A has a null data pointer"));
         }
 
         SECTION("null B pointer") {
-            const auto nullB = matrix::makeMatrixView(static_cast<const fp_t*>(nullptr), 3, 2, matrix::matrixLayout::rowMajor);
+            const auto nullB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(nullptr), 3, 2, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, nullB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix B has a null data pointer"));
         }
 
         SECTION("empty A") {
-            const auto emptyA = matrix::makeMatrixView(static_cast<const fp_t*>(Adata.data()), 0, 3, matrix::matrixLayout::rowMajor);
+            const auto emptyA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(Adata.data()), 0, 3, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(emptyA, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix A is empty"));
         }
 
         SECTION("empty B") {
-            const auto emptyB = matrix::makeMatrixView(static_cast<const fp_t*>(Bdata.data()), 3, 0, matrix::matrixLayout::rowMajor);
+            const auto emptyB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(Bdata.data()), 3, 0, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, emptyB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix B is empty"));
@@ -394,7 +394,7 @@ void runGemmiAccuracyTests() {
 
         SECTION("dimension mismatch") {
             std::vector<fp_t> badBData(4 * 2, 1.0);
-            auto badB = matrix::makeMatrixView(badBData, 4, 2, matrix::matrixLayout::rowMajor);
+            auto badB = matrix::MatrixView<const fp_t>(badBData, 4, 2, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, badB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Dimension mismatch"));
@@ -433,8 +433,8 @@ void runGemmiAccuracyTests() {
         SECTION("bitsPerSlice evaluates to zero") {
             fp_t value = 1.0;
             constexpr size_t hugeK = (size_t{1} << 31);
-            const auto hugeA = matrix::makeMatrixView(static_cast<const fp_t*>(&value), 1, hugeK, matrix::matrixLayout::rowMajor);
-            const auto hugeB = matrix::makeMatrixView(static_cast<const fp_t*>(&value), hugeK, 1, matrix::matrixLayout::rowMajor);
+            const auto hugeA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(&value), 1, hugeK, matrix::matrixLayout::rowMajor);
+            const auto hugeB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(&value), hugeK, 1, matrix::matrixLayout::rowMajor);
 
             REQUIRE_THROWS_WITH(
                 ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(hugeA, hugeB, validConfig)),
