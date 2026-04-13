@@ -123,7 +123,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Configuration object for the multiterm emulation scheme. </p>
 <p>The <code>config</code> struct specifies <em>all user‑selectable settings</em> for the multiterm algorithm.</p>
 <p>The user may specify the multiplication schedule as either:</p>
-<p>**(1) a predefined strategy **, using a <code>multiplicationStrategy</code> value, or</p>
+<p>**(1) a predefined strategy**, using a <code>multiplicationStrategy</code> value, or</p>
 <p>**(2) a custom mask**, using an explicit std::vector&lt;bool&gt; with <code>numSplitsA * numSplitsB</code> elements.</p>
 <p>If the custom mask is used, the vector is interpreted as a matrix stored in row-major order, where each column represents a slice of <code>A</code> and each row represents a slice of <code>B</code>. Products are computed only for those slice pairs (i,j) where the mask is true.</p>
 <h3><a class="anchor" id="autotoc_md0"></a>
@@ -132,7 +132,7 @@ Examples</h3>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a> <a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>;</div>
 <div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#a1e73764b59a0674860182bd7ff4ce53f">numSplitsA</a>        = 8;</div>
 <div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#ac5d8f5cbf28a6b02999f42cbb55a059d">numSplitsB</a>        = 8;</div>
-<div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#af832ef02dff57473125d1f396d3cb50d">splitType</a>         = multiterm::splitStrategy::roundToNearest;</div>
+<div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#af832ef02dff57473125d1f396d3cb50d">splitType</a>         = multiterm::splittingStrategy::roundToNearest;</div>
 <div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#a065bd81a426a744b3d8d932bbfe81722">redType</a>           = multiterm::reductionStrategy::floatingPoint;</div>
 <div class="line"><a class="code hl_struct" href="../../d1/da4/structmultiterm_1_1config.html">config</a>.<a class="code hl_variable" href="../../d1/da4/structmultiterm_1_1config.html#ab082d137e33d216b86ec6611ae205068">multSpecification</a> = multiterm::multiplicationStrategy::reduced;</div>
 <div class="line"> </div>
