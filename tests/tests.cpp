@@ -66,26 +66,26 @@ std::vector<fp_t> generateValuesWithSignificand(typename fp::FloatingPointTraits
     constexpr size_t significandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
     constexpr size_t expBits  = fp::FloatingPointTraits<fp_t>::numExponentBits;
 
-        const uint_t fractionMask = (static_cast<uint_t>(1) << significandBits) - 1;
-        const uint_t expMask  = (static_cast<uint_t>(1) << expBits) - 1;
+    const uint_t fractionMask = (static_cast<uint_t>(1) << significandBits) - 1;
+    const uint_t expMask  = (static_cast<uint_t>(1) << expBits) - 1;
 
-        const uint_t fraction = pattern & fractionMask;
-        const int bias = (static_cast<int>(1) << (expBits - 1)) - 1;
+    const uint_t fraction = pattern & fractionMask;
+    const int bias = (static_cast<int>(1) << (expBits - 1)) - 1;
 
-        std::vector<fp_t> result;
-        result.reserve((expMax - expMin + 1) * 2);
+    std::vector<fp_t> result;
+    result.reserve((expMax - expMin + 1) * 2);
 
-        for (int e = expMin; e <= expMax; e++) {
-            int stored = e + bias;
-            // LCOV_EXCL_START
-            if (stored <= 0 || stored >= int(expMask))
-                continue;
-            // LCOV_EXCL_STOP
-            uint_t bits = (static_cast<uint_t>(stored) << (significandBits - 1)) | fraction;
-            pushWithBothSigns<fp_t>(result, bits);
-        }
+    for (int e = expMin; e <= expMax; e++) {
+        int stored = e + bias;
+        // LCOV_EXCL_START
+        if (stored <= 0 || stored >= int(expMask))
+            continue;
+        // LCOV_EXCL_STOP
+        uint_t bits = (static_cast<uint_t>(stored) << (significandBits - 1)) | fraction;
+        pushWithBothSigns<fp_t>(result, bits);
+    }
 
-        return result;
+    return result;
 }
 
 template <typename fp_t>
