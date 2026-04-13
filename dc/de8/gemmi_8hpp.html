@@ -155,8 +155,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/structmultiterm_1_1config.html">multiterm::config</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration object for the multiterm emulation scheme.  <a href="../../d1/da4/structmultiterm_1_1config.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dfb/structmultiterm_1_1DerivedParameters.html">multiterm::DerivedParameters</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html">multiterm::OperandPreparationConfig</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for operand preparation.  <a href="../../d2/dbf/structmultiterm_1_1OperandPreparationConfig.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -207,10 +205,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a6546a5e19345d62bf00368b9523edc85"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a6546a5e19345d62bf00368b9523edc85">fp::getStoredFloatingPointExponent</a> (fp_t value)</td></tr>
 <tr class="memdesc:a6546a5e19345d62bf00368b9523edc85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the exponent of a floating-point value.  <br /></td></tr>
 <tr class="separator:a6546a5e19345d62bf00368b9523edc85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc47b522f9c92f8eaee60270bdec87da" id="r_abc47b522f9c92f8eaee60270bdec87da"><td class="memTemplParams" colspan="2">template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </td></tr>
-<tr class="memitem:abc47b522f9c92f8eaee60270bdec87da"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d6/dfb/structmultiterm_1_1DerivedParameters.html">DerivedParameters</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#abc47b522f9c92f8eaee60270bdec87da">multiterm::deriveParameters</a> (<a class="el" href="../../d7/d80/structmatrix_1_1MatrixView.html">matrix::MatrixView</a>&lt; const fp_t &gt; A, <a class="el" href="../../d7/d80/structmatrix_1_1MatrixView.html">matrix::MatrixView</a>&lt; const fp_t &gt; B, const <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;<a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a>)</td></tr>
-<tr class="memdesc:abc47b522f9c92f8eaee60270bdec87da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate inputs and derive execution parameters for multiterm scheme.  <br /></td></tr>
-<tr class="separator:abc47b522f9c92f8eaee60270bdec87da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc8441983b4aaa5f2e3bda581fd22fdc" id="r_acc8441983b4aaa5f2e3bda581fd22fdc"><td class="memTemplParams" colspan="2">template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </td></tr>
+<tr class="memitem:acc8441983b4aaa5f2e3bda581fd22fdc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#acc8441983b4aaa5f2e3bda581fd22fdc">multiterm::validateParameters</a> (<a class="el" href="../../d7/d80/structmatrix_1_1MatrixView.html">matrix::MatrixView</a>&lt; const fp_t &gt; A, <a class="el" href="../../d7/d80/structmatrix_1_1MatrixView.html">matrix::MatrixView</a>&lt; const fp_t &gt; B, const <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;<a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a>)</td></tr>
+<tr class="memdesc:acc8441983b4aaa5f2e3bda581fd22fdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate inputs for the multiterm scheme.  <br /></td></tr>
+<tr class="separator:acc8441983b4aaa5f2e3bda581fd22fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a64f880ec252461a437d856508ddc0b" id="r_a9a64f880ec252461a437d856508ddc0b"><td class="memTemplParams" colspan="2">template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </td></tr>
+<tr class="memitem:a9a64f880ec252461a437d856508ddc0b"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#a9a64f880ec252461a437d856508ddc0b">multiterm::computeBitsPerSlice</a> (size_t innerDimension)</td></tr>
+<tr class="memdesc:a9a64f880ec252461a437d856508ddc0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the number of bits assigned to each split slice.  <br /></td></tr>
+<tr class="separator:a9a64f880ec252461a437d856508ddc0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae245d16dbc07f7142a94643fe0e174b0" id="r_ae245d16dbc07f7142a94643fe0e174b0"><td class="memTemplParams" colspan="2">template&lt;typename splitint_t , typename fp_t &gt; </td></tr>
 <tr class="memitem:ae245d16dbc07f7142a94643fe0e174b0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/de8/gemmi_8hpp.html#ae245d16dbc07f7142a94643fe0e174b0">multiterm::computeNormalisationVectors</a> (<a class="el" href="../../d7/dcf/structmultiterm_1_1preparedOperand.html">preparedOperand</a>&lt; splitint_t, fp_t &gt; &amp;operand)</td></tr>
 <tr class="memdesc:ae245d16dbc07f7142a94643fe0e174b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute normalization vectors for the matrix.  <br /></td></tr>
@@ -275,7 +277,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00272">272</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00271">271</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -443,6 +445,51 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a9a64f880ec252461a437d856508ddc0b" name="a9a64f880ec252461a437d856508ddc0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a64f880ec252461a437d856508ddc0b">&#9670;&#160;</a></span>computeBitsPerSlice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t multiterm::computeBitsPerSlice </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>innerDimension</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the number of bits assigned to each split slice. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">fp_t</td><td>Floating-point element type. </td></tr>
+    <tr><td class="paramname">splitint_t</td><td>Signed integer type used to store matrix slices. </td></tr>
+    <tr><td class="paramname">accumulator_t</td><td>Signed integer accumulator type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">innerDimension</td><td>Inner dimension of the matrix product (<code>k</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>size_t Number of bits assigned to each split slice. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>if the computed value is zero. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00425">425</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a664ef207e193a2a4bb83d74c0495caa3" name="a664ef207e193a2a4bb83d74c0495caa3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a664ef207e193a2a4bb83d74c0495caa3">&#9670;&#160;</a></span>computeExactIntegerGEMM()</h2>
 
@@ -515,7 +562,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01005">1005</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01013">1013</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -578,7 +625,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00622">622</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00630">630</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -602,7 +649,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
 
 <p>Compute normalization vectors for the matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00587">587</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00595">595</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -668,7 +715,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01041">1041</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01048">1048</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -734,7 +781,7 @@ template&lt;typename splitint_t , typename accumulator_t , typename fp_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix C. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01094">1094</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01101">1101</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -773,7 +820,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00866">866</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00874">874</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -812,7 +859,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00654">654</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00662">662</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -851,82 +898,7 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00713">713</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
-
-</div>
-</div>
-<a id="abc47b522f9c92f8eaee60270bdec87da" name="abc47b522f9c92f8eaee60270bdec87da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc47b522f9c92f8eaee60270bdec87da">&#9670;&#160;</a></span>deriveParameters()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">DerivedParameters multiterm::deriveParameters </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d7/d80/structmatrix_1_1MatrixView.html">matrix::MatrixView</a>&lt; const fp_t &gt;&#160;</td>
-          <td class="paramname"><em>A</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d7/d80/structmatrix_1_1MatrixView.html">matrix::MatrixView</a>&lt; const fp_t &gt;&#160;</td>
-          <td class="paramname"><em>B</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;&#160;</td>
-          <td class="paramname"><em>config</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Validate inputs and derive execution parameters for multiterm scheme. </p>
-<p>Check that the two matrix views and the algorithm configuration are mutually consistent and that the template types satisfy the precision requirements of the accumulation scheme. The function performs both compile-time (static_assert) and runtime checks:</p><ul>
-<li><code>fp_t</code> is a floating-point type (compile-time);</li>
-<li><code>splitint_t</code> is a signed integer type (compile-time);</li>
-<li><code>accumulator_t</code> is a signed integer type (compile-time);</li>
-<li>neither matrix view has a null data pointer;</li>
-<li>neither matrix view is empty;</li>
-<li>the matrices are conformable for multiplication(<code>A.cols() == B.rows()</code>);</li>
-<li><code>numSplitsA</code> and <code>numSplitsB</code> are both strictly positive;</li>
-<li>the custom mask size (if used) equals <code>numSplitsA * numSplitsB</code>;</li>
-<li><code>splitint_t</code> is not too wide for <code>accumulator_t</code>; and</li>
-<li>the computed bitsPerSlice is strictly positive.</li>
-</ul>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">fp_t</td><td>Floating-point element type. </td></tr>
-    <tr><td class="paramname">splitint_t</td><td>Signed integer type used to store matrix slices. </td></tr>
-    <tr><td class="paramname">accumulator_t</td><td>Signed integer accumulator type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">A</td><td>View of the left-hand matrix (m x k). </td></tr>
-    <tr><td class="paramname">B</td><td>View of the right-hand matrix (k x n). </td></tr>
-    <tr><td class="paramname">config</td><td>Algorithm configuration. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>DerivedParameters Derived execution parameters for the multiplication. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">std::invalid_argument</td><td>if any runtime constraint is violated. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00368">368</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00721">721</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1025,7 +997,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01151">1151</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01158">1158</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1093,7 +1065,7 @@ template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01186">1186</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l01193">1193</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1174,7 +1146,7 @@ template&lt;typename fp_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00962">962</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00970">970</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1215,7 +1187,80 @@ template&lt;typename splitint_t , typename fp_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00893">893</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00901">901</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
+
+</div>
+</div>
+<a id="acc8441983b4aaa5f2e3bda581fd22fdc" name="acc8441983b4aaa5f2e3bda581fd22fdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc8441983b4aaa5f2e3bda581fd22fdc">&#9670;&#160;</a></span>validateParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename fp_t , typename splitint_t , typename accumulator_t &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void multiterm::validateParameters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/d80/structmatrix_1_1MatrixView.html">matrix::MatrixView</a>&lt; const fp_t &gt;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d7/d80/structmatrix_1_1MatrixView.html">matrix::MatrixView</a>&lt; const fp_t &gt;&#160;</td>
+          <td class="paramname"><em>B</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d1/da4/structmultiterm_1_1config.html">config</a> &amp;&#160;</td>
+          <td class="paramname"><em>config</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Validate inputs for the multiterm scheme. </p>
+<p>Check that the two matrix views and the algorithm configuration are mutually consistent and that the template types satisfy the precision requirements of the accumulation scheme. The function performs both compile-time (static_assert) and runtime checks:</p><ul>
+<li><code>fp_t</code> is a floating-point type (compile-time);</li>
+<li><code>splitint_t</code> is a signed integer type (compile-time);</li>
+<li><code>accumulator_t</code> is a signed integer type (compile-time);</li>
+<li>neither matrix view has a null data pointer;</li>
+<li>neither matrix view is empty;</li>
+<li>the matrices are conformable for multiplication(<code>A.cols() == B.rows()</code>);</li>
+<li><code>numSplitsA</code> and <code>numSplitsB</code> are both strictly positive;</li>
+<li>the custom mask size (if used) equals <code>numSplitsA * numSplitsB</code>;</li>
+<li><code>splitint_t</code> is not too wide for <code>accumulator_t</code>.</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">fp_t</td><td>Floating-point element type. </td></tr>
+    <tr><td class="paramname">splitint_t</td><td>Signed integer type used to store matrix slices. </td></tr>
+    <tr><td class="paramname">accumulator_t</td><td>Signed integer accumulator type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>View of the left-hand matrix (m x k). </td></tr>
+    <tr><td class="paramname">B</td><td>View of the right-hand matrix (k x n). </td></tr>
+    <tr><td class="paramname">config</td><td>Algorithm configuration. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>if any runtime constraint is violated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/de8/gemmi_8hpp_source.html#l00360">360</a> of file <a class="el" href="../../dc/de8/gemmi_8hpp_source.html">gemmi.hpp</a>.</p>
 
 </div>
 </div>

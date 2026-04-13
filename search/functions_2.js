@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['deriveparameters_0',['deriveParameters',['../dc/de8/gemmi_8hpp.html#abc47b522f9c92f8eaee60270bdec87da',1,'multiterm']]]
+  ['empty_0',['empty',['../d7/d80/structmatrix_1_1MatrixView.html#a52f282527a605744e3c3b7bad919a07f',1,'matrix::MatrixView']]]
 ];
