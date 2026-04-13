@@ -268,7 +268,6 @@ enum class reductionStrategy {
     integer        ///< Accumulate products in integer arithmetic.
 };
 
-
 using multiplicationSpecification = std::variant<multiplicationStrategy, std::vector<bool>>;
 
 /**
@@ -324,7 +323,6 @@ using multiplicationSpecification = std::variant<multiplicationStrategy, std::ve
  * Only products at positions marked `true' are computed.
  *
  */
-
 struct config {
     size_t numSplitsA;                             ///< Number of slices for matrix A.
     size_t numSplitsB;                             ///< Number of slices for matrix B.
@@ -333,12 +331,8 @@ struct config {
     reductionStrategy redType;                     ///< Reduction strategy.
 };
 
-struct DerivedParameters {
-    size_t bitsPerSlice; ///< Number of bits assigned to each split slice.
-};
-
 /**
- * @brief Validate inputs and derive execution parameters for multiterm scheme.
+ * @brief Validate inputs for the multiterm scheme.
  *
  * Check that the two matrix views and the algorithm configuration are mutually
  * consistent and that the template types satisfy the precision requirements of
@@ -352,8 +346,7 @@ struct DerivedParameters {
  *  - the matrices are conformable for multiplication(`A.cols() == B.rows()`);
  *  - `numSplitsA` and `numSplitsB` are both strictly positive;
  *  - the custom mask size (if used) equals `numSplitsA * numSplitsB`;
- *  - `splitint_t` is not too wide for `accumulator_t`; and
- *  - the computed bitsPerSlice is strictly positive.
+ *  - `splitint_t` is not too wide for `accumulator_t`.
  *
  * @tparam fp_t          Floating-point element type.
  * @tparam splitint_t    Signed integer type used to store matrix slices.
@@ -361,13 +354,12 @@ struct DerivedParameters {
  * @param  A   View of the left-hand matrix (m x k).
  * @param  B   View of the right-hand matrix (k x n).
  * @param  config Algorithm configuration.
- * @return DerivedParameters Derived execution parameters for the multiplication.
  * @throws std::invalid_argument if any runtime constraint is violated.
  */
 template <typename fp_t, typename splitint_t, typename accumulator_t>
-DerivedParameters deriveParameters(matrix::MatrixView<const fp_t> A,
-                                   matrix::MatrixView<const fp_t> B,
-                                   const config& config) {
+void validateParameters(matrix::MatrixView<const fp_t> A,
+                        matrix::MatrixView<const fp_t> B,
+                        const config& config) {
 
     // Compile-time type checks.
     static_assert(std::is_floating_point_v<fp_t>,
@@ -417,19 +409,35 @@ DerivedParameters deriveParameters(matrix::MatrixView<const fp_t> A,
             "splitint_t (" + std::to_string(bitsPerInteger) + " bits) is too wide "
             "for accumulator_t (" + std::to_string(bitsInAccumulator) + " bits): "
             "require bitsPerInteger <= bitsInAccumulator / 2");
+}
 
-    const size_t k = A.cols;
-    const double log2k = (k > 1) ? std::log2(static_cast<double>(k)) : 0.0;
+/**
+ * @brief Compute the number of bits assigned to each split slice.
+ *
+ * @tparam fp_t          Floating-point element type.
+ * @tparam splitint_t    Signed integer type used to store matrix slices.
+ * @tparam accumulator_t Signed integer accumulator type.
+ * @param innerDimension Inner dimension of the matrix product (`k`).
+ * @return size_t Number of bits assigned to each split slice.
+ * @throws std::invalid_argument if the computed value is zero.
+ */
+template <typename splitint_t, typename accumulator_t>
+size_t computeBitsPerSlice(size_t innerDimension) {
+    constexpr size_t bitsInAccumulator = std::numeric_limits<accumulator_t>::digits;
+    constexpr size_t bitsPerInteger    = std::numeric_limits<splitint_t>::digits;
+
+    const double log2k = (innerDimension > 1) ? std::log2(static_cast<double>(innerDimension)) : 0.0;
     const auto alpha = static_cast<size_t>(
         std::max(0.0, std::floor((static_cast<double>(bitsInAccumulator) - log2k) / 2.0)));
     const size_t bitsPerSlice = std::min(bitsPerInteger, alpha);
-    if (bitsPerSlice == 0)
+    if (bitsPerSlice == 0) {
         throw std::invalid_argument(
-            "Computed bitsPerSlice is 0: inner dimension k=" + std::to_string(k) +
+            "Computed bitsPerSlice is 0: inner dimension k=" + std::to_string(innerDimension) +
             " is too large for accumulator_t (" +
             std::to_string(bitsInAccumulator) + " bits)");
+    }
 
-    return DerivedParameters{bitsPerSlice};
+    return bitsPerSlice;
 }
 
 /***********************
@@ -1035,7 +1043,6 @@ void computeExactIntegerGEMM(const preparedOperand<splitint_t, fp_t> &A,
  * @param schedule Multiplication schedule specifying which slice products to compute.
  * @param layoutC Layout of the output matrix C.
  * @return Resulting matrix C.
- *
  */
 template <typename splitint_t, typename accumulator_t, typename fp_t>
 std::vector<fp_t> computeProductsWithFloatingPointAccumulation(const preparedOperand<splitint_t, fp_t> &A,
@@ -1158,9 +1165,9 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const matrix::matrixLayout 
     auto viewA = matrix::MatrixView<const fp_t>(A, m, k, layoutA);
     auto viewB = matrix::MatrixView<const fp_t>(B, k, n, layoutB);
 
-    // Validate inputs and derive execution parameters.
-    auto derivedParameters = multiterm::deriveParameters<fp_t, splitint_t, accumulator_t>(viewA, viewB, config);
-    const size_t bitsPerSlice = derivedParameters.bitsPerSlice;
+    // Validate inputs and compute execution parameters.
+    multiterm::validateParameters<fp_t, splitint_t, accumulator_t>(viewA, viewB, config);
+    const size_t bitsPerSlice = multiterm::computeBitsPerSlice<splitint_t, accumulator_t>(k);
 
     // Slice operands.
     auto splitA = multiterm::prepareOperand<splitint_t, fp_t>(viewA,

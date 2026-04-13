@@ -347,7 +347,7 @@ void runGemmiAccuracyTests() {
  * Test cases *
  **************/
 
- TEST_CASE("deriveParameters exceptions on invalid inputs", "[deriveParameters][errors]") {
+ TEST_CASE("validateParameters and computeBitsPerSlice exceptions on invalid inputs", "[validateParameters][errors]") {
         using fp_t = double;
 
         std::vector<fp_t> Adata(2 * 3, 1.0);
@@ -367,28 +367,28 @@ void runGemmiAccuracyTests() {
         SECTION("null A pointer") {
             const auto nullA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(nullptr), 2, 3, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(nullA, B, validConfig)),
+                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(nullA, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix A has a null data pointer"));
         }
 
         SECTION("null B pointer") {
             const auto nullB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(nullptr), 3, 2, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, nullB, validConfig)),
+                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, nullB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix B has a null data pointer"));
         }
 
         SECTION("empty A") {
             const auto emptyA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(Adata.data()), 0, 3, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(emptyA, B, validConfig)),
+                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(emptyA, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix A is empty"));
         }
 
         SECTION("empty B") {
             const auto emptyB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(Bdata.data()), 3, 0, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, emptyB, validConfig)),
+                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, emptyB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix B is empty"));
         }
 
@@ -396,7 +396,7 @@ void runGemmiAccuracyTests() {
             std::vector<fp_t> badBData(4 * 2, 1.0);
             auto badB = matrix::MatrixView<const fp_t>(badBData, 4, 2, matrix::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, badB, validConfig)),
+                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, badB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Dimension mismatch"));
         }
 
@@ -404,7 +404,7 @@ void runGemmiAccuracyTests() {
             auto cfg = validConfig;
             cfg.numSplitsA = 0;
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
+                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
                 Catch::Matchers::ContainsSubstring("numSplitsA must be >= 1"));
         }
 
@@ -412,7 +412,7 @@ void runGemmiAccuracyTests() {
             auto cfg = validConfig;
             cfg.numSplitsB = 0;
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
+                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
                 Catch::Matchers::ContainsSubstring("numSplitsB must be >= 1"));
         }
 
@@ -420,13 +420,13 @@ void runGemmiAccuracyTests() {
             auto cfg = validConfig;
             cfg.multSpecification = std::vector<bool>{true, false, true};
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
+                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
                 Catch::Matchers::ContainsSubstring("Custom mask size"));
         }
 
         SECTION("split integer type too wide for accumulator") {
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int32_t, int32_t>(A, B, validConfig)),
+                ((void)multiterm::validateParameters<fp_t, int32_t, int32_t>(A, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("splitint_t"));
         }
 
@@ -436,8 +436,11 @@ void runGemmiAccuracyTests() {
             const auto hugeA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(&value), 1, hugeK, matrix::matrixLayout::rowMajor);
             const auto hugeB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(&value), hugeK, 1, matrix::matrixLayout::rowMajor);
 
+            // Validate separately and then check derivation-specific failure.
+            REQUIRE_NOTHROW(((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(hugeA, hugeB, validConfig)));
+
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::deriveParameters<fp_t, int8_t, int32_t>(hugeA, hugeB, validConfig)),
+                ((void)multiterm::computeBitsPerSlice<int8_t, int32_t>(hugeK)),
                 Catch::Matchers::ContainsSubstring("Computed bitsPerSlice is 0"));
         }
 }
