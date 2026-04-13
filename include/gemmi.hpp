@@ -64,9 +64,9 @@ struct FloatingPointTraits<double> {
  */
 template <typename fp_t>
 int getStoredFloatingPointExponent(fp_t value) {
-    return (value == 0.0) ?
-        0 :
-        std::max(std::numeric_limits<fp_t>::min_exponent, std::ilogb(std::abs(value)) + 1);
+    auto minFPExponent = std::numeric_limits<fp_t>::min_exponent;
+    auto actualExponent = std::ilogb(std::abs(value)) + 1;
+    return (value == 0.0) ? 0 : std::max(minFPExponent, actualExponent);
 }
 
 } // namespace fp
@@ -278,7 +278,7 @@ using multiplicationSpecification = std::variant<multiplicationStrategy, std::ve
  *
  * The user may specify the multiplication schedule as either:
  *
- *   **(1) a predefined strategy **, using a `multiplicationStrategy` value, or
+ *   **(1) a predefined strategy**, using a `multiplicationStrategy` value, or
  *
  *   **(2) a custom mask**, using an explicit std::vector<bool> with
  *       `numSplitsA * numSplitsB` elements.
@@ -298,7 +298,7 @@ using multiplicationSpecification = std::variant<multiplicationStrategy, std::ve
  * multiterm::config config;
  * config.numSplitsA        = 8;
  * config.numSplitsB        = 8;
- * config.splitType         = multiterm::splitStrategy::roundToNearest;
+ * config.splitType         = multiterm::splittingStrategy::roundToNearest;
  * config.redType           = multiterm::reductionStrategy::floatingPoint;
  * config.multSpecification = multiterm::multiplicationStrategy::reduced;
  *
@@ -370,14 +370,14 @@ void validateParameters(matrix::MatrixView<const fp_t> A,
                   "accumulator_t must be a signed integer type");
 
     // Matrix checks.
-    if (A.data == nullptr)
-        throw std::invalid_argument("Matrix A has a null data pointer");
-    if (B.data == nullptr)
-        throw std::invalid_argument("Matrix B has a null data pointer");
-    if (A.empty())
-        throw std::invalid_argument("Matrix A is empty (rows or cols is 0)");
-    if (B.empty())
-        throw std::invalid_argument("Matrix B is empty (rows or cols is 0)");
+    auto validateMatrix = [](const auto& M, std::string_view name) {
+        if (M.data == nullptr)
+            throw std::invalid_argument(std::string(name) + " has a null data pointer");
+        if (M.empty())
+            throw std::invalid_argument(std::string(name) + " is empty (rows or cols is 0)");
+    };
+    validateMatrix(A, "Matrix A");
+    validateMatrix(B, "Matrix B");
 
     if (A.cols != B.rows)
         throw std::invalid_argument(
@@ -414,7 +414,6 @@ void validateParameters(matrix::MatrixView<const fp_t> A,
 /**
  * @brief Compute the number of bits assigned to each split slice.
  *
- * @tparam fp_t          Floating-point element type.
  * @tparam splitint_t    Signed integer type used to store matrix slices.
  * @tparam accumulator_t Signed integer accumulator type.
  * @param innerDimension Inner dimension of the matrix product (`k`).
