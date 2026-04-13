@@ -40,10 +40,6 @@ var gemmi_8hpp =
     [ "deriveParameters", "dc/de8/gemmi_8hpp.html#abc47b522f9c92f8eaee60270bdec87da", null ],
     [ "gemmi", "dc/de8/gemmi_8hpp.html#a47651f8e07b814de3ad4772947137a62", null ],
     [ "getStoredFloatingPointExponent", "dc/de8/gemmi_8hpp.html#a6546a5e19345d62bf00368b9523edc85", null ],
-    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a71c0eaaa6e9cbf66d22000d09326c57e", null ],
-    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a2dfcc84f525401e68bd17d9939aa84a9", null ],
-    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a9d606fad322b164e21cb1bd819573e09", null ],
-    [ "makeMatrixView", "dc/de8/gemmi_8hpp.html#a2d880415fadd91d6d6c560e47a6508c2", null ],
     [ "makeSchedule", "dc/de8/gemmi_8hpp.html#a45c7ea63a14a97b41e04c3f35abf8565", null ],
     [ "prepareOperand", "dc/de8/gemmi_8hpp.html#a6acd3c926bc30df3bb8af453eb6fc758", null ]
 ];

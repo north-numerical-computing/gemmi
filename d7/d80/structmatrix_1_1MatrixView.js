@@ -2,6 +2,8 @@ var structmatrix_1_1MatrixView =
 [
     [ "MatrixView", "d7/d80/structmatrix_1_1MatrixView.html#a92e92b4b3b2cb55a857951bd0573daaa", null ],
     [ "MatrixView", "d7/d80/structmatrix_1_1MatrixView.html#a9a78af2ea1b19d18a84b667a548dd4f5", null ],
+    [ "MatrixView", "d7/d80/structmatrix_1_1MatrixView.html#a50d44a02ee0a3c21a7be16ac5d903d85", null ],
+    [ "MatrixView", "d7/d80/structmatrix_1_1MatrixView.html#ae5a37fb4b86d55f3c9c71f6ef2739d24", null ],
     [ "at", "d7/d80/structmatrix_1_1MatrixView.html#a829dfb5a9e6565b769615162747d62be", null ],
     [ "empty", "d7/d80/structmatrix_1_1MatrixView.html#a52f282527a605744e3c3b7bad919a07f", null ],
     [ "index", "d7/d80/structmatrix_1_1MatrixView.html#aa932b6752d5fdaa6ebb1d8b32c681137", null ],
