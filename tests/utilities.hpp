@@ -9,18 +9,18 @@
 template <typename fp_t>
 size_t matrixIndex(size_t i, size_t j,
                    size_t rows, size_t cols,
-                   matrix::matrixLayout layout) {
-    return (layout == matrix::matrixLayout::rowMajor)
+                   gemmi::core::matrixLayout layout) {
+    return (layout == gemmi::core::matrixLayout::rowMajor)
         ? (i * cols + j)
         : (j * rows + i);
 }
 
 template <typename fp_t>
 std::vector<fp_t> referenceGemm(
-    const std::vector<fp_t>& A, matrix::matrixLayout layoutA,
-    const std::vector<fp_t>& B, matrix::matrixLayout layoutB,
+    const std::vector<fp_t>& A, gemmi::core::matrixLayout layoutA,
+    const std::vector<fp_t>& B, gemmi::core::matrixLayout layoutB,
     size_t m, size_t k, size_t n,
-    matrix::matrixLayout layoutC)
+    gemmi::core::matrixLayout layoutC)
 {
     std::vector<fp_t> C(m * n, fp_t{0});
 

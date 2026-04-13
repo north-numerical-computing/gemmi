@@ -3,9 +3,9 @@
 #include "../include/gemmi.hpp"
 
 typedef struct {
-    multiterm::splittingStrategy splitType;
-    multiterm::multiplicationSpecification multSpec;
-    multiterm::reductionStrategy accType;
+    gemmi::mt::splittingStrategy splitType;
+    gemmi::mt::multiplicationSpecification multSpec;
+    gemmi::mt::reductionStrategy accType;
 } algorithmOptions;
 static std::unique_ptr<algorithmOptions> options = nullptr;
 
@@ -15,9 +15,9 @@ public:
 
         if (options == nullptr) {
             options = std::make_unique<algorithmOptions>();
-            options->splitType = multiterm::splittingStrategy::roundToNearest;
-            options->accType = multiterm::reductionStrategy::integer;
-            options->multSpec = multiterm::multiplicationStrategy::reduced;
+            options->splitType = gemmi::mt::splittingStrategy::roundToNearest;
+            options->accType = gemmi::mt::reductionStrategy::integer;
+            options->multSpec = gemmi::mt::multiplicationStrategy::reduced;
         }
 
         // Validate input.
@@ -47,23 +47,23 @@ public:
             matlab::data::ArrayFactory factory;
             matlab::data::StructArray S = factory.createStructArray({1, 1}, {"split", "acc", "mult"});
             switch (options->splitType) {
-                case multiterm::splittingStrategy::truncation:
+                case gemmi::mt::splittingStrategy::truncation:
                     S[0]["split"] = factory.createCharArray("t");
                     break;
-                case multiterm::splittingStrategy::unsignedEncoding:
+                case gemmi::mt::splittingStrategy::unsignedEncoding:
                     S[0]["split"] = factory.createCharArray("u");
                     break;
-                case multiterm::splittingStrategy::roundToNearest:
+                case gemmi::mt::splittingStrategy::roundToNearest:
                     S[0]["split"] = factory.createCharArray("n");
                     break;
                 default:
                     S[0]["split"] = factory.createCharArray("unknown");
                     break;
             }
-            S[0]["acc"] = factory.createCharArray(options->accType == multiterm::reductionStrategy::floatingPoint ? "f" : "i");
-            if (std::holds_alternative<multiterm::multiplicationStrategy>(options->multSpec)) {
-                const auto multType = std::get<multiterm::multiplicationStrategy>(options->multSpec);
-                S[0]["mult"] = factory.createCharArray(multType == multiterm::multiplicationStrategy::full ? "f" : "r");
+            S[0]["acc"] = factory.createCharArray(options->accType == gemmi::mt::reductionStrategy::floatingPoint ? "f" : "i");
+            if (std::holds_alternative<gemmi::mt::multiplicationStrategy>(options->multSpec)) {
+                const auto multType = std::get<gemmi::mt::multiplicationStrategy>(options->multSpec);
+                S[0]["mult"] = factory.createCharArray(multType == gemmi::mt::multiplicationStrategy::full ? "f" : "r");
             } else {
                 matlab::data::TypedArray<bool> multMask = factory.createArray<bool>({numSplitsA, numSplitsB});
                 const auto& mask = std::get<std::vector<bool>>(options->multSpec);
@@ -87,11 +87,11 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<double, int8_t, int32_t>(A, matrix::matrixLayout::columnMajor,
-                                                B, matrix::matrixLayout::columnMajor,
+        auto C = gemmi::mt::gemmi<double, int8_t, int32_t>(A, gemmi::core::matrixLayout::columnMajor,
+                                                B, gemmi::core::matrixLayout::columnMajor,
                                                 A_size[0], A_size[1], B_size[1],
-                                                matrix::matrixLayout::columnMajor,
-                                                multiterm::config{numSplitsA, numSplitsB,
+                                                gemmi::core::matrixLayout::columnMajor,
+                                                gemmi::mt::config{numSplitsA, numSplitsB,
                                                                   options->splitType,
                                                                   options->multSpec,
                                                                   options->accType});
@@ -108,10 +108,10 @@ private:
         auto A_size = Amatlab.getDimensions();
         auto B_size = Bmatlab.getDimensions();
 
-        auto C = gemmi<float, int8_t, int32_t>(A, matrix::matrixLayout::columnMajor, B, matrix::matrixLayout::columnMajor,
+        auto C = gemmi::mt::gemmi<float, int8_t, int32_t>(A, gemmi::core::matrixLayout::columnMajor, B, gemmi::core::matrixLayout::columnMajor,
                                                A_size[0], A_size[1], B_size[1],
-                                               matrix::matrixLayout::columnMajor,
-                                               multiterm::config{numSplitsA, numSplitsB,
+                                               gemmi::core::matrixLayout::columnMajor,
+                                               gemmi::mt::config{numSplitsA, numSplitsB,
                                                                  options->splitType,
                                                                  options->multSpec,
                                                                  options->accType});
@@ -207,13 +207,13 @@ private:
                         const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                         switch ((char)data[0]) {
                             case 't':
-                                options->splitType = multiterm::splittingStrategy::truncation;
+                                options->splitType = gemmi::mt::splittingStrategy::truncation;
                                 break;
                             case 'u':
-                                options->splitType = multiterm::splittingStrategy::unsignedEncoding;
+                                options->splitType = gemmi::mt::splittingStrategy::unsignedEncoding;
                                 break;
                             case 'n':
-                                options->splitType = multiterm::splittingStrategy::roundToNearest;
+                                options->splitType = gemmi::mt::splittingStrategy::roundToNearest;
                                 break;
                             default:
                                 matlabPtr->feval(u"error",
@@ -228,10 +228,10 @@ private:
                         const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                         switch ((char)data[0]) {
                             case 'f':
-                                options->accType = multiterm::reductionStrategy::floatingPoint;
+                                options->accType = gemmi::mt::reductionStrategy::floatingPoint;
                                 break;
                             case 'i':
-                                options->accType = multiterm::reductionStrategy::integer;
+                                options->accType = gemmi::mt::reductionStrategy::integer;
                                 break;
                             default:
                                 matlabPtr->feval(u"error",
@@ -247,10 +247,10 @@ private:
                             const matlab::data::TypedArrayRef<char16_t> data = inStruct[0][field];
                             switch ((char)(data[0])) {
                                 case 'f':
-                                    options->multSpec = multiterm::multiplicationStrategy::full;
+                                    options->multSpec = gemmi::mt::multiplicationStrategy::full;
                                     break;
                                 case 'r':
-                                    options->multSpec = multiterm::multiplicationStrategy::reduced;
+                                    options->multSpec = gemmi::mt::multiplicationStrategy::reduced;
                                     break;
                                 default:
                                     matlabPtr->feval(u"error",
@@ -268,7 +268,7 @@ private:
                             std::vector<bool> mask;
                             mask.reserve(numSplitsA * numSplitsB);
                             // Convert from column-major (MATLAB) to row-major (C order)
-                            // mask order expected by multiterm::config.
+                            // mask order expected by gemmi::mt::config.
                             for (size_t row = 0; row < numSplitsA; ++row) {
                                 for (size_t col = 0; col < numSplitsB; ++col) {
                                     mask.push_back(inMask[row][col]);

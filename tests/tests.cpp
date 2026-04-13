@@ -17,7 +17,7 @@ template <>
 constexpr double tolerance<double>() { return 1e-14; }
 
 template <typename fp_t>
-using storage_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
+using storage_t = typename gemmi::core::FloatingPointTraits<fp_t>::StorageType;
 
 template <typename fp_t>
 std::string hexBits(fp_t value) {
@@ -50,8 +50,8 @@ void requireBitwiseIdenticalVectors(const std::vector<fp_t> &actual,
 
 template <typename fp_t>
 inline void pushWithBothSigns(std::vector<fp_t>& out,
-                                typename fp::FloatingPointTraits<fp_t>::StorageType bits) {
-    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
+                                typename gemmi::core::FloatingPointTraits<fp_t>::StorageType bits) {
+    using uint_t = typename gemmi::core::FloatingPointTraits<fp_t>::StorageType;
         const size_t totalBits = sizeof(uint_t) * 8;
         const uint_t signMask  = static_cast<uint_t>(1) << (totalBits - 1);
         out.push_back(std::bit_cast<fp_t>(bits));
@@ -59,12 +59,12 @@ inline void pushWithBothSigns(std::vector<fp_t>& out,
 }
 
 template <typename fp_t>
-std::vector<fp_t> generateValuesWithSignificand(typename fp::FloatingPointTraits<fp_t>::StorageType pattern,
+std::vector<fp_t> generateValuesWithSignificand(typename gemmi::core::FloatingPointTraits<fp_t>::StorageType pattern,
                                                 int expMin, int expMax) {
-    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
+    using uint_t = typename gemmi::core::FloatingPointTraits<fp_t>::StorageType;
 
-    constexpr size_t significandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
-    constexpr size_t expBits  = fp::FloatingPointTraits<fp_t>::numExponentBits;
+    constexpr size_t significandBits = gemmi::core::FloatingPointTraits<fp_t>::numSignificandBits;
+    constexpr size_t expBits  = gemmi::core::FloatingPointTraits<fp_t>::numExponentBits;
 
     const uint_t fractionMask = (static_cast<uint_t>(1) << significandBits) - 1;
     const uint_t expMask  = (static_cast<uint_t>(1) << expBits) - 1;
@@ -90,9 +90,9 @@ std::vector<fp_t> generateValuesWithSignificand(typename fp::FloatingPointTraits
 
 template <typename fp_t>
 std::vector<fp_t> generateTestValues(int targetExponent) {
-    using uint_t = typename fp::FloatingPointTraits<fp_t>::StorageType;
-    constexpr size_t significandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
-    constexpr size_t expBits  = fp::FloatingPointTraits<fp_t>::numExponentBits;
+    using uint_t = typename gemmi::core::FloatingPointTraits<fp_t>::StorageType;
+    constexpr size_t significandBits = gemmi::core::FloatingPointTraits<fp_t>::numSignificandBits;
+    constexpr size_t expBits  = gemmi::core::FloatingPointTraits<fp_t>::numExponentBits;
 
     const int bias = (static_cast<int>(1) << (expBits - 1)) - 1;
         const uint_t expField = static_cast<uint_t>(targetExponent + bias) << (significandBits - 1);
@@ -137,7 +137,7 @@ std::vector<fp_t> makeRandomMatrix(size_t rows, size_t cols,
  ************************/
 
 template <typename splitint_t, typename fp_t>
-std::vector<fp_t> reconstructFromMultitermDecomposition(const multiterm::preparedOperand<splitint_t, fp_t> &split) {
+std::vector<fp_t> reconstructFromMultitermDecomposition(const gemmi::mt::preparedOperand<splitint_t, fp_t> &split) {
     std::vector<fp_t> reconstructed(split.matrix.size(), fp_t{0});
     for (size_t i = 0; i < split.outerDimension(); ++i) {
         for (size_t j = 0; j < split.innerDimension(); ++j) {
@@ -177,16 +177,16 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
         };
 
         for (auto [m, n] : shapes) {
-        for (auto layout : {matrix::matrixLayout::rowMajor,
-                            matrix::matrixLayout::columnMajor}) {
-            for (auto strategy : {multiterm::splittingStrategy::truncation,
-                                  multiterm::splittingStrategy::unsignedEncoding,
-                                  multiterm::splittingStrategy::roundToNearest}) {
-                for (auto dim : {normalisationDimension::byRows,
-                                 normalisationDimension::byCols}) {
-                    auto config = multiterm::OperandPreparationConfig(strategy, numSplits, bitsPerSlice, dim);
-                    auto split = multiterm::prepareOperand<int8_t>(
-                        matrix::MatrixView<const fp_t>(testValues, m, n, layout),
+        for (auto layout : {gemmi::core::matrixLayout::rowMajor,
+                            gemmi::core::matrixLayout::columnMajor}) {
+            for (auto strategy : {gemmi::mt::splittingStrategy::truncation,
+                                  gemmi::mt::splittingStrategy::unsignedEncoding,
+                                  gemmi::mt::splittingStrategy::roundToNearest}) {
+                for (auto dim : {gemmi::mt::normalisationDimension::byRows,
+                                 gemmi::mt::normalisationDimension::byCols}) {
+                    auto config = gemmi::mt::OperandPreparationConfig(strategy, numSplits, bitsPerSlice, dim);
+                    auto split = gemmi::mt::prepareOperand<int8_t>(
+                        gemmi::core::MatrixView<const fp_t>(testValues, m, n, layout),
                         config);
 
                     const auto recon = reconstructFromMultitermDecomposition(split);
@@ -200,7 +200,7 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
 template <typename fp_t>
 void runUnsignedEncodingEdgeBranchTests() {
     using split_t = std::conditional_t<std::is_same_v<fp_t, float>, int32_t, int64_t>;
-    constexpr size_t numSignificandBits = fp::FloatingPointTraits<fp_t>::numSignificandBits;
+    constexpr size_t numSignificandBits = gemmi::core::FloatingPointTraits<fp_t>::numSignificandBits;
 
     const int tinyPower = std::is_same_v<fp_t, float> ? 60 : 120;
     const std::vector<fp_t> values = {
@@ -211,14 +211,14 @@ void runUnsignedEncodingEdgeBranchTests() {
     const size_t bitsPerSlice = numSignificandBits + 1;
     const size_t numSplits = numSlicesForExactRoundTrip<fp_t>();
 
-    const auto config = multiterm::OperandPreparationConfig(
-        multiterm::splittingStrategy::unsignedEncoding,
+    const auto config = gemmi::mt::OperandPreparationConfig(
+        gemmi::mt::splittingStrategy::unsignedEncoding,
         numSplits,
         bitsPerSlice,
-        normalisationDimension::byRows);
+        gemmi::mt::normalisationDimension::byRows);
 
-    const auto split = multiterm::prepareOperand<split_t>(
-        matrix::MatrixView<const fp_t>(values, 1, 2, matrix::matrixLayout::rowMajor),
+    const auto split = gemmi::mt::prepareOperand<split_t>(
+        gemmi::core::MatrixView<const fp_t>(values, 1, 2, gemmi::core::matrixLayout::rowMajor),
         config);
 
     const auto recon = reconstructFromMultitermDecomposition(split);
@@ -249,14 +249,14 @@ const std::vector<GemmSliceCounts> gemmSplitCounts = {
 
 template <typename fp_t, typename Fn>
 void forEachSharedGemmCase(Fn&& testFunction) {
-    for (auto layoutA : {matrix::matrixLayout::rowMajor, matrix::matrixLayout::columnMajor}) {
-        for (auto layoutB : {matrix::matrixLayout::rowMajor, matrix::matrixLayout::columnMajor}) {
-            for (auto layoutC : {matrix::matrixLayout::rowMajor, matrix::matrixLayout::columnMajor}) {
-                for (auto splitType : {multiterm::splittingStrategy::truncation,
-                                       multiterm::splittingStrategy::unsignedEncoding,
-                                       multiterm::splittingStrategy::roundToNearest}) {
-                    for (auto accumulationType : {multiterm::reductionStrategy::floatingPoint,
-                                                  multiterm::reductionStrategy::integer}) {
+    for (auto layoutA : {gemmi::core::matrixLayout::rowMajor, gemmi::core::matrixLayout::columnMajor}) {
+        for (auto layoutB : {gemmi::core::matrixLayout::rowMajor, gemmi::core::matrixLayout::columnMajor}) {
+            for (auto layoutC : {gemmi::core::matrixLayout::rowMajor, gemmi::core::matrixLayout::columnMajor}) {
+                for (auto splitType : {gemmi::mt::splittingStrategy::truncation,
+                                       gemmi::mt::splittingStrategy::unsignedEncoding,
+                                       gemmi::mt::splittingStrategy::roundToNearest}) {
+                    for (auto accumulationType : {gemmi::mt::reductionStrategy::floatingPoint,
+                                                  gemmi::mt::reductionStrategy::integer}) {
                         for (auto [m, k, n] : gemmShapes) {
                             const auto A = makeRandomMatrix<fp_t>(m, k, 127);
                             const auto B = makeRandomMatrix<fp_t>(k, n, 255);
@@ -279,13 +279,13 @@ void forEachSharedGemmCase(Fn&& testFunction) {
 template <typename fp_t>
 void runBitmaskScheduleEquivalenceTests() {
     forEachSharedGemmCase<fp_t>(
-        [&](const matrix::matrixLayout layoutA, const matrix::matrixLayout layoutB, const matrix::matrixLayout layoutC,
-            const multiterm::splittingStrategy splitType, const multiterm::reductionStrategy accumulationType,
+        [&](const gemmi::core::matrixLayout layoutA, const gemmi::core::matrixLayout layoutB, const gemmi::core::matrixLayout layoutC,
+            const gemmi::mt::splittingStrategy splitType, const gemmi::mt::reductionStrategy accumulationType,
             const size_t m, const size_t k, const size_t n,
             const size_t numSplitA, const size_t numSplitB,
             const std::vector<fp_t>& A, const std::vector<fp_t>& B) {
-            const auto makeConfig = [&](const multiterm::multiplicationSpecification& spec) {
-                return multiterm::config{numSplitA, numSplitB, splitType,
+            const auto makeConfig = [&](const gemmi::mt::multiplicationSpecification& spec) {
+                return gemmi::mt::config{numSplitA, numSplitB, splitType,
                                          spec, accumulationType};
             };
 
@@ -298,37 +298,37 @@ void runBitmaskScheduleEquivalenceTests() {
                 }
             }
 
-            const auto run = [&](const multiterm::multiplicationSpecification& spec) {
-                return gemmi<fp_t, int8_t, int32_t>(A, layoutA,
+            const auto run = [&](const gemmi::mt::multiplicationSpecification& spec) {
+                return gemmi::mt::gemmi<fp_t, int8_t, int32_t>(A, layoutA,
                                                     B, layoutB,
                                                     m, k, n,
                                                     layoutC,
                                                     makeConfig(spec));
             };
 
-            REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::full)).mask == fullMask);
-            REQUIRE(multiterm::makeSchedule(makeConfig(multiterm::multiplicationStrategy::reduced)).mask == reducedMask);
-            requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::full), run(fullMask));
-            requireBitwiseIdenticalVectors(run(multiterm::multiplicationStrategy::reduced), run(reducedMask));
+            REQUIRE(gemmi::mt::makeSchedule(makeConfig(gemmi::mt::multiplicationStrategy::full)).mask == fullMask);
+            REQUIRE(gemmi::mt::makeSchedule(makeConfig(gemmi::mt::multiplicationStrategy::reduced)).mask == reducedMask);
+            requireBitwiseIdenticalVectors(run(gemmi::mt::multiplicationStrategy::full), run(fullMask));
+            requireBitwiseIdenticalVectors(run(gemmi::mt::multiplicationStrategy::reduced), run(reducedMask));
         });
 }
 
 template <typename fp_t>
 void runGemmiAccuracyTests() {
     forEachSharedGemmCase<fp_t>(
-        [&](const matrix::matrixLayout layoutA, const matrix::matrixLayout layoutB, const matrix::matrixLayout layoutC,
-            const multiterm::splittingStrategy splitType, const multiterm::reductionStrategy accumulationType,
+        [&](const gemmi::core::matrixLayout layoutA, const gemmi::core::matrixLayout layoutB, const gemmi::core::matrixLayout layoutC,
+            const gemmi::mt::splittingStrategy splitType, const gemmi::mt::reductionStrategy accumulationType,
             const size_t m, const size_t k, const size_t n,
             const size_t numSplitA, const size_t numSplitB,
             const std::vector<fp_t>& A, const std::vector<fp_t>& B) {
-            for (auto multiplicationType : {multiterm::multiplicationStrategy::reduced,
-                                            multiterm::multiplicationStrategy::full}) {
-                const auto config = multiterm::config{
+            for (auto multiplicationType : {gemmi::mt::multiplicationStrategy::reduced,
+                                            gemmi::mt::multiplicationStrategy::full}) {
+                const auto config = gemmi::mt::config{
                     numSplitA, numSplitB,
                     splitType, multiplicationType, accumulationType
                 };
 
-                const auto C = gemmi<fp_t, int8_t, int32_t>(A, layoutA,
+                const auto C = gemmi::mt::gemmi<fp_t, int8_t, int32_t>(A, layoutA,
                                                             B, layoutB,
                                                             m, k, n,
                                                             layoutC,
@@ -353,50 +353,50 @@ void runGemmiAccuracyTests() {
         std::vector<fp_t> Adata(2 * 3, 1.0);
         std::vector<fp_t> Bdata(3 * 2, 1.0);
 
-        auto A = matrix::MatrixView<const fp_t>(Adata, 2, 3, matrix::matrixLayout::rowMajor);
-        auto B = matrix::MatrixView<const fp_t>(Bdata, 3, 2, matrix::matrixLayout::rowMajor);
+        auto A = gemmi::core::MatrixView<const fp_t>(Adata, 2, 3, gemmi::core::matrixLayout::rowMajor);
+        auto B = gemmi::core::MatrixView<const fp_t>(Bdata, 3, 2, gemmi::core::matrixLayout::rowMajor);
 
-        const auto validConfig = multiterm::config{
+        const auto validConfig = gemmi::mt::config{
             2,
             2,
-            multiterm::splittingStrategy::roundToNearest,
-            multiterm::multiplicationStrategy::full,
-            multiterm::reductionStrategy::integer
+            gemmi::mt::splittingStrategy::roundToNearest,
+            gemmi::mt::multiplicationStrategy::full,
+            gemmi::mt::reductionStrategy::integer
         };
 
         SECTION("null A pointer") {
-            const auto nullA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(nullptr), 2, 3, matrix::matrixLayout::rowMajor);
+            const auto nullA = gemmi::core::MatrixView<const fp_t>(static_cast<const fp_t*>(nullptr), 2, 3, gemmi::core::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(nullA, B, validConfig)),
+                ((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(nullA, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix A has a null data pointer"));
         }
 
         SECTION("null B pointer") {
-            const auto nullB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(nullptr), 3, 2, matrix::matrixLayout::rowMajor);
+            const auto nullB = gemmi::core::MatrixView<const fp_t>(static_cast<const fp_t*>(nullptr), 3, 2, gemmi::core::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, nullB, validConfig)),
+                ((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(A, nullB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix B has a null data pointer"));
         }
 
         SECTION("empty A") {
-            const auto emptyA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(Adata.data()), 0, 3, matrix::matrixLayout::rowMajor);
+            const auto emptyA = gemmi::core::MatrixView<const fp_t>(static_cast<const fp_t*>(Adata.data()), 0, 3, gemmi::core::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(emptyA, B, validConfig)),
+                ((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(emptyA, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix A is empty"));
         }
 
         SECTION("empty B") {
-            const auto emptyB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(Bdata.data()), 3, 0, matrix::matrixLayout::rowMajor);
+            const auto emptyB = gemmi::core::MatrixView<const fp_t>(static_cast<const fp_t*>(Bdata.data()), 3, 0, gemmi::core::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, emptyB, validConfig)),
+                ((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(A, emptyB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Matrix B is empty"));
         }
 
         SECTION("dimension mismatch") {
             std::vector<fp_t> badBData(4 * 2, 1.0);
-            auto badB = matrix::MatrixView<const fp_t>(badBData, 4, 2, matrix::matrixLayout::rowMajor);
+            auto badB = gemmi::core::MatrixView<const fp_t>(badBData, 4, 2, gemmi::core::matrixLayout::rowMajor);
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, badB, validConfig)),
+                ((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(A, badB, validConfig)),
                 Catch::Matchers::ContainsSubstring("Dimension mismatch"));
         }
 
@@ -404,7 +404,7 @@ void runGemmiAccuracyTests() {
             auto cfg = validConfig;
             cfg.numSplitsA = 0;
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
+                ((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
                 Catch::Matchers::ContainsSubstring("numSplitsA must be >= 1"));
         }
 
@@ -412,7 +412,7 @@ void runGemmiAccuracyTests() {
             auto cfg = validConfig;
             cfg.numSplitsB = 0;
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
+                ((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
                 Catch::Matchers::ContainsSubstring("numSplitsB must be >= 1"));
         }
 
@@ -420,27 +420,27 @@ void runGemmiAccuracyTests() {
             auto cfg = validConfig;
             cfg.multSpecification = std::vector<bool>{true, false, true};
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
+                ((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(A, B, cfg)),
                 Catch::Matchers::ContainsSubstring("Custom mask size"));
         }
 
         SECTION("split integer type too wide for accumulator") {
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::validateParameters<fp_t, int32_t, int32_t>(A, B, validConfig)),
+                ((void)gemmi::mt::validateParameters<fp_t, int32_t, int32_t>(A, B, validConfig)),
                 Catch::Matchers::ContainsSubstring("splitint_t"));
         }
 
         SECTION("bitsPerSlice evaluates to zero") {
             fp_t value = 1.0;
             constexpr size_t hugeK = (size_t{1} << 31);
-            const auto hugeA = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(&value), 1, hugeK, matrix::matrixLayout::rowMajor);
-            const auto hugeB = matrix::MatrixView<const fp_t>(static_cast<const fp_t*>(&value), hugeK, 1, matrix::matrixLayout::rowMajor);
+            const auto hugeA = gemmi::core::MatrixView<const fp_t>(static_cast<const fp_t*>(&value), 1, hugeK, gemmi::core::matrixLayout::rowMajor);
+            const auto hugeB = gemmi::core::MatrixView<const fp_t>(static_cast<const fp_t*>(&value), hugeK, 1, gemmi::core::matrixLayout::rowMajor);
 
             // Validate separately and then check derivation-specific failure.
-            REQUIRE_NOTHROW(((void)multiterm::validateParameters<fp_t, int8_t, int32_t>(hugeA, hugeB, validConfig)));
+            REQUIRE_NOTHROW(((void)gemmi::mt::validateParameters<fp_t, int8_t, int32_t>(hugeA, hugeB, validConfig)));
 
             REQUIRE_THROWS_WITH(
-                ((void)multiterm::computeBitsPerSlice<int8_t, int32_t>(hugeK)),
+                ((void)gemmi::mt::computeBitsPerSlice<int8_t, int32_t>(hugeK)),
                 Catch::Matchers::ContainsSubstring("Computed bitsPerSlice is 0"));
         }
 }
@@ -487,12 +487,12 @@ TEST_CASE("Split round-trip conversion", "[split][roundtrip]") {
 
 TEST_CASE("Bitmask schedule", "[schedule][mask]") {
     SECTION("validation") {
-        const auto config = multiterm::config{3, 2,
-                                              multiterm::splittingStrategy::roundToNearest,
+        const auto config = gemmi::mt::config{3, 2,
+                                              gemmi::mt::splittingStrategy::roundToNearest,
                                               std::vector<bool>{true},
-                                              multiterm::reductionStrategy::integer};
+                                              gemmi::mt::reductionStrategy::integer};
         REQUIRE_THROWS_WITH(
-            ((void)multiterm::makeSchedule(config)),
+            ((void)gemmi::mt::makeSchedule(config)),
             Catch::Matchers::ContainsSubstring("Mask size mismatch"));
     }
 
