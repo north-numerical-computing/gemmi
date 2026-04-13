@@ -141,9 +141,9 @@ $(document).ready(function(){initNavTree('dc/de8/gemmi_8hpp_source.html','../../
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> fp_t&gt;</div>
 <div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="../../dc/de8/gemmi_8hpp.html#a6546a5e19345d62bf00368b9523edc85">   66</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../dc/de8/gemmi_8hpp.html#a6546a5e19345d62bf00368b9523edc85">getStoredFloatingPointExponent</a>(fp_t value) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordflow">return</span> (value == 0.0) ?</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        0 :</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        std::max(std::numeric_limits&lt;fp_t&gt;::min_exponent, std::ilogb(std::abs(value)) + 1);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">auto</span> minFPExponent = std::numeric_limits&lt;fp_t&gt;::min_exponent;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">auto</span> actualExponent = std::ilogb(std::abs(value)) + 1;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">return</span> (value == 0.0) ? 0 : std::max(minFPExponent, actualExponent);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}</div>
 </div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
@@ -309,14 +309,14 @@ $(document).ready(function(){initNavTree('dc/de8/gemmi_8hpp_source.html','../../
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>                  <span class="stringliteral">&quot;accumulator_t must be a signed integer type&quot;</span>);</div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="comment">// Matrix checks.</span></div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keywordflow">if</span> (A.<a class="code hl_variable" href="../../d7/d80/structmatrix_1_1MatrixView.html#ae1e9bd862e00b73e5efa816758a708d6">data</a> == <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Matrix A has a null data pointer&quot;</span>);</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <span class="keywordflow">if</span> (B.<a class="code hl_variable" href="../../d7/d80/structmatrix_1_1MatrixView.html#ae1e9bd862e00b73e5efa816758a708d6">data</a> == <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Matrix B has a null data pointer&quot;</span>);</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="keywordflow">if</span> (A.<a class="code hl_function" href="../../d7/d80/structmatrix_1_1MatrixView.html#a52f282527a605744e3c3b7bad919a07f">empty</a>())</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Matrix A is empty (rows or cols is 0)&quot;</span>);</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="keywordflow">if</span> (B.<a class="code hl_function" href="../../d7/d80/structmatrix_1_1MatrixView.html#a52f282527a605744e3c3b7bad919a07f">empty</a>())</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Matrix B is empty (rows or cols is 0)&quot;</span>);</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keyword">auto</span> validateMatrix = [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; M, std::string_view name) {</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keywordflow">if</span> (M.data == <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>            <span class="keywordflow">throw</span> std::invalid_argument(std::string(name) + <span class="stringliteral">&quot; has a null data pointer&quot;</span>);</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keywordflow">if</span> (M.empty())</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>            <span class="keywordflow">throw</span> std::invalid_argument(std::string(name) + <span class="stringliteral">&quot; is empty (rows or cols is 0)&quot;</span>);</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    };</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    validateMatrix(A, <span class="stringliteral">&quot;Matrix A&quot;</span>);</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    validateMatrix(B, <span class="stringliteral">&quot;Matrix B&quot;</span>);</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span> </div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordflow">if</span> (A.<a class="code hl_variable" href="../../d7/d80/structmatrix_1_1MatrixView.html#a068afcecc83a36efaebd84c7004bbc54">cols</a> != B.<a class="code hl_variable" href="../../d7/d80/structmatrix_1_1MatrixView.html#a8e7cde0a85edca31e858880bb18ea219">rows</a>)</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        <span class="keywordflow">throw</span> std::invalid_argument(</div>
