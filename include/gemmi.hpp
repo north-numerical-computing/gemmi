@@ -10,6 +10,7 @@
  */
 
 // Core utilities.
+#include "core/types.hpp"
 #include "core/floating_point.hpp"
 #include "core/matrix_view.hpp"
 

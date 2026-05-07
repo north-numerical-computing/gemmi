@@ -145,9 +145,9 @@ std::vector<fp_t> gemmi (const std::vector<fp_t> &A, const core::matrixLayout la
 
     // Slice operands.
     auto splitA = prepareOperand<splitint_t, fp_t>(viewA,
-        OperandPreparationConfig(config.splitType, config.numSplitsA, bitsPerSlice, normalisationDimension::byRows));
+        OperandPreparationConfig(config.splitType, config.numSplitsA, bitsPerSlice, core::normalisationDimension::byRows));
     auto splitB = prepareOperand<splitint_t, fp_t>(viewB,
-        OperandPreparationConfig(config.splitType, config.numSplitsB, bitsPerSlice, normalisationDimension::byCols));
+        OperandPreparationConfig(config.splitType, config.numSplitsB, bitsPerSlice, core::normalisationDimension::byCols));
 
     // Build multiplication schedule.
     auto schedule = makeSchedule(config);

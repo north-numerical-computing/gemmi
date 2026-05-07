@@ -182,8 +182,8 @@ void runSplitRoundTripTests(const size_t bitsPerSlice, const std::vector<fp_t> t
             for (auto strategy : {gemmi::mt::splittingStrategy::truncation,
                                   gemmi::mt::splittingStrategy::unsignedEncoding,
                                   gemmi::mt::splittingStrategy::roundToNearest}) {
-                for (auto dim : {gemmi::mt::normalisationDimension::byRows,
-                                 gemmi::mt::normalisationDimension::byCols}) {
+                for (auto dim : {gemmi::core::normalisationDimension::byRows,
+                                 gemmi::core::normalisationDimension::byCols}) {
                     auto config = gemmi::mt::OperandPreparationConfig(strategy, numSplits, bitsPerSlice, dim);
                     auto split = gemmi::mt::prepareOperand<int8_t>(
                         gemmi::core::MatrixView<const fp_t>(testValues, m, n, layout),
@@ -215,7 +215,7 @@ void runUnsignedEncodingEdgeBranchTests() {
         gemmi::mt::splittingStrategy::unsignedEncoding,
         numSplits,
         bitsPerSlice,
-        gemmi::mt::normalisationDimension::byRows);
+        gemmi::core::normalisationDimension::byRows);
 
     const auto split = gemmi::mt::prepareOperand<split_t>(
         gemmi::core::MatrixView<const fp_t>(values, 1, 2, gemmi::core::matrixLayout::rowMajor),

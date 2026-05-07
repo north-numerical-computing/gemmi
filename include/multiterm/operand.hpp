@@ -45,7 +45,7 @@ struct preparedOperand {
      * @return Inner product dimension.
      */
     size_t innerDimension() const {
-        return (prepConfig.dimension == normalisationDimension::byRows) ?
+        return (prepConfig.dimension == core::normalisationDimension::byRows) ?
             matrix.cols : matrix.rows;
     }
 
@@ -54,7 +54,7 @@ struct preparedOperand {
      * @return Dimension not used in the inner product.
      */
     size_t outerDimension() const {
-        return (prepConfig.dimension == normalisationDimension::byRows) ?
+        return (prepConfig.dimension == core::normalisationDimension::byRows) ?
             matrix.rows : matrix.cols;
     }
 
@@ -65,7 +65,7 @@ struct preparedOperand {
      * @return The index of the operand in the matrix.
      */
     size_t operandIndex(size_t outer, size_t inner) const {
-        return (prepConfig.dimension == normalisationDimension::byRows) ?
+        return (prepConfig.dimension == core::normalisationDimension::byRows) ?
             matrix.index(outer, inner) :
             matrix.index(inner, outer);
     }

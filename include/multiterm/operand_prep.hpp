@@ -334,7 +334,7 @@ preparedOperand<splitint_t, fp_t> prepareOperand(core::MatrixView<const fp_t> ma
     operand.matrix = matrix;
     operand.prepConfig = prepConfig;
     operand.memory.resize(operand.matrix.size() * prepConfig.numSplits);
-    operand.powersVector.resize(operand.prepConfig.dimension == normalisationDimension::byRows ?
+    operand.powersVector.resize(operand.prepConfig.dimension == core::normalisationDimension::byRows ?
                            operand.rows() : operand.cols());
     operand.scalingExponents.resize(operand.powersVector.size());
 

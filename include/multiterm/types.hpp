@@ -8,13 +8,7 @@
 
 namespace gemmi::mt {
 
-/**
- * @brief Enum to specify the dimension used for normalization.
- */
-enum class normalisationDimension {
-    byRows, ///< Normalise by rows (matrix on the left of the product).
-    byCols  ///< Normalise by columns (matrix on the right of the product).
-};
+// Use normalisationDimension from core namespace
 
 /**
  * @brief Enum to specify the splitting strategy to use.
@@ -111,7 +105,7 @@ struct OperandPreparationConfig {
     splittingStrategy splitType;      ///< Splitting strategy to use.
     size_t numSplits;                 ///< Number of splits to use.
     size_t bitsPerSlice;              ///< Number of bits per slice.
-    normalisationDimension dimension; ///< Dimension along which to normalize.
+    core::normalisationDimension dimension; ///< Dimension along which to normalize.
 };
 
 } // namespace gemmi::mt
